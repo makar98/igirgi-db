@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ИГиРГИ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+
+    {% block links %}
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar-expand-lg fixed-top">
+        <ul class="navbar-nav mr-auto sidenav" id="navAccordion" style="margin: 0px;">
+            <li>
+                <a class="navbar-brand" href="{{ url_for('new_style_index') }}">
+                    <img style="left: 10px; top: 0px; height: 50px;"
+                         src="{{ url_for('static', filename='logo.png') }}">
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="{{ url_for('new_style_index') }}">
+                    <button class="nav-link btn-primary" href="">
+                        Home
+                        <span class="sr-only">
+                            (current)
+                        </span>
+                    </button>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('db_page') }}">
+                    <button
+                        class="nav-link nav-link-collapse btn-primary"
+                        href="#"
+                        id="hasSubItems"
+                        data-toggle="collapse"
+                        data-target=".db-collapse"
+                        aria-controls="collapseSubItems2"
+                        aria-expanded="true"
+                        >
+                        База данных
+                    </button>
+                </a>
+            <ul class="nav-second-level collapse db-collapse" id="db-nav" data-parent="#navAccordion">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Поиск скважины</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('new_style_customers') }}">
+                        <span class="nav-link-text">Дочернее общество</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Сервисные компании</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Оценка ГИС</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('gis') }}">
+                        <span class="nav-link-text">Оценка ГТИ</span>
+                    </a>
+                </li>
+            </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('gis') }}">
+                    <button
+                        class="nav-link nav-link-collapse btn-primary"
+                        href="#"
+                        id="_hasSubItems"
+                        data-toggle="collapse"
+                        data-target=".gis-collapse"
+                        aria-controls="collapseSubItems2"
+                        aria-expanded="true"
+                        >
+                        ГИС
+                    </button>
+                </a>
+            <ul class="nav-second-level collapse gis-collapse" id="gis-nav" data-parent="#navAccordion">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Свойства скважин</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('new_style_customers') }}">
+                        <span class="nav-link-text">База кривых</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Оценка качества ГИС</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Сводка по интерпретации</span>
+                    </a>
+                </li>
+            </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('gti') }}">
+                    <button
+                        class="nav-link nav-link-collapse btn-primary"
+                        href="#"
+                        id="__hasSubItems"
+                        data-toggle="collapse"
+                        data-target=".gti-collapse"
+                        aria-controls="collapseSubItems2"
+                        aria-expanded="true"
+                        >
+                        ГТИ
+                    </button>
+                </a>
+                <ul class="nav-second-level collapse gti-collapse" id="gti-nav" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('gti_tbl') }}">
+                            <span class="nav-link-text">Таблица</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span class="nav-link-text">Статистика</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item active">
+                <a href="{{ url_for('logger') }}">
+                    <button class="nav-link btn-primary" href="">
+                        Logger
+                    </button>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+    <main class="content-wrapper">
+        <div style="text-align: right; margin-right: 10px;">
+            <img src="{{ url_for('static', filename='images/user.png') }}"
+                 class="img-db"
+                 style="height: 30px; width: 30px">
+            <span class="left-text-img align-middle" id="user" data-id="{{ current_user.id }}">
+                {{ current_user }}
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="{{ url_for('logout') }}">
+                Logout
+                </a>
+            </span>
+        </div>
+        <div class="container-fluid">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    {% block bottom_scripts %}
+    {% endblock %}
+</body>
+</html>

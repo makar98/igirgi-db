@@ -1,0 +1,195 @@
+{% extends 'new_style_base.html' %}
+{% block content %}
+
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <li class="list-group-item border-0">
+            <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_customer/{{ well.pad.field.customer.id }}">
+                    Дочернее общество <br> {{ well.pad.field.customer.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_field/{{ well.pad.field.id }}">
+                    Месторождение <br> {{ well.pad.field.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_pad/{{ well.pad.id }}">
+                    Куст <br> {{ well.pad.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                Скважина <br> {{ well.name }} {{ well.well_type }}
+            </span>
+        </li>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-md-2 second-nav">
+            <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Скважина</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Куст</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/strat.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Стратиграфия</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/petro.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Потрофизическая<br>модель</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/export.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Правило экспорта<br>кривых</span>
+                </a>
+            </li>
+         </div>
+        <div class="col" >
+            <div class="list-group list-group-flush">
+                <span data-toggle="modal" data-target="#add-wellbore-btn">
+                <img src="{{ url_for('static', filename='images/plus.png') }}"
+                     class="img-40px"
+                     >
+                    Добавить секцию
+                </span>
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="add-wellbore-btn">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="add_wellbore">
+                            <div class="modal-header">
+                                header
+                            </div>
+                            <div class="modal-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Заказчик</label>
+                                            <input class="form-control"
+                                                       name="customer"
+                                                       value="{{ well.pad.field.customer.name }}"
+                                                       data-id="{{ well.pad.field.customer.id }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Месторождение</label>
+                                            <input class="form-control"
+                                                       name="field"
+                                                       value="{{ well.pad.field.name }}"
+                                                       data-id="{{ well.pad.field.id }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Куст</label>
+                                            <input class="form-control"
+                                                       name="pad"
+                                                       value="{{ well.pad.name }}"
+                                                       data-id="{{ well.pad.id }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Скважина</label>
+                                            <input class="form-control"
+                                                       name="well"
+                                                       value="{{ well.name }}"
+                                                       data-id="{{ well.id }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Тип скважины</label>
+                                            <input class="form-control"
+                                                       name="well_type"
+                                                       value="{{ well.well_type.name }}"
+                                                       data-id="{{ well.well_type.id }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Тип сецкии</label>
+                                            <select class="form-control form-control" name="wellbore_type">
+                                                {% for wbt in wellbore_types %}
+                                                    <option data-id="{{ wbt.id }}">{{ wbt }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Секция</label>
+                                            <input type="text" class="form-control" name="wellbore">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="is_gis">ГИС</label>
+                                            <input type="checkbox" class="form-control" name="is_gis">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="is_gti">ГТИ</label>
+                                            <input type="checkbox" class="form-control" name="is_gti">
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary"
+                                            onclick="add_wellbore()">
+                                        Добавить
+                                    </button>
+
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <li class="list-group-item border-0">
+                    <input>
+            </li>
+            <div id="wellbores">
+            {% for wb in well.wellbores %}
+                <a href="{{ url_for('new_style_wellbore', id=wb.id) }}">
+                    <li>{{ wb.name }}  {{ wb.wellbore_type }}</li>
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('db-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/wellbore.js') }}"></script>
+{% endblock %}

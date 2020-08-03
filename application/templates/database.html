@@ -1,0 +1,50 @@
+{% extends 'new_style_base.html' %}
+{% block content %}
+<div class="collapse db-collapse" data-parent="#navAccordion" id="db-body">
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
+                <span class="left-text-img align-middle">Поиск<br>скважины</span>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Дочернее<br>общество</span>
+                </a>
+            </div>
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                <span class="left-text-img align-middle">Сервисные<br>компании</span>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 100px;">
+            <div class="col">
+                <div style="text-align: center;">
+                <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
+                <span class="left-text-img align-middle">Оценка<br>ГИС</span>
+                    </div>
+            </div>
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
+                <span class="left-text-img align-middle">Оценка<br>ГТИ</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('db-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+        db_body = document.getElementById('db-body')
+        db_body.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+{% endblock %}

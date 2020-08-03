@@ -1,0 +1,71 @@
+{% extends 'new_style_base.html' %}
+{% block content %}
+
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <li class="list-group-item border-0">
+            <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_customer/{{ wellbore.well.pad.field.customer.id }}">
+                    Дочернее общество <br> {{ wellbore.well.pad.field.customer.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_field/{{ wellbore.well.pad.field.id }}">
+                    Месторождение <br> {{ wellbore.well.pad.field.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_pad/{{ wellbore.well.pad.id }}">
+                    Куст <br> {{ wellbore.well.pad.name }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                <a href="../../new_style_well/{{ wellbore.well.id }}">
+                    Скважина <br> {{ wellbore.well.name }} {{ wellbore.well.well_type }}
+                </a>
+            </span>
+            <span class="left-text-img align-middle">
+                Ствол <br> {{ wellbore.name }} {{ wellbore.wellbore_type }}
+            </span>
+        </li>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col" >
+            <div id="wellbores">
+            {% for qs in wellbore.quality_sheets %}
+                <a href="{{ url_for('quality_sheet', id=qs.id) }}">
+                    <li>{{ qs.wellbore.name }} {{ qs.wellbore.wellbore_type }} - {{ qs.id }}</li>
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <input type="checkbox" name="is_gis" {% if wellbore.is_gis %} checked {% endif %}>
+            <label for="is_gis">is_gis</label>
+        </div>
+        <div class="col-2">
+            <input type="checkbox" id="horns" name="is_gti" {% if wellbore.is_gti %} checked {% endif %}>
+            <label for="is_gti">is_gti</label>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('db-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/wellbore.js') }}"></script>
+{% endblock %}

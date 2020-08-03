@@ -1,0 +1,108 @@
+.name{
+    background-color: #F6CF4C;
+}
+.name span{
+    margin: auto !important;
+    font-size: 10pt;
+    font-weight: bold;
+}
+.content{
+    background-color: #FAF0C8;;
+    display: flex;
+    padding: 0px;
+}
+.content span{
+    margin: auto !important;
+    font-size: 10pt;
+}
+.row{
+    text-align: center;
+    display: flex;
+    margin: 0px;
+
+}
+.col-md-2{
+    display: flex;
+    border: 1px solid #FFFFFF;
+}
+.col-md-1{
+    display: flex;
+    border: 1px solid #FFFFFF;
+}
+.col-sm-1{
+    border: 1px solid #FFFFFF;
+}
+.name-content-group{
+    margin-top: 25px;
+}
+.border-none{
+    border: none;
+}
+.first-line{
+    height: 50%;
+}
+.bottom-line{
+    border-top: 1px solid #FFFFFF;
+    height: 50%;
+}
+input{
+    background-color: #FAF0C8;
+    border-style: none;
+    text-align: center;
+    margin: 0px auto;
+    padding: 0px;
+    width: 80%;
+}
+.content input.date{
+    width: 100%;
+}
+select{
+    width: 100%;
+    text-align: center;
+    text-align-last: center;
+    margin: 0px;
+    border: none 0px;
+    padding: 5px;
+    background-color: #FAF0C8;
+    appearance: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+}
+
+
+table.drop td{
+    vertical-align: middle;
+    text-align: center;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    font-weight: bold;
+    color: #000000;
+    font-family: 'Europe';
+    margin: 0;
+}
+
+table.drop h6{
+    font-size: 0.6em;
+    margin: 0;
+}
+
+.val_name{
+    background-color: #F6CF4C;
+}
+
+table.drop h6{
+    font-weight: normal;
+}
+
+#info .col-md-4{
+    padding: 0px;
+}
+#las .col-md-4{
+    padding: 0px;
+}
+#real_time .col-md-4{
+    padding: 0px;
+}

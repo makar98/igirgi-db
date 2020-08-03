@@ -1,0 +1,68 @@
+{% extends 'new_style_base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <li class="list-group-item border-0">
+            <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+
+        </li>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-md-2 second-nav">
+            <li class="nav-item">
+                <a href="{{ url_for('gis_curves_input') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Входные кривые</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Расчетные кривые</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/strat.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Осредненные<br>кривые</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/petro.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Экспорт кривых</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/export.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Таблица по<br>переименованию</span>
+                </a>
+            </li>
+         </div>
+        {% block tables %}
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('gis-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+<script src="{{ url_for('static', filename='js/add_wellbore.js') }}"></script>
+{% block bottom_scripts_next %}
+{% endblock %}
+{% endblock %}
+
+

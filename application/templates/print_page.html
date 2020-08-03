@@ -1,0 +1,931 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <link href="{{ url_for('static', filename='air-datepicker-master/dist/css/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+        <script src="{{ url_for('static', filename='air-datepicker-master/dist/js/datepicker.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/autosize.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+        <script type="">
+             window.onload = function() {
+                objects = document.getElementsByClassName('2nd_tbl_color')
+                for (obj of objects){
+                    if (obj.value == 'Увязан'){obj.style.color = 'green'};
+                    if (obj.value == 'Отсутствуют'){obj.style.color = 'green'};
+                    if (obj.value == 'Отсутствует'){obj.style.color = 'green'};
+                    if (obj.value == 'Соответствует основному замеру'){obj.style.color = 'green'};
+                    if (obj.value == 'Отменен по согласованию сторон'){obj.style.color = 'green'};
+                    if (obj.value == 'Соответствуют'){obj.style.color = 'green'};
+                    if (obj.value == 'Опорные пласты не вскрыты'){obj.style.color = 'green'};
+
+                    if (obj.value == 'Частично неувязан'){obj.style.color = 'blue'}
+                    if (obj.value == 'Единичные'){obj.style.color = 'blue'}
+                    if (obj.value == 'Незначительная'){obj.style.color = 'blue'}
+                    if (obj.value == 'Занижены'){obj.style.color = 'blue'}
+                    if (obj.value == 'Завышены'){obj.style.color = 'blue'}
+
+                    if (obj.value == 'Неувязан'){obj.style.color = 'red'};
+                    if (obj.value == 'Регулярные'){obj.style.color = 'red'};
+                    if (obj.value == 'Выше допустимой'){obj.style.color = 'red'};
+                    if (obj.value == 'Не соответствует основному замеру'){obj.style.color = 'red'}
+                    if (obj.value == 'Не произведен'){obj.style.color = 'red'};
+                    if (obj.value == 'Не соответствуют'){obj.style.color = 'red'};
+                }
+
+            }
+        </script>
+
+        <style type="text/css">
+            html { font-family:Calibri, Arial, Helvetica, sans-serif; font-size:11pt; background-color:white }
+            a.comment-indicator:hover + div.comment { background:#ffd; position:absolute; display:block; border:1px solid black; padding:0.5em }
+            a.comment-indicator { background:red; display:inline-block; border:1px solid black; width:0.5em; height:0.5em }
+            div.comment { display:none }
+            table { border-collapse:collapse; page-break-after:always }
+            .gridlines td { border:1px dotted black }
+            .gridlines th { border:1px dotted black }
+            .b { text-align:center }
+            .e { text-align:center }
+            .f { text-align:right }
+            .inlineStr { text-align:left }
+            .n { text-align:right }
+            .s { text-align:left }
+            td.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style1 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style1 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style2 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style2 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style3 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style3 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style4 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style4 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style5 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style5 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style6 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style6 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style7 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style7 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style8 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style8 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style9 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style9 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style10 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style10 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style11 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style11 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style12 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style12 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style13 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style13 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style14 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style14 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style15 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style15 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style16 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style16 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style17 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style17 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style18 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style18 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style19 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style19 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style20 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:white }
+            th.style20 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:white }
+            td.style21 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style21 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style22 { vertical-align:bottom; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            th.style22 { vertical-align:bottom; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            td.style23 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            th.style23 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            td.style24 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style24 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style25 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style25 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style26 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style26 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style27 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style27 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style28 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style28 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style29 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style29 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style30 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style30 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style31 { vertical-align:bottom; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style31 { vertical-align:bottom; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style32 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style32 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style33 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style33 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style34 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style34 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style35 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style35 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style36 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style36 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style37 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style37 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style38 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style38 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style39 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style39 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style40 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style40 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style41 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style41 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style42 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style42 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style43 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style43 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style44 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style44 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style45 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style45 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style46 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style46 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style47 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style47 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style48 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style48 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style49 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style49 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style50 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style50 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style51 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style51 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style52 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style52 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style53 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style53 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style54 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style54 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style55 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style55 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style56 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style56 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style57 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style57 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style58 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style58 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style59 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style59 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style60 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style60 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style61 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style61 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style62 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style62 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style63 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style63 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style64 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style64 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style65 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:28pt; background-color:#FFFFFF }
+            th.style65 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:28pt; background-color:#FFFFFF }
+            td.style66 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style66 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style67 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style67 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style68 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style68 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style69 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style69 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style70 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style70 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style71 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style71 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style72 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style72 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style73 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style73 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style74 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style74 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style75 { vertical-align:bottom; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            th.style75 { vertical-align:bottom; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            td.style76 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            th.style76 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            td.style77 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style77 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style78 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style78 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style79 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style79 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style80 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style80 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+
+            table.sheet0 col.col0 { width:210pt }
+            table.sheet0 col.col1 { width:70pt }
+            table.sheet0 col.col2 { width:70pt }
+            table.sheet0 col.col3 { width:140pt }
+            table.sheet0 col.col4 { width:140pt }
+            table.sheet0 col.col5 { width:140pt }
+            table.sheet0 col.col6 { width:140pt }
+            table.sheet0 col.col7 { width:140pt }
+            table.sheet0 col.col8 { width:140pt }
+            table.sheet0 col.col9 { width:70pt }
+            table.sheet0 col.col10 { width:70pt }
+            table.sheet0 col.col11 { width:70pt }
+
+            table.sheet0 tr { height:15pt }
+            table.sheet0 tr.row0 { height:14.1pt }
+            table.sheet0 tr.row1 { height:14.1pt }
+            table.sheet0 tr.row2 { height:14.1pt }
+            table.sheet0 tr.row3 { height:15pt }
+            table.sheet0 tr.row4 { height:15pt }
+            table.sheet0 tr.row5 { height:15pt }
+            table.sheet0 tr.row6 { height:15pt }
+            table.sheet0 tr.row7 { height:47.1pt }
+            table.sheet0 tr.row8 { height:46.5pt }
+            table.sheet0 tr.row9 { height:15.75pt }
+            table.sheet0 tr.row10 { height:50.1pt }
+            table.sheet0 tr.row11 { height:26.1pt }
+            table.sheet0 tr.row12 { height:26.1pt }
+            table.sheet0 tr.row13 { height:26.1pt }
+            table.sheet0 tr.row14 { height:26.1pt }
+            table.sheet0 tr.row15 { height:26.1pt }
+            table.sheet0 tr.row16 { height:20.1pt }
+            table.sheet0 tr.row17 { height:20.1pt }
+            table.sheet0 tr.row18 { height:20.1pt }
+            table.sheet0 tr.row19 { height:15pt }
+            table.sheet0 tr.row20 { height:80.1pt }
+            table.sheet0 tr.row21 { height:26.1pt }
+            table.sheet0 tr.row22 { height:26.1pt }
+            table.sheet0 tr.row23 { height:26.1pt }
+            table.sheet0 tr.row24 { height:26.1pt }
+            table.sheet0 tr.row25 { height:26.1pt }
+            table.sheet0 tr.row28 { height:23.25pt }
+            table.sheet0 tr.row29 { height:15pt }
+            table.sheet0 tr.row30 { height:18.75pt }
+            table.sheet0 tr.row31 { height:15.75pt }
+            table.sheet0 tr.row32 { height:15.75pt }
+            table.sheet0 tr.row33 { height:15.75pt }
+            table.sheet0 tr.row34 { height:18.75pt }
+            table.sheet0 tr.row35 { height:18.75pt }
+            table.sheet0 tr.row36 { height:18.75pt }
+            table.sheet0 tr.row37 { height:18.75pt }
+            table.sheet0 tr.row38 { height:18.75pt }
+            table.sheet0 tr.row39 { height:18.75pt }
+            table.sheet0 tr.row40 { height:18.75pt }
+            table.sheet0 tr.row41 { height:18.75pt }
+            table.sheet0 tr.row42 { height:20.25pt }
+            table.sheet0 tr.row43 { height:20.25pt }
+            table.sheet0 tr.row44 { height:20.25pt }
+            table.sheet0 tr.row45 { height:20.25pt }
+            table.sheet0 tr.row46 { height:20.25pt }
+            table.sheet0 tr.row47 { height:20.25pt }
+            table.sheet0 tr.row48 { height:20.25pt }
+            table.sheet0 tr.row49 { height:20.25pt }
+            table.sheet0 tr.row50 { height:20.25pt }
+            table.sheet0 tr.row51 { height:15pt }
+            table.sheet0 tr.row52 { height:15pt }
+            table.sheet0 tr.row53 { height:15pt }
+
+            textarea{
+                background-color: #FAF0C8;
+                display: block;
+                border-style: none;
+                resize: none;
+                margin:0 auto;
+                vertical-align: middle;
+                text-align:center;
+                overflow:hidden;
+                outline: none;
+
+                width: 80%;
+            }
+            input{
+                background-color: #FAF0C8;
+                border-style: none;
+                text-align: center;
+                margin: 0px auto;
+                padding: 0px;
+                width: 80%;
+            }
+
+            .assigned_date{
+                text-align: center;
+                background-color: #FAF0C8;
+                border: none;
+            }
+
+            input.date{
+                width: 100%;
+            }
+
+            select{
+                width: 100%;
+                text-align: center;
+                text-align-last: center;
+                margin: 0px;
+                border: none 0px;
+                padding: 5px;
+                background-color: #FAF0C8;
+                appearance: none !important;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+            }
+
+            p{
+                text-align: center;
+                font: 400 13.3333px Arial;
+                font-style: normal;
+                font-variant-ligatures: normal;
+                font-variant-caps: normal;
+                font-variant-numeric: normal;
+                font-variant-east-asian: normal;
+                font-weight: 400;
+                font-stretch: normal;
+                font-size: 13.3333px;
+                line-height: normal;
+                font-family: Arial;
+            }
+
+            .among_tbl{
+            height: 50px;
+            margin: 0px;
+            font-weight: bold;
+            font-size: 16pt;
+            font-family: 'Europe';
+            }
+
+
+            table.drop td{
+                vertical-align: middle;
+                text-align: center;
+                border-bottom: 1px solid #FFFFFF;
+                border-top: 1px solid #FFFFFF;
+                border-left: 1px solid #FFFFFF;
+                border-right: 1px solid #FFFFFF;
+                font-weight: bold;
+                color: #000000;
+                font-family: 'Europe';
+                margin: 0;
+            }
+
+            table.drop h6{
+                font-size: 0.6em;
+                margin: 0;
+            }
+
+            table.drop td.val_name{
+                background-color: #F6CF4C;
+            }
+
+            table.drop h6{
+                font-weight: normal;
+            }
+        </style>
+    </head>
+    <body>
+        <style>
+            @page { margin-left: 0.70866141732283in; margin-right: 0.70866141732283in; margin-top: 0.74803149606299in; margin-bottom: 0.74803149606299in; }
+            body { margin-left: 0.70866141732283in; margin-right: 0.70866141732283in; margin-top: 0.74803149606299in; margin-bottom: 0.74803149606299in; }
+        </style>
+        <div class="menu">
+            <a href="/" ><button style="align: left" >Home</button></a>
+            <a href="/customers" ><button>Заказчики(добавить месторождение)</button></a>
+            <a href="/companies"><button>Сервисные компании(добавить прибор)</button></a>
+        </div>
+            <table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="sheet0 gridlines">
+                <col class="col0">
+                <col class="col1">
+                <col class="col2">
+                <col class="col3">
+                <col class="col4">
+                <col class="col5">
+                <col class="col6">
+                <col class="col7">
+                <col class="col8">
+                <col class="col9">
+                <col class="col10">
+                <col class="col11">
+                <tbody>
+                    <tr class="row0">
+                        <td class="column1 style65 s style65" colspan="12" rowspan="6">
+                            Лист оценки качества данных ГИС
+                        </td>
+                    </tr>
+                    <tr class="row1">
+                    </tr>
+                    <tr class="row2">
+                    </tr>
+                    <tr class="row3">
+                    </tr>
+                    <tr class="row4">
+                    </tr>
+                    <tr class="row5">
+                    </tr>
+                    <tr class="row6">
+                    </tr>
+                    <tr class="row7">
+                        <td onclick="test(this)" class="column1 style34 s">
+                            Заказчик
+                        </td>
+                        <td class="column2 style43 s style44" colspan="3">
+                            Месторождение
+                        </td>
+                        <td class="column5 style34 s">
+                            № Куста
+                        </td>
+                        <td class="column6 style34 s">
+                            № Скважины
+                        </td>
+                        <td class="column7 style43 s style66" colspan="2">
+                            Сервисная геофизическая компания
+                        </td>
+                        <td class="column9 style35 s">
+                            Секция<br />
+                            скважины
+                        </td>
+                        <td class="column10 style43 s style44" colspan="2">
+                            Интервал секции, м
+                        </td>
+                        <td class="column12 style34 s">
+                            Диаметр<br />
+                            секции, мм
+                        </td>
+                    </tr>
+                    <tr class="row8">
+                        <td class="column1 style33 s">
+                            <p>{{ cl.customer }}</p>
+                        </td>
+                        <td class="column2 style67 s style68" colspan="3">
+                            <p>{{ cl.field }}</p>
+                        </td>
+                        <td class="column5 style33 n">
+                            <p>{{ cl.pad_num }}</p>
+                        </td>
+                        <td class="column6 style33 n">
+                            <p>{{ cl.well_num }}</p>
+                        </td>
+                        <td class="column7 style67 s style68" colspan="2">
+                            <p>{{ cl.service_company }}</p>
+                        </td>
+                        <td class="column9 style33 s">
+                            <p>{{ cl.well_section }}</p>
+                        </td>
+                        <td class="column10 style33 n">
+                            <p>{{ cl.section_interval_beg }}</p>
+                        </td>
+                        <td class="column11 style33 n">
+                            <p>{{ cl.section_interval_end }}</p>
+                        </td>
+                        <td class="column12 style33 n">
+                            <p>{{ cl.section_diameter }}</p>
+                        </td>
+                    </tr>
+                    <tr class="row9"><td class="column1 style21 null"></td>
+                    <td class="column2 style21 null"></td>
+                    <td class="column3 style21 null"></td>
+                    <td class="column4 style21 null"></td>
+                    <td class="column5 style21 null"></td>
+                    <td class="column6 style21 null"></td>
+                    <td class="column7 style21 null"></td>
+                    <td class="column8 style21 null"></td>
+                    <td class="column9 style21 null"></td>
+                    <td class="column10 style21 null"></td>
+                    <td class="column11 style21 null"></td>
+                    <td class="column12 style21 null"></td>
+                    </tr>
+
+                    <tbody id="body_1">
+                        <tr class="row10">
+                            <td class="column1 style19 s">
+                                Метод
+                            </td>
+                            <td class="column2 style37 s" colspan="1">
+                                Тип прибора
+                            </td>
+                            <td class="column3 style19 s" colspan="1">
+                                Номер прибора
+                            </td>
+                            <td class="column4 style19 s">
+                                Дата калибровки прибора
+                            </td>
+                            <td class="column5 style19 s">
+                                Дата проведения ГИС
+                            </td>
+                            <td class="column6 style19 s">
+                                Дата поступления ГИС в ИГиРГИ
+                            </td>
+                            <td class="column7 style45 s style45" colspan="2">
+                                Интервал записи (факт), м
+                            </td>
+                            <td class="column9 style47 s style48" colspan="2">
+                                Коэффициент сходимости данных Real-time/Memory
+                            </td>
+                            <td class="column11 style47 s style48" colspan="2">
+                                Коэффициент отсутствия данных
+                            </td>
+                            <td class="column12 style32 s style32" colspan="2">
+                            </td>
+                        </tr>
+                        {% for m in cl.methods %}
+                            <tr id="test_row" class="row11">
+                                <td class="column1 style13 s">
+                                   <p>{{ m.method }}</p>
+                                </td>
+                                <td class="column2 style13 s">
+                                    <p>{{ m.tool_type }}</p>
+                                </td>
+                                <td class="column3 style38 n">
+                                    <p>{{ m.tool_num }}</p>
+                                </td>
+                                <td class="column4 style12 n">
+                                   <p>{{ m.calibration_date }}</p>
+                                </td>
+                                <td class="column5 style12 s">
+                                    <p>{{ m.gis_date }}</p>
+                                </td>
+                                <td class="column6 style12 s">
+                                    <p>{{ m.receipt_date }}</p>
+                                </td>
+                                <td class="column7 style14 n">
+                                    <p>{{ m.interval_beg }}</p>
+                                </td>
+                                <td class="column8 style13 n">
+                                    <p>{{ m.interval_end }}</p>
+                                </td>
+                                <td class="column9 style77 n style78" colspan="2">
+                                    <p>{{ m.rt_coefficient }}</p>
+                                </td>
+                                <td class="column11 style77 n style78" colspan="2">
+                                    <p>{{ m.no_data_coefficient }}</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tr class="row16"><td class="column1 style11 null"></td>
+                        <td class="column2 style11 null"></td>
+                        <td class="column3 style9 null"></td>
+                        <td class="column4 style9 null"></td>
+                        <td class="column5 style11 null"></td>
+                        <td class="column6 style11 null"></td>
+                        <td class="column7 style11 null"></td>
+                        <td class="column8 style11 null"></td>
+                        <td class="column9 style11 null"></td>
+                        <td class="column10 style11 null"></td>
+                        <td class="column11 style11 null"></td>
+                        <td class="column12 style11 null"></td>
+                    </tr>
+                    <tr class="row17">
+                        <td style="vertical-align: top;" class="column1 style31 s style31" colspan="3">
+                            <p class="among_tbl" onclick="if(document.getElementById('info').style.display === 'none'){
+                                                    document.getElementById('info').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('info').style.display = 'none';}">
+                                Полнота представляемой информации
+                            </p>
+
+                            <div id="info" style="display: none;" onclick="get_information()">
+                                <table width="100%" bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td style="width: 75%;" class="val_name">
+                                            <h6>Титульный лист</h6>
+                                        </td>
+                                        <td style="border: none;">
+                                            <p>{{ cl.title_page }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Конструкция скважины</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.construct }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Размеры ствола/колонны/НКТ</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.column_size }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Хронология, cводные данные по скважине</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.well_chronology }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Данные по буровому раствору</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.drilling_fluid_info }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Компоновка приборов и примечания</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.tool_composition }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Сводные данные контроля глубины</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.depth_control_data }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Данные инклинометрии</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.directional_survey_data }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Основная запись</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.main_record }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Параметры обработки данных и параметры прибора</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.data_processing_and_tool_parameters }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Контрольная запись</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.second_record }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Планшеты с кривыми контроля качества</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.title_page }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Калибровка приборов</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.curve_control_pad }}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <td style="vertical-align: top;" class="column2 style31 null style31" rowspan="2">
+                            <textarea name="information" id="information" style=" margin: 0px; background-color: white;" readonly>
+                                {{ cl.information }}
+                            </textarea>
+                        </td>
+
+
+                        <td style="vertical-align: top;" class="column3 style31 s style31" colspan="1" rowspan="2">
+                            <p class="among_tbl" onclick="if(document.getElementById('las').style.display === 'none'){
+                                                    document.getElementById('las').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('las').style.display = 'none';}">
+                                Оформление Las-файла
+                            </p>
+
+                            <div id="las" style="display: none;">
+                                <table bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Well»</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.las_file_design_well_section }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Parameters»</h6>
+                                        </td>
+                                            <td>
+                                                <p>{{ cl.las_file_design_parameters_section }}</p>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Curve»</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.las_file_design_curve_section }}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <button type="button" onclick="document.getElementById('las').style.display = 'none';">click</button>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" class="column5 style31 null style31" rowspan="2">
+                            <textarea name="las_file_design" id="las_file_design" style=" margin: 0px; background-color: white;" readonly>
+                                {{ cl.las_file_design }}
+                            </textarea>
+                        </td>
+                        <td style="vertical-align: top;" class="column6 style31 s style31" colspan="2" rowspan="2">
+                            <p class="among_tbl" onclick="if(document.getElementById('real_time').style.display === 'none'){
+                                                    document.getElementById('real_time').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('real_time').style.display = 'none';}">
+                                Некорректная настройка дынных Real-time
+                            </p>
+
+                            <div id="real_time" onclick="get_rt_data_value()" style="display: none;">
+                                <table bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Полнота предостовляемых данных</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.data_completeness }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Настройки передачи данных</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.data_transfer_settings }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Название кривых</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.curve_names }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Описание мнемоник</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ cl.mnemonic_description }}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" class="column8 style31 null style31" rowspan="2">
+                            <textarea name="incorrect_RT_data" id="incorrect_RT_data" style="background-color: white; margin: 0px" readonly>
+                                {{ cl.incorrect_RT_data }}
+                            </textarea>
+                        </td>
+                        <td class="column9 style31 null style31" rowspan="2" colspan="3" style="vertical-align: top;">
+                            <p class="among_tbl" style="height: 30px; padding: 0px; margin: 0px; padding: 0px; white-space: nowrap;">
+                                Плотность данных Real-time:
+                            </p>
+                            <div id="dot_m" style="display:inline-block; margin: 0px; padding: 0px;" >
+                                <p class="among_tbl" style="height: 30px; padding: 0px; margin: 0px; padding: 0px; white-space: nowrap;">{{ cl.dot_by_meter }}</p>
+                                точ. на метр
+                            </div>
+
+
+                        </td>
+                    </tr>
+                    <tr class="row18"></tr>
+                    <tr class="row19"></tr>
+
+                    <tbody id="body_2">
+                        <tr class="row20"><td class="column1 style19 s">Метод</td>
+                            <td class="column2 style47 s style48" colspan="2">
+                                Увязка по глубине
+                            </td>
+                            <td class="column4 style19 s">
+                                Выбросы
+                            </td>
+                            <td class="column5 style19 s">
+                                Зашумленность
+                            </td>
+                            <td class="column6 style19 s">
+                                Повторный/<br />
+                                контрольный замер
+                            </td>
+                            <td class="column7 style19 s">
+                                Распределение измерений на кросс-плотах относительно палеток
+                            </td>
+                            <td class="column8 style19 s">
+                                Показания прибора в исследуемом разрезе
+                            </td>
+                            <td class="column9 style19 s">
+                                Соответствие абсолютных петрофизических значений в опорных пластах
+                            </td>
+                            <td class="column11 style47 s style48" colspan="3">
+                                Примечание
+                            </td>
+                        </tr>
+                            {% for m in cl.methods %}
+
+                            <tr class="row21">
+                                <td class="column1 style13 s">
+                                    <p>{{ m.method }}</p>
+                                </td>
+                                <td class="column2 style55 s style56" colspan="2">
+                                    <p class="2nd_tbl_color">{{ m.linkage_by_depth }}</p>
+                                </td>
+                                <td class="column4 style16 s">
+                                    <p class="2nd_tbl_color">{{ m.emissions }}</p>
+                                </td>
+                                <td class="column5 style16 s">
+                                    <p class="2nd_tbl_color">{{ m.noise }}</p>
+                                </td>
+                                <td class="column6 style18 s">
+                                    <p class="2nd_tbl_color">{{ m.check_measurement }}</p>
+                                </td>
+                                <td class="column7 style18 s">
+                                    <p class="2nd_tbl_color">{{ m.cross_plot_distribution }}</p>
+                                </td>
+                                <td class="column8 style18 s">
+                                    <p class="2nd_tbl_color">{{ m.tool_indication }}</p>
+                                </td>
+                                <td class="column9 style18 s">
+                                    <p class="2nd_tbl_color">{{ m.absolute_petrophysical_values }}</p>
+                                </td>
+                                <td class="column11 style49 null style50" colspan="3">
+                                    <p class="2nd_tbl_color">{{ m.notes }}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                    </tbody>
+                    <tr class="row26"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style10 null"></td>
+                        <td class="column7 style10 null"></td>
+                        <td class="column8 style10 null"></td>
+                        <td class="column9 style10 null"></td>
+                        <td class="column10 style10 null"></td>
+                        <td class="column11 style10 null"></td>
+                        <td class="column12 style10 null"></td>
+                    </tr>
+                    <tr class="row27"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style10 null"></td>
+                        <td class="column7 style10 null"></td>
+                        <td class="column8 style10 null"></td>
+                        <td class="column9 style10 null"></td>
+                        <td class="column10 style10 null"></td>
+                        <td class="column11 style10 null"></td>
+                        <td class="column12 style10 null"></td>
+                    </tr>
+                    <tr class="row28"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style22 null"></td>
+                        <td class="column8 style23 s"></td>
+                        <td class="column9 style24 null"></td>
+                        <td class="column10 style24 null"></td>
+                        <td class="column11 style24">
+                            Итоговая оценка качества:
+                        </td>
+                        <td class="column12 style25 n">
+                            <textarea name="grade" id="grade" style="background-color: white; width: 100%;" readonly>
+                                {{ cl.grade }}
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr class="row29"></tr>
+                    <tr class="row30"><td class="column1 style26 null"></td>
+                        <td class="column2 style26 null"></td>
+                        <td class="column3 style26 null"></td>
+                        <td class="column4 style26 null"></td>
+                        <td class="column5 style26 null"></td>
+                        <td class="column6 style26 null"></td>
+                        <td class="column7 style26 null"></td>
+                        <td class="column8 style26 null"></td>
+                        <td class="column9 style26 null"></td>
+                        <td class="column10 style26 null"></td>
+                        <td class="column11 style26 null"></td>
+                    </tr>
+                    <tr class="row31">
+                        <td class="column1 style64 null style64" colspan="12"></td>
+                    </tr>
+                </tbody>
+            </table>
+    </body>
+</html>

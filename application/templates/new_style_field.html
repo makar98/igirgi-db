@@ -1,0 +1,303 @@
+{% extends 'new_style_base.html' %}
+{% block content %}
+
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <div class="col">
+            <li class="list-group-item border-0">
+                <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                <span class="left-text-img align-middle"
+                      id="customer_link"
+                      data-id="{{ field.customer.id }}">
+                    <a href="../../new_style_customer/{{ field.customer.id }}">
+                        Дочернее общество <br> {{ field.customer.name }}
+                    </a>
+                </span>
+                <span class="left-text-img align-middle"
+                      id="field_link"
+                      data-id="{{ field.id }}">
+                    Месторождение <br> {{ field.name }}
+                </span>
+                    <input
+                       id="field"
+                       data-id="{{ field.id }}"
+                       value="{{ field.name }}"
+                       hidden
+                    >
+                    <input
+                       id="customer"
+                       data-id="{{ field.customer.id }}"
+                       value="{{ field.customer.name }}"
+                       hidden
+                    >
+            </li>
+        </div>
+        <div class="col">
+            <li class="list-group-item border-0">
+                <span data-toggle="modal" data-target="#field-info-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Информация
+                </span>
+                <div class="modal" tabindex="-1" role="dialog" id="field-info-btn">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div id="edit_field">
+                                <div class="modal-header">
+                                    <span>{{ field.name }}</span>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>ДО</label>
+                                            <input class="form-control"
+                                                   name="customer"
+                                                   value="{{ field.customer.name }}"
+                                                   data-id="{{ field.customer.id }}"
+                                                   style="text-align: center"
+                                                   disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Месторождение</label>
+                                        <input class="form-control"
+                                               name="field"
+                                               value="{{ field.name }}"
+                                               data-id="{{ field.id }}">
+                                    </div>
+                                    <div class="form-row">
+                                        <button
+                                            class="btn btn-primary btn-del"
+                                            onclick="edit_field()">
+                                            Сохранить изменения
+                                        </button>
+                                    </div>
+                                    <div class="form-row">
+                                        <button
+                                            class="btn btn-primary btn-del"
+                                            onclick="delete_field()">
+                                            Удалить месторождение
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </div>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-md-2 second-nav">
+            <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Скважина</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/well.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Куст</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/strat.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Стратиграфия</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/petro.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Потрофизическая<br>модель</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="{{ url_for('new_style_customers') }}">
+                    <img src="{{ url_for('static', filename='images/export.png') }}" class="img-40px">
+                    <span class="left-text-img align-middle">Правило экспорта<br>кривых</span>
+                </a>
+            </li>
+         </div>
+        <div class="col">
+            <div class="list-group list-group-flush">
+                    <span data-toggle="modal" data-target="#add-pad-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Добавить куст
+                    </span>
+                <div class="modal" tabindex="-1" role="dialog" id="add-pad-btn">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div id="add_pad">
+                                <div class="modal-header">
+                                    header
+                                </div>
+                                <div class="modal-body">
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Заказчик</label>
+                                                <input class="form-control"
+                                                       name="customer"
+                                                       value="{{ field.customer.name }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Месторождение</label>
+                                                <label>Заказчик</label>
+                                                <input class="form-control"
+                                                       name="field"
+                                                       style="text-align: center"
+                                                       disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Куст</label>
+                                                <input type="text" class="form-control" name="pad">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary"
+                                                onclick="add_pad()">
+                                            Добавить
+                                        </button>
+
+                                </div>
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <li class="list-group-item border-0">
+                    <input>
+                </li>
+                <div id="pads">
+                {% for pad in field.pads %}
+                    <a href="{{ url_for('new_style_pad', id=pad.id) }}">
+                        <li>{{ field.name }} {{ pad }}</li>
+                    </a>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col" >
+            <div class="list-group list-group-flush">
+                <span data-toggle="modal" data-target="#add-well-btn">
+                <img src="{{ url_for('static', filename='images/plus.png') }}"
+                     class="img-40px"
+                     >
+                    Добавить скважину
+                </span>
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="add-well-btn">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="add_well">
+                            <div class="modal-header">
+                                header
+                            </div>
+                            <div class="modal-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Заказчик</label>
+                                            <input class="form-control"
+                                                       name="customer"
+                                                       value="{{ field.customer.name }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Месторождение</label>
+                                            <input class="form-control"
+                                                       name="customer"
+                                                       value="{{ field.name }}"
+                                                       style="text-align: center"
+                                                       disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Куст</label>
+                                            <select class="form-control form-control"
+                                                    name="pad">
+                                                {% for pad in field.pads %}
+                                                <option data-id="{{ pad.id }}">
+                                                    {{ pad.name }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Тип скважины</label>
+                                            <select class="form-control form-control" name="well_type">
+                                                {% for wt in well_types %}
+                                                    <option data-id="{{ wt.id }}">{{ wt }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Скважина</label>
+                                            <input type="text" class="form-control" name="well">
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary"
+                                            onclick="add_well()">
+                                        Добавить
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <li class="list-group-item border-0">
+                    <input>
+            </li>
+            <div id="wells">
+            {% for pad in field.pads %}
+                {% for well in pad.wells %}
+                    <a href="{{ url_for('new_style_well', id=well.id) }}">
+                        <li>{{ field.name }} куст {{ pad.name }} скважина {{ well.name }}</li>
+                    </a>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('db-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/field.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pad.js') }}"></script>
+<script src="{{ url_for('static', filename='js/well_field.js') }}"></script>
+{% endblock %}

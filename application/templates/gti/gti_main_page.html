@@ -1,0 +1,33 @@
+{% extends 'new_style_base.html' %}
+
+{% block content %}
+<div class="collapse db-collapse" data-parent="#navAccordion" id="gti-body">
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col">
+                <a href="{{ url_for('gti_tbl') }}">
+                    <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Таблица</span>
+                </a>
+            </div>
+            <div class="col">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Статистика</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('gti-nav')
+        db_nav.className = 'nav-second-level gti-collapse collapse show'
+        db_body = document.getElementById('gti-body')
+        db_body.className = 'nav-second-level gti-collapse collapse show'
+    }
+</script>
+{% endblock %}

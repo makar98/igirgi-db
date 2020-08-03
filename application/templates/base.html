@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        {% block scripts %}
+        {% endblock %}
+    <style type="text/css">
+        {% block styles %}
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="menu">
+            <a href="/" taregt='blank'><img style="position: absolute; left: 70px; height: 50px;"src="{{ url_for('static', filename='logo.png') }}"></a>
+            <a href="/" ><button style="align: left" >Home</button></a>
+            <a href="/customers" ><button>Заказчики(добавить месторождение)</button></a>
+            <a href="/companies"><button>Сервисные компании(добавить прибор)</button></a>
+            <a href="/all_tables"><button>tbl</button></a>
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

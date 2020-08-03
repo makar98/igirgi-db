@@ -1,0 +1,51 @@
+.menu{
+	white-space: nowrap;
+	margin: 0 auto;
+	text-align: center;
+}
+.header{
+	position: sticky;
+	top: 5px;
+	height: 50px;
+	width: 100%;
+	
+	text-align: center;
+	line-height: 50px;
+		
+	background-color: #fecf00;
+}
+html, body{
+	height: 100%;
+    text-align: center;
+}
+
+h3{
+    padding: 5px;
+}
+
+table{
+    text-align: center;
+    margin: 10px auto;
+    max-width: 1260px;
+}
+tr{
+    max-height: 50px;
+    max-width: 1260px;
+}
+td{
+    vertical-align: top;
+    text-align: center;
+    width: 180px;
+    height: 20px;
+}
+.names{
+    font-weight: bold;
+    background: #fc0;
+}
+
+.values{
+
+}
+.half{
+    width: 90px;
+}

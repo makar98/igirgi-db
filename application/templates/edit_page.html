@@ -1,0 +1,2009 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <link href="{{ url_for('static', filename='air-datepicker-master/dist/css/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+        <script src="{{ url_for('static', filename='air-datepicker-master/dist/js/datepicker.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/autosize.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+
+        <script>
+            window.onload = function() {
+                method = document.getElementById('method');
+                method.onchange = change_method;
+                current_pathname = window.location.pathname
+                pathname_list = current_pathname.split('/')
+                cl_id = pathname_list[pathname_list.length-1]
+                var xhr = new XMLHttpRequest();
+                var url = 'http://' + document.location.host + '/get_cl_json/' + cl_id
+                xhr.open('POST', url)
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send();
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        cl = JSON.parse(xhr.responseText)
+
+                        methods = cl.methods
+                        console.log(methods)
+                        document.getElementById('customer').value = cl.customer
+                        get_fields_list() //field
+                        document.getElementById('pad_num').value = cl.pad_num
+                        document.getElementById('well_num').value = cl.well_num
+                        document.getElementById('company').value = cl.service_company
+                        document.getElementById('well_section').value = cl.well_section
+                        document.getElementById('section_interval_beg').value = cl.section_interval_beg
+                        document.getElementById('section_interval_end').value = cl.section_interval_end
+
+                        document.getElementById('information').value = cl.information
+                        document.getElementsByName('title_page').value = cl.title_page
+                        document.getElementsByName('construct').value = cl.construct
+                        document.getElementsByName('column_size').value = cl.column_size
+                        document.getElementsByName('well_chronology').value = cl.well_chronology
+                        document.getElementsByName('drilling_fluid_info').value = cl.drilling_fluid_info
+                        document.getElementsByName('tool_composition').value = cl.tool_composition
+                        document.getElementsByName('depth_control_data').value = cl.depth_control_data
+                        document.getElementsByName('main_record').value = cl.main_record
+                        document.getElementsByName('data_processing_and_tool_parameters').value = cl.data_processing_and_tool_parameters
+                        document.getElementsByName('second_record').value = cl.second_record
+                        document.getElementsByName('curve_control_pad').value = cl.curve_control_pad
+                        document.getElementsByName('tool_calibration').value = cl.tool_calibration
+
+                        document.getElementsByName('las_file_design').value =cl.las_file_design
+                        document.getElementsByName('las_file_design_well_section').value = cl.las_file_design_well_section
+                        document.getElementsByName('las_file_design_parameters_section').value = cl.las_file_design_parameters_section
+                        document.getElementsByName('las_file_design_curve_section').value = cl.las_file_design_curve_section
+
+                        document.getElementsByName('incorrect_RT_data').value = cl.incorrect_RT_data
+                        document.getElementsByName('data_completeness').value = cl.data_completeness
+                        document.getElementsByName('data_transfer_settings').value = cl.data_transfer_settings
+                        document.getElementsByName('curve_names').value = cl.curve_names
+                        document.getElementsByName('mnemonic_description').value = cl.mnemonic_description
+
+                        document.getElementsByName('selected_dot').value = parseInt(cl.dot_by_meter)
+
+                        for (method_row=0; method_row<methods.length-1; method_row++){
+                            addRow()
+                        }
+
+                        for (method_row=0; method_row<methods.length; method_row++){
+                            document.getElementsByName('method')[method_row].value = methods[method_row].method
+                            change_method.call(document.getElementsByName('method')[method_row])
+                            document.getElementsByName('tool_type')[method_row].value = methods[method_row].tool_type
+                            document.getElementsByName('tool_num')[method_row].value = methods[method_row].tool_num
+                            document.getElementsByName('calibration_date')[method_row].value = methods[method_row].calibration_date
+                            document.getElementsByName('gis_date')[method_row].value = methods[method_row].gis_date
+                            document.getElementsByName('receipt_date')[method_row].value = methods[method_row].receipt_date
+                            document.getElementsByName('interval_beg')[method_row].value = methods[method_row].interval_beg
+                            document.getElementsByName('interval_end')[method_row].value = methods[method_row].interval_end
+                            document.getElementsByName('rt_coefficient')[method_row].value = methods[method_row].rt_coefficient
+                            document.getElementsByName('no_data_coefficient')[method_row].value = methods[method_row].no_data_coefficient
+
+                            document.getElementsByName('linkage_by_depth')[method_row].value = methods[method_row].linkage_by_depth
+                            document.getElementsByName('emissions')[method_row].value = methods[method_row].emissions
+                            document.getElementsByName('noise')[method_row].value = methods[method_row].noise
+                            document.getElementsByName('check_measurement')[method_row].value = methods[method_row].check_measurement
+                            document.getElementsByName('cross_plot_distribution')[method_row].value = methods[method_row].cross_plot_distribution
+                            document.getElementsByName('tool_indication')[method_row].value = methods[method_row].tool_indication
+                            document.getElementsByName('absolute_petrophysical_values')[method_row].value = methods[method_row].absolute_petrophysical_values
+                            document.getElementsByName('notes')[method_row].value = methods[method_row].notes
+                        }
+
+
+                    }
+                }
+            }
+            function get_tables_value() {
+
+            }
+        </script>
+
+        <script type="">
+            setInterval(function() {
+                las = get_las_value();
+                info = get_information();
+                rt_data = get_rt_data_value();
+
+                tables_data = get_tables_value();
+
+                rt_table = tables_data[0];
+                no_data = tables_data[1];
+                second_table = tables_data[2];
+                document.getElementById('second_table_result').value = second_table
+                result = rt_table * 0.1 + no_data * 0.1 + info * 0.2 + las * 0.1 + rt_data * 0.1 + second_table * 0.4;
+                if (isNaN(result) === true) {
+                    document.getElementById('grade').value = 'Введены не все значения'
+                }
+                else {
+                    document.getElementById('grade').value = Math.round(result) + '%'
+                }
+            }, 1000);
+        </script>
+
+        <script type="">
+            function get_tables_value() {
+                values = []
+                rt_coefficient_array = document.getElementsByName('rt_coefficient');
+
+                no_data_coefficient_array = document.getElementsByName('no_data_coefficient');
+
+                linkage_by_depth_array = document.getElementsByName('linkage_by_depth');
+
+                emissions_array = document.getElementsByName('emissions');
+
+                noise_array = document.getElementsByName('noise');
+
+                check_measurement_array = document.getElementsByName('check_measurement');
+
+                cross_plot_distribution_array = document.getElementsByName('cross_plot_distribution');
+
+                tool_indication_array = document.getElementsByName('tool_indication');
+
+                absolute_petrophysical_values_array = document.getElementsByName('absolute_petrophysical_values');
+
+                let rt_coefficient_value
+                rt_coefficient_value = 0
+
+                let no_data_coefficient_value
+                no_data_coefficient_value = 0
+
+                let second_table_value
+                second_table_value = 0
+
+                for (let i=0; i < rt_coefficient_array.length; i++) {
+                    rt_coefficient_value = rt_coefficient_value + Number.parseFloat(rt_coefficient_array[i].value);
+                    no_data_coefficient_value = no_data_coefficient_value + Number.parseFloat(no_data_coefficient_array[i].value);
+
+                    second_table_row_values = []
+                    second_table_row_values.push(linkage_by_depth_array[i].value)
+                    second_table_row_values.push(emissions_array[i].value)
+                    second_table_row_values.push(noise_array[i].value)
+                    second_table_row_values.push(check_measurement_array[i].value)
+                    second_table_row_values.push(cross_plot_distribution_array[i].value)
+                    second_table_row_values.push(tool_indication_array[i].value)
+                    second_table_row_values.push(absolute_petrophysical_values_array[i].value)
+
+                    let second_table_row_value
+                    second_table_row_value = 0
+                    for (val of second_table_row_values) {
+                        if (val === 'Увязан' || val === 'Отсутствуют' || val === 'Отсутствует' ||
+                            val === 'Соответствует основному замеру' ||
+                            val === 'Отменен по согласованию сторон' ||
+                            val === 'Опорные пласты не вскрыты' ||
+                            val === 'Произведен' || val === 'Соответствуют') {
+                            coef = 1
+                        }
+                        else if (val === 'Частично неувязан' ||val === 'Единичные' || val === 'Незначительная' ||
+                            val === 'Занижены' || val === 'Завышены') {
+                            coef = 0.5
+                        }
+                        else if (val === 'Неувязан' || val === 'Регулярные' || val === 'Выше допустимой' ||
+                            val === 'Не соответствует основному замеру' ||
+                            val === 'Не произведен' || val === 'Не соответствуют') {
+                            coef = 0
+                        }
+                        else {
+                            coef = NaN
+                        }
+                        second_table_row_value = second_table_row_value + coef
+
+                    }
+                    second_table_value = second_table_value + second_table_row_value / 7
+                }
+                result = []
+                result.push(Math.round(rt_coefficient_value / rt_coefficient_array.length * 100))
+                result.push(Math.round(no_data_coefficient_value / rt_coefficient_array.length * 100))
+                result.push(Math.round(second_table_value / rt_coefficient_array.length * 100))
+                return result
+            }
+        </script>
+
+        <script type="">
+             function get_information() {
+                values = []
+                title_page = document.getElementsByName('title_page')[0].value;
+                values.push(title_page)
+
+                construct = document.getElementsByName('construct')[0].value;
+                values.push(construct)
+
+                column_size = document.getElementsByName('column_size')[0].value;
+                values.push(column_size)
+
+                well_chronology = document.getElementsByName('well_chronology')[0].value;
+                values.push(well_chronology)
+
+                drilling_fluid_info = document.getElementsByName('drilling_fluid_info')[0].value;
+                values.push(drilling_fluid_info)
+
+                tool_composition = document.getElementsByName('tool_composition')[0].value;
+                values.push(tool_composition)
+
+                depth_control_data = document.getElementsByName('depth_control_data')[0].value;
+                values.push(depth_control_data)
+
+                directional_survey_data = document.getElementsByName('directional_survey_data')[0].value;
+                values.push(directional_survey_data)
+
+                main_record = document.getElementsByName('main_record')[0].value;
+                values.push(main_record)
+
+                data_processing_and_tool_parameters = document.getElementsByName('data_processing_and_tool_parameters')[0].value;
+                values.push(data_processing_and_tool_parameters)
+
+                second_record = document.getElementsByName('second_record')[0].value;
+                values.push(second_record)
+
+                curve_control_pad = document.getElementsByName('curve_control_pad')[0].value;
+                values.push(curve_control_pad)
+
+                tool_calibration = document.getElementsByName('tool_calibration')[0].value;
+                values.push(tool_calibration)
+
+                let las_val_sum
+                las_val_sum = 0;
+                let coef
+                for (val of values) {
+                    if (val === 'Полная') {
+                        coef = 1
+                    }
+                    if (val === 'Частичная') {
+                        coef = 0.5
+                    }
+                    if (val === 'Отстутсвует') {
+                        coef = 0
+                    }
+                    las_val_sum = las_val_sum + coef
+                }
+                document.getElementById('information').value = Math.round(las_val_sum / 13 * 100) + '%'
+                return Math.round(las_val_sum / 13 * 100)
+            }
+
+            function get_las_value() {
+                values = []
+                well = document.getElementsByName('las_file_design_well_section')[0].value;
+                values.push(well)
+                parameters = document.getElementsByName('las_file_design_parameters_section')[0].value;
+                values.push(parameters)
+                curve = document.getElementsByName('las_file_design_curve_section')[0].value;
+                values.push(curve)
+                let las_val_sum
+                las_val_sum = 0;
+                let coef
+                for (val of values) {
+                    if (val === 'Полная') {
+                        coef = 1
+                    }
+                    if (val === 'Частичная') {
+                        coef = 0.5
+                    }
+                    if (val === 'Отстутсвует') {
+                        coef = 0
+                    }
+                    las_val_sum = las_val_sum + coef
+                }
+                document.getElementById('las_file_design').value = Math.round(las_val_sum / 3 * 100) + '%'
+                return Math.round(las_val_sum / 3 * 100)
+            }
+
+            function get_rt_data_value() {
+                values = []
+                data_completeness = document.getElementsByName('data_completeness')[0].value;
+                values.push(data_completeness)
+
+                data_transfer_settings = document.getElementsByName('data_transfer_settings')[0].value;
+                values.push(data_transfer_settings)
+
+                curve_names = document.getElementsByName('curve_names')[0].value;
+                values.push(curve_names)
+
+                mnemonic_description = document.getElementsByName('mnemonic_description')[0].value;
+                values.push(mnemonic_description)
+
+                let las_val_sum
+                las_val_sum = 0;
+                let coef
+                for (val of values) {
+                    if (val === 'Полная') {
+                        coef = 1
+                    }
+                    if (val === 'Частичная') {
+                        coef = 0.5
+                    }
+                    if (val === 'Отстутсвует') {
+                        coef = 0
+                    }
+                    las_val_sum = las_val_sum + coef
+                }
+                document.getElementById('incorrect_RT_data').value = Math.round(las_val_sum / 4 * 100) + '%'
+                return Math.round(las_val_sum / 4 * 100)
+            }
+
+        </script>
+
+        <script type="">
+            function change_method() {
+                console.log(this)
+                cell_1 = this.parentNode;
+                current_row = cell_1.parentNode // Находим строку, ячейку в которой нужно отредактировать
+                cells = current_row.cells;  // все ячейки строки
+                selected_method = cells[0].children[0].value // Текущий(выбранный) метод
+                tool_type = cells[1].children[0] // select tool_type
+                console.log(tool_type)
+                var body_1 = document.getElementById('body_1');
+                i = 0
+                // Находим строку, ячейку в которой нужно отредактировать
+                for (row of body_1.rows) {
+                    if (row === current_row) {
+                        break
+                    }
+                    i++
+                }
+
+                var body_2 = document.getElementById('body_2');
+                selected_method = cells[0].children[0].value
+                body_2.rows[i].cells[0].getElementsByTagName("p")['0'].textContent = selected_method;
+
+                ///////////////////////////////////////////////////////////////////////
+                service_company_name = document.getElementById('company').value
+                selected_method = cells[0].children[0].value // Текущий(выбранный) метод
+                var xhr = new XMLHttpRequest();
+                var url = 'http://' + document.location.host + '/get_tool_json/' + service_company_name
+                xhr.open('POST', url)
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({'customer': service_company_name, 'method': selected_method}));
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        tools = JSON.parse(xhr.responseText)
+                        opt = document.createElement('select');
+                        opt.setAttribute("name", "tool_type");
+                        var j = 0;
+                        if (tools.length != 0) {
+                            for (tool of tools) {
+                                opt.options[j] = new Option(tool);
+                                j++;
+                            }
+                        }
+                        else {
+                            opt.options[0] = new Option();
+                            }
+                        var to_replace = tool_type
+                        console.log(to_replace)
+                        var parentDiv = to_replace.parentNode;
+                        parentDiv.replaceChild(opt, to_replace);
+                    }
+                }
+
+            }
+        </script>
+
+        <script type="">
+            function change_service_company() {
+                service_company_name = document.getElementById('company').value
+                select_list = document.getElementsByName("method")
+
+                first_row = select_list[0].parentNode.parentNode
+                table_body = first_row.parentNode
+                var row_list = []
+                var tool_type_list = []
+                for (select of select_list) {
+                    tool_type_list.push(select.value)
+                    row_list.push(select.parentNode.parentNode)
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = 'http://' + document.location.host + '/change_method_json/' + service_company_name
+                xhr.open('POST', url)
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({'methods': tool_type_list}))
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        tools = JSON.parse(xhr.responseText);
+                        for (row=0; row<row_list.length; row++){
+                            current_row = row_list[row];
+
+                            current_row.cells[1].children[0].value;
+                            opt = document.createElement('select');
+                            opt.setAttribute("name", "tool_type");
+                            var j = 0;
+                            if (tools[row].length != 0) {
+                                for (tool of tools[row]) {
+                                    opt.options[j] = new Option(tool);
+                                    j++;
+                                }
+                            }
+                            else {
+                                opt.options[0] = new Option();
+                            }
+                            current_tool_type = current_row.cells[1].children[0]
+                            var to_replace = current_tool_type
+                            var parentDiv = to_replace.parentNode;
+                            parentDiv.replaceChild(opt, to_replace);
+                        }
+                    }
+                }
+
+            }
+        </script>
+
+        <script type="text/javascript">
+            function addRow() {
+
+
+                let class_styles_list_body_1 = [
+                                                ['column1 style13 s', '1'],
+                                                ['column2 style13 s', '1'],
+                                                ['column5 style12 s', '1'],
+                                                ['column6 style12 s', '1'],
+                                                ['column4 style12 n', '1'],
+                                                ['column7 style14 n', '1'],
+                                                ['column3 style38 n', '1'],
+                                                ['column8 style13 n', '1'],
+                                                ['column9 style77 n style78', '2'],
+                                                ['column11 style77 n style78', '2']
+                                                ]
+
+                let class_styles_list_body_2 = [
+                                                ['column1 style13 s', '1'],
+                                                ['column2 style55 s style56', '2'],
+                                                ['column4 style16 s', '1'],
+                                                ['column5 style16 s', '1'],
+                                                ['column6 style18 s', '1'],
+                                                ['column7 style18 s', '1'],
+                                                ['column8 style18 s', '1'],
+                                                ['column9 style18 s', '1'],
+                                                ['column11 style49 null style50', '3']
+                                                ]
+
+                var body_1 = document.getElementById('body_1');
+                var body_2 = document.getElementById('body_2');
+
+                var newRow_body_1 = body_1.insertRow();
+                var newRow_body_2 = body_2.insertRow();
+
+
+                for (i=0; i<=9; i++){
+                    var newCell_body_1 = newRow_body_1.insertCell();
+                    newCell_body_1.colSpan = class_styles_list_body_1[i][1]
+                    newCell_body_1.className = class_styles_list_body_1[i][0]
+                };
+                body_2_first_row = body_2.rows[1]
+                for (i=0; i<=8; i++){
+                    var newCell_body_2 = newRow_body_2.insertCell();
+                    newCell_body_2.colSpan = class_styles_list_body_2[i][1]
+                    newCell_body_2.className = class_styles_list_body_2[i][0]
+                    newCell_body_2.innerHTML = body_2_first_row.cells[i].innerHTML
+                };
+
+
+
+                body_1_last_row = body_1.rows[body_1.rows.length-1]
+                body_1_last_row.className = 'row11'
+                body_2_last_row = body_2.rows[body_2.rows.length-1]
+                body_2_last_row.className = 'row21'
+
+                opt = document.createElement('select');
+                opt.onchange = change_method;
+                opt.setAttribute("name", "method");
+
+                var electric = document.createElement("OPTGROUP");
+                electric.setAttribute("label", "ЭЛЕКТРИЧЕСКИЙ И ЭЛЕКТРОМАГНИТНЫЙ КАРОТАЖ");
+                opt.append(electric)
+                opt.options[0] = new Option("Азимутальный электрический микроимиджер");
+                opt.options[1] = new Option("Боковой каротаж");
+                opt.options[2] = new Option("Боковой микрокаротаж");
+                opt.options[3] = new Option("Высокочастотное индукционное каротажное изопараметрическое зондирование");
+                opt.options[4] = new Option("Индукционный каротаж");
+                opt.options[5] = new Option("Электромагнитный каротаж");
+
+                var radio = document.createElement("OPTGROUP");
+                radio.setAttribute("label", "РАДИОАКТИВНЫЙ КАРОТАЖ");
+                opt.append(radio)
+                opt.options[6] = new Option("Азимутальный имидж гамма-каротаж");
+                opt.options[7] = new Option("Азимутальный имидж объемной плотности");
+                opt.options[8] = new Option("Азимутальный имидж индекса фотоэлектрического поглощения");
+                opt.options[9] = new Option("Гамма-гамма-каротаж (Объемная плотность)");
+                opt.options[10] = new Option("Гамма-гамма-каротаж (Индекс фотоэлектрического поглощения)");
+                opt.options[11] = new Option("Импульсный нейтронный каротаж");
+                opt.options[12] = new Option("Импульсный спектрометрический нейтронный гамма-каротаж");
+                opt.options[13] = new Option("Интегральный гамма-каротаж");
+                opt.options[14] = new Option("Спектрометрический гамма-каротаж");
+                opt.options[15] = new Option("Нейтронный каротаж");
+
+                var acoustic = document.createElement("OPTGROUP");
+                acoustic.setAttribute("label", "АКУСТИЧЕСКИЙ КАРОТАЖ");
+                opt.append(acoustic)
+                opt.options[16] = new Option("Акустический каротаж на преломленных волнах");
+                opt.options[17] = new Option("Акустический каротаж па отраженных волнах");
+
+                var cali = document.createElement("OPTGROUP");
+                cali.setAttribute("label", "КАВЕРНОМЕТРИЯ И ПРОФИЛЕМЕТРИЯ");
+                opt.append(cali)
+                opt.options[18] = new Option("Каверномер");
+                opt.options[19] = new Option("Плотностной каверномер");
+                opt.options[20] = new Option("Акустический каверномер");
+
+                var nuclear = document.createElement("OPTGROUP");
+                nuclear.setAttribute("label", "ЯДЕРНО-МАГНИТНЫЙ КАРОТАЖ");
+                opt.append(nuclear)
+                opt.options[21] = new Option("Ядерно-магнитный каротаж в сильном поле");
+
+                body_1_last_row.cells[0].append(opt);
+
+                selected_method = body_1.rows[body_1.rows.length - 1].cells[0].getElementsByTagName("select")[0].value
+                body_2.rows[body_2.rows.length - 1].cells[0].getElementsByTagName("p")['0'].textContent = selected_method;
+
+                tool_type = document.createElement('select');
+                tool_type.setAttribute("name", "tool_type");
+                tool_type.onclick = change_method;
+
+
+                body_1_last_row.cells[1].append(tool_type);
+
+                tool_num = document.createElement('input');
+                tool_num.setAttribute("name", "tool_num");
+                body_1_last_row.cells[2].append(tool_num);
+
+                record_beg = document.createElement('input');
+                record_beg.setAttribute("name", "interval_beg");
+                record_beg.value = document.getElementById('interval_beg').value
+                body_1_last_row.cells[6].append(record_beg);
+
+                record_end = document.createElement('input');
+                record_end.setAttribute("name", "interval_end");
+                record_end.value = document.getElementById('interval_end').value
+                body_1_last_row.cells[7].append(record_end);
+
+                coef_corr = document.createElement('input');
+                coef_corr.setAttribute("name", "rt_coefficient");
+                body_1_last_row.cells[8].append(coef_corr);
+
+                no_data_ratio = document.createElement('input');
+                no_data_ratio.setAttribute("name", "no_data_coefficient");
+                body_1_last_row.cells[9].append(no_data_ratio);
+
+                del_button = document.createElement('button');
+                cell_for_del_button = document.createElement('td');
+                cell_for_del_button.setAttribute("class", "column12 style32 s style32");
+                cell_for_del_button.setAttribute("colspan", "2");
+                body_1_last_row.append(cell_for_del_button);
+                del_button.setAttribute("onclick", "delete_row(this)");
+                del_button.setAttribute("type", "button");
+                del_button.innerHTML = 'delete_row'
+                body_1_last_row.cells[10].append(del_button);
+
+                cal_1 = document.createElement('input');
+                cal_1.setAttribute("name", "calibration_date");
+                cal_1.type = "text";
+                cal_1.className = 'date assigned_date';
+                //cal_1.value = document.getElementById('calibration_date').value
+                body_1_last_row.cells[3].append(cal_1);
+
+                cal_2 = document.createElement('input');
+                cal_2.setAttribute("name", "gis_date");
+                cal_2.type = "text";
+                //cal_2.className = 'date assigned_date  range_date';
+                cal_2.className = 'date';
+                cal_2.value = document.getElementById('gis_date').value
+                body_1_last_row.cells[4].append(cal_2);
+
+                cal_3 = document.createElement('input');
+                cal_3.setAttribute("name", "receipt_date");
+                //cal_3.setAttribute("data-timepicker", "true");
+                cal_3.type = "text";
+                //cal_3.className = 'date assigned_date';
+                cal_3.className = 'date';
+                cal_3.value = document.getElementById('receipt_date').value
+                body_1_last_row.cells[5].append(cal_3);
+
+                $('.range_date').datepicker({position: "top right",
+                                                            todayButton: true,
+                                                            range: true,
+                                                            multipleDatesSeparator: " - "}
+                                                            )
+                $(".assigned_date").datepicker({todayButton: new Date(),
+                                                clearButton: true,
+                                                dateFormat: "dd-mm-yyyy"}
+                                                );
+            }
+        </script>
+
+         <script type="">
+            function delete_row(element) {
+                table_body_2 = document.getElementById('body_2')
+                table_body_2.rows[element.parentNode.parentNode.rowIndex - 10].remove() // аминь
+                element.parentNode.parentNode.remove()
+            };
+        </script>
+
+        <script type="text/javascript">
+            $(function(){
+                $(".assigned_date").datepicker({todayButton: new Date(),
+                                                clearButton: true,
+                                                dateFormat: "dd-mm-yyyy"});
+            });
+        </script>
+
+        <script type="">
+            $(document).ready(function(){
+                var textarea= $('textarea');
+
+                textarea.height(textarea.get(0).scrollHeight);
+
+                textarea.on('keyup input change', function(){
+                    var $this = $(this);
+                    $this.height(1);
+                    $this.height(this.scrollHeight);
+                });
+            });
+        </script>
+
+        <script type="">
+            function choice_method() {
+                /*document.getElementById('ta_1').value = options[selectedIndex].text + '\n';*/
+
+                document.getElementById('select_1').style.display = 'none';
+                val = document.getElementById('select_1').value;
+                for (method of document.getElementsByClassName('method')){
+                    // electric
+                    if (val=='Боковой каротаж'){value = 'Боковой каротаж';};
+                    if (val=='Боковой микрокаротаж'){value = 'Боковой микрокаротаж';};
+                    if (val=='Электромагнитный каротаж по затуханию'){value = 'Электромагнитный каротаж по затуханию';};
+                    if (val=='Высокочастотное индукционное каротажное изопараметрическое зондирование'){value = 'Высокочастотное индукционное<br> каротажное изопараметрическое зондирование';};
+                    if (val=='Электромагнитный каротаж по затуханию' ){value = 'Электромагнитный каротаж <br>по затуханию';};
+                    if (val=='Азимутальный электрический микроимиджер'){value = 'Азимутальный электрический микроимиджер';};
+
+                    // radio
+                    if (val=='Интегральный гамма-каротаж'){value = 'Интегральный гамма-каротаж';};
+                    if (val=='Спектрометрический гамма-каротаж'){value = 'Спектрометрический гамма-каротаж';};
+                    if (val=='Азимутальный имидж гамма-каротаж'){value = 'Азимутальный имидж гамма-каротаж';};
+                    if (val=='Нейтронный каротаж'){value = 'Нейтронный каротаж';};
+                    if (val=='Импульсный нейтронный каротаж'){value = 'Импульсный нейтронный каротаж';};
+                    if (val=='Импульсный спектрометрический нейтронный гамма-каротаж'){value = 'Импульсный спектрометрический <br> нейтронный гамма-каротаж';};
+                    if (val=='Гамма-гамма плотностной'){value = 'Гамма-гамма плотностной';};
+                    if (val=='Гамма-гамма литоплотностной каротаж'){value = 'Гамма-гамма литоплотностной каротаж';};
+                    if (val=='Азимутальный имидж объемной плотности'){value = 'Азимутальный имидж объемной плотности';};
+
+                    //acoustic
+                    if (val=='Акустический каротаж на преломленных волнах'){value = 'Акустический каротаж на преломленных волнах';};
+                    if (val=='Акустический каротаж па отраженных волнах'){value = 'Акустический каротаж па отраженных волнах';};
+
+                    // cali
+                    if (val=='Каверномер'){value = 'Каверномер';};
+                    if (val=='Плотностной каверномер'){value = 'Плотностной каверномер';};
+                    if (val=='Акустический каверномер'){value = 'Акустический каверномер';};
+
+                    // nuclear
+                    if (val=='Ядерно-магнитный каротаж в сильном поле'){value = 'Ядерно-магнитный каротаж в сильном поле';};
+
+                    method.innerHTML = value;
+                    method.style.display = 'block';
+
+                    /*document.getElementById('ta_1').style.display = 'block';
+                    document.getElementById('ta_1').disabled = true;*/
+                };
+            }
+        </script>
+
+        <script type="">
+            function color_method(obj) {
+
+                if (obj.value == 'Увязан'){obj.style.color = 'green'};
+                if (obj.value == 'Отсутствуют'){obj.style.color = 'green'};
+                if (obj.value == 'Отсутствует'){obj.style.color = 'green'};
+                if (obj.value == 'Соответствует основному замеру'){obj.style.color = 'green'};
+                if (obj.value == 'Отменен по согласованию сторон'){obj.style.color = 'green'};
+                if (obj.value == 'Соответствуют'){obj.style.color = 'green'};
+                if (obj.value == 'Опорные пласты не вскрыты'){obj.style.color = 'green'};
+
+                if (obj.value == 'Частично неувязан'){obj.style.color = 'blue'}
+                if (obj.value == 'Единичные'){obj.style.color = 'blue'}
+                if (obj.value == 'Незначительная'){obj.style.color = 'blue'}
+                if (obj.value == 'Занижены'){obj.style.color = 'blue'}
+                if (obj.value == 'Завышены'){obj.style.color = 'blue'}
+
+                if (obj.value == 'Неувязан'){obj.style.color = 'red'};
+                if (obj.value == 'Регулярные'){obj.style.color = 'red'};
+                if (obj.value == 'Выше допустимой'){obj.style.color = 'red'};
+                if (obj.value == 'Не соответствует основному замеру'){obj.style.color = 'red'}
+                if (obj.value == 'Не произведен'){obj.style.color = 'red'};
+                if (obj.value == 'Не соответствуют'){obj.style.color = 'red'};
+
+            }
+        </script>
+        <script type="">
+            function dot_color() {
+                elem = document.getElementById('dot_m');
+                dot = document.getElementById('selected_dot')
+                if (dot.value >= 5){
+                    elem.style.color = 'green';
+                    dot.style.color = 'green';
+                }
+                else {
+                    elem.style.color = 'red'
+                    dot.style.color = 'red'
+                }
+
+            }
+        </script>
+
+
+        <script type="">
+            function get_fields_list() {
+                var customer = document.getElementById('customer').value;
+                var xhr = new XMLHttpRequest();
+
+                var url = 'http://' + document.location.host + '/get_customer_json/' + customer;
+                console.log(url)
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({'customer': customer}));
+                //xhr.send(customer);
+                xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if(xhr.status == 200) {
+                        fields = JSON.parse(xhr.responseText)
+                        fields = fields.toString();
+
+                        fields = fields.split(',');
+                        opt = document.createElement('select');
+                        opt.setAttribute("id", "field");
+                        opt.setAttribute("name", "field");
+                        i = 0
+                        for (field of fields){
+                            opt.options[i] = new Option(field);
+                            i++
+                        }
+
+                        var to_replace = document.getElementById('field')
+                        var parentDiv = to_replace.parentNode;
+                        parentDiv.replaceChild(opt, to_replace);
+                        }
+                    }
+                };
+
+            }
+        </script>
+
+
+        <style type="text/css">
+            html { font-family:Calibri, Arial, Helvetica, sans-serif; font-size:11pt; background-color:white }
+            a.comment-indicator:hover + div.comment { background:#ffd; position:absolute; display:block; border:1px solid black; padding:0.5em }
+            a.comment-indicator { background:red; display:inline-block; border:1px solid black; width:0.5em; height:0.5em }
+            div.comment { display:none }
+            table { border-collapse:collapse; page-break-after:always }
+            .gridlines td { border:1px dotted black }
+            .gridlines th { border:1px dotted black }
+            .b { text-align:center }
+            .e { text-align:center }
+            .f { text-align:right }
+            .inlineStr { text-align:left }
+            .n { text-align:right }
+            .s { text-align:left }
+            td.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style1 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style1 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style2 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style2 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style3 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style3 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style4 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style4 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style5 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style5 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style6 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style6 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style7 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style7 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style8 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style8 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style9 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style9 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style10 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style10 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style11 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style11 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style12 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style12 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style13 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style13 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style14 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style14 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style15 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style15 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style16 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style16 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style17 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style17 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style18 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style18 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style19 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style19 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style20 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:white }
+            th.style20 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:white }
+            td.style21 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style21 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style22 { vertical-align:bottom; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            th.style22 { vertical-align:bottom; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            td.style23 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            th.style23 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:18pt; background-color:#FFFFFF }
+            td.style24 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style24 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style25 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style25 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style26 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style26 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style27 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style27 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style28 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style28 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style29 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style29 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style30 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style30 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style31 { vertical-align:bottom; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style31 { vertical-align:bottom; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style32 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style32 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style33 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style33 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style34 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style34 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style35 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style35 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style36 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style36 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style37 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style37 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style38 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style38 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:none #000000; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style39 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style39 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style40 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style40 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style41 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style41 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style42 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style42 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style43 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style43 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style44 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style44 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style45 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style45 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style46 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style46 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style47 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style47 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style48 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            th.style48 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#F6CF4C }
+            td.style49 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style49 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style50 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style50 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style51 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style51 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style52 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style52 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style53 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style53 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style54 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style54 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#7030A0; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style55 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style55 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style56 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style56 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-style:italic; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style57 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style57 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style58 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style58 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#F79646; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style59 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style59 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style60 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            th.style60 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; font-style:italic; color:#00B050; font-family:'Europe'; font-size:14pt; background-color:white }
+            td.style61 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            th.style61 { vertical-align:middle; text-align:right; padding-right:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:16pt; background-color:#FFFFFF }
+            td.style62 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style62 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style63 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style63 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style64 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style64 { vertical-align:middle; text-align:left; padding-left:0px; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style65 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:28pt; background-color:#FFFFFF }
+            th.style65 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:28pt; background-color:#FFFFFF }
+            td.style66 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            th.style66 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#F6CF4C }
+            td.style67 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style67 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style68 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style68 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style69 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            th.style69 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FAF0C8 }
+            td.style70 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            th.style70 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:12pt; background-color:#FFFFFF }
+            td.style71 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style71 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style72 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style72 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style73 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            th.style73 { vertical-align:middle; text-align:center; border-bottom:none #000000; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#000000; font-family:'Europe'; font-size:14pt; background-color:#FFFFFF }
+            td.style74 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            th.style74 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-style:italic; color:#000000; font-family:'Europe'; font-size:11pt; background-color:#FFFFFF }
+            td.style75 { vertical-align:bottom; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            th.style75 { vertical-align:bottom; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            td.style76 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            th.style76 { vertical-align:bottom; text-align:center; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FFFFFF; font-family:'Calibri'; font-size:11pt; background-color:#000000 }
+            td.style77 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style77 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style78 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style78 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; color:#00B050; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style79 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style79 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:1px solid #FFFFFF !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            td.style80 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+            th.style80 { vertical-align:middle; text-align:center; border-bottom:1px solid #FFFFFF !important; border-top:1px solid #FFFFFF !important; border-left:none #000000; border-right:1px solid #FFFFFF !important; font-weight:bold; color:#FF0000; font-family:'Europe'; font-size:10pt; background-color:#FAF0C8 }
+
+            table.sheet0 col.col0 { width:210pt }
+            table.sheet0 col.col1 { width:70pt }
+            table.sheet0 col.col2 { width:70pt }
+            table.sheet0 col.col3 { width:140pt }
+            table.sheet0 col.col4 { width:140pt }
+            table.sheet0 col.col5 { width:140pt }
+            table.sheet0 col.col6 { width:140pt }
+            table.sheet0 col.col7 { width:140pt }
+            table.sheet0 col.col8 { width:140pt }
+            table.sheet0 col.col9 { width:70pt }
+            table.sheet0 col.col10 { width:70pt }
+            table.sheet0 col.col11 { width:70pt }
+
+            table.sheet0 tr { height:15pt }
+            table.sheet0 tr.row0 { height:14.1pt }
+            table.sheet0 tr.row1 { height:14.1pt }
+            table.sheet0 tr.row2 { height:14.1pt }
+            table.sheet0 tr.row3 { height:15pt }
+            table.sheet0 tr.row4 { height:15pt }
+            table.sheet0 tr.row5 { height:15pt }
+            table.sheet0 tr.row6 { height:15pt }
+            table.sheet0 tr.row7 { height:47.1pt }
+            table.sheet0 tr.row8 { height:46.5pt }
+            table.sheet0 tr.row9 { height:15.75pt }
+            table.sheet0 tr.row10 { height:50.1pt }
+            table.sheet0 tr.row11 { height:26.1pt }
+            table.sheet0 tr.row12 { height:26.1pt }
+            table.sheet0 tr.row13 { height:26.1pt }
+            table.sheet0 tr.row14 { height:26.1pt }
+            table.sheet0 tr.row15 { height:26.1pt }
+            table.sheet0 tr.row16 { height:20.1pt }
+            table.sheet0 tr.row17 { height:20.1pt }
+            table.sheet0 tr.row18 { height:20.1pt }
+            table.sheet0 tr.row19 { height:15pt }
+            table.sheet0 tr.row20 { height:80.1pt }
+            table.sheet0 tr.row21 { height:26.1pt }
+            table.sheet0 tr.row22 { height:26.1pt }
+            table.sheet0 tr.row23 { height:26.1pt }
+            table.sheet0 tr.row24 { height:26.1pt }
+            table.sheet0 tr.row25 { height:26.1pt }
+            table.sheet0 tr.row28 { height:23.25pt }
+            table.sheet0 tr.row29 { height:15pt }
+            table.sheet0 tr.row30 { height:18.75pt }
+            table.sheet0 tr.row31 { height:15.75pt }
+            table.sheet0 tr.row32 { height:15.75pt }
+            table.sheet0 tr.row33 { height:15.75pt }
+            table.sheet0 tr.row34 { height:18.75pt }
+            table.sheet0 tr.row35 { height:18.75pt }
+            table.sheet0 tr.row36 { height:18.75pt }
+            table.sheet0 tr.row37 { height:18.75pt }
+            table.sheet0 tr.row38 { height:18.75pt }
+            table.sheet0 tr.row39 { height:18.75pt }
+            table.sheet0 tr.row40 { height:18.75pt }
+            table.sheet0 tr.row41 { height:18.75pt }
+            table.sheet0 tr.row42 { height:20.25pt }
+            table.sheet0 tr.row43 { height:20.25pt }
+            table.sheet0 tr.row44 { height:20.25pt }
+            table.sheet0 tr.row45 { height:20.25pt }
+            table.sheet0 tr.row46 { height:20.25pt }
+            table.sheet0 tr.row47 { height:20.25pt }
+            table.sheet0 tr.row48 { height:20.25pt }
+            table.sheet0 tr.row49 { height:20.25pt }
+            table.sheet0 tr.row50 { height:20.25pt }
+            table.sheet0 tr.row51 { height:15pt }
+            table.sheet0 tr.row52 { height:15pt }
+            table.sheet0 tr.row53 { height:15pt }
+
+            textarea{
+                background-color: #FAF0C8;
+                display: block;
+                border-style: none;
+                resize: none;
+                margin:0 auto;
+                vertical-align: middle;
+                text-align:center;
+                overflow:hidden;
+                outline: none;
+
+                width: 80%;
+            }
+            input{
+                background-color: #FAF0C8;
+                border-style: none;
+                text-align: center;
+                margin: 0px auto;
+                padding: 0px;
+                width: 80%;
+            }
+
+            .assigned_date{
+                text-align: center;
+                background-color: #FAF0C8;
+                border: none;
+            }
+
+            input.date{
+                width: 100%;
+            }
+
+            select{
+                width: 100%;
+                text-align: center;
+                text-align-last: center;
+                margin: 0px;
+                border: none 0px;
+                padding: 5px;
+                background-color: #FAF0C8;
+                appearance: none !important;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+            }
+
+            p{
+                text-align: center;
+            }
+
+            table.drop td{
+                vertical-align: middle;
+                text-align: center;
+                border-bottom: 1px solid #FFFFFF;
+                border-top: 1px solid #FFFFFF;
+                border-left: 1px solid #FFFFFF;
+                border-right: 1px solid #FFFFFF;
+                font-weight: bold;
+                color: #000000;
+                font-family: 'Europe';
+                margin: 0;
+            }
+
+            table.drop h6{
+                font-size: 0.6em;
+                margin: 0;
+            }
+
+            table.drop td.val_name{
+                background-color: #F6CF4C;
+            }
+
+            table.drop h6{
+                font-weight: normal;
+            }
+        </style>
+    </head>
+    <body>
+        <style>
+            @page { margin-left: 0.70866141732283in; margin-right: 0.70866141732283in; margin-top: 0.74803149606299in; margin-bottom: 0.74803149606299in; }
+            body { margin-left: 0.70866141732283in; margin-right: 0.70866141732283in; margin-top: 0.74803149606299in; margin-bottom: 0.74803149606299in; }
+        </style>
+        <div class="menu">
+            <a href="/" ><button style="align: left" >Home</button></a>
+            <a href="/customers" ><button>Заказчики(добавить месторождение)</button></a>
+            <a href="/companies"><button>Сервисные компании(добавить прибор)</button></a>
+            <a href="/all_tables"><button>tbl</button></a>
+        </div>
+        <form name="save" method="POST" action=" {{ url_for('save_to_db') }} ">
+            <table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="sheet0 gridlines">
+                <col class="col0">
+                <col class="col1">
+                <col class="col2">
+                <col class="col3">
+                <col class="col4">
+                <col class="col5">
+                <col class="col6">
+                <col class="col7">
+                <col class="col8">
+                <col class="col9">
+                <col class="col10">
+                <col class="col11">
+                <tbody>
+                    <tr class="row0">
+                        <td class="column1 style65 s style65" colspan="12" rowspan="6">
+                            <h6 style="color: red;">Сделать блок страницы перед загрузкой для xhr на get_tool_json</h6>
+                        </td>
+                    </tr>
+                    <tr class="row1">
+                    </tr>
+                    <tr class="row2">
+                    </tr>
+                    <tr class="row3">
+                    </tr>
+                    <tr class="row4">
+                    </tr>
+                    <tr class="row5">
+                    </tr>
+                    <tr class="row6">
+                    </tr>
+                    <tr class="row7">
+                        <td class="column1 style34 s">
+                            Заказчик
+                        </td>
+                        <td class="column2 style43 s style44" colspan="3">
+                            Месторождение
+                        </td>
+                        <td class="column5 style34 s">
+                            № Куста
+                        </td>
+                        <td class="column6 style34 s">
+                            № Скважины
+                        </td>
+                        <td class="column7 style43 s style66" colspan="2">
+                            Сервисная геофизическая компания
+                        </td>
+                        <td class="column9 style35 s">
+                            Секция<br />
+                            скважины
+                        </td>
+                        <td class="column10 style43 s style44" colspan="2">
+                            Интервал секции, м
+                        </td>
+                        <td class="column12 style34 s">
+                            Диаметр<br />
+                            секции, мм
+                        </td>
+                    </tr>
+                    <tr class="row8">
+                        <td class="column1 style33 s">
+                            <select name="customer" id="customer" onchange="get_fields_list()">
+                                <option></option>
+                                {% for i in customers %}
+                                    <option>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="column2 style67 s style68" colspan="3">
+                            <select name="field" id="field">
+                                <option></option>
+                            </select>
+                        </td>
+                        <td class="column5 style33 n">
+                            <input name="pad_num" id="pad_num">
+                        </td>
+                        <td class="column6 style33 n">
+                            <input name="well_num" id="well_num">
+                        </td>
+                        <td class="column7 style67 s style68" colspan="2">
+                            <select name="service_company" id="company" onchange="change_service_company()">
+                                {% for i in companies %}
+                                    <option>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="column9 style33 s">
+                            <select name="well_section" id="well_section">
+                                <option>Горизонтальная</option>
+                                <option>Транспортная</option>
+                            </select>
+                        </td>
+                        <td class="column10 style33 n">
+                            <input name="section_interval_beg" id="section_interval_beg">
+                        </td>
+                        <td class="column11 style33 n">
+                            <input name="section_interval_end" id="section_interval_end">
+                        </td>
+                        <td class="column12 style33 n">
+                            <input name="section_diameter" id="section_diameter">
+                        </td>
+                    </tr>
+                    <tr class="row9"><td class="column1 style21 null"></td>
+                    <td class="column2 style21 null"></td>
+                    <td class="column3 style21 null"></td>
+                    <td class="column4 style21 null"></td>
+                    <td class="column5 style21 null"></td>
+                    <td class="column6 style21 null"></td>
+                    <td class="column7 style21 null"></td>
+                    <td class="column8 style21 null"></td>
+                    <td class="column9 style21 null"></td>
+                    <td class="column10 style21 null"></td>
+                    <td class="column11 style21 null"></td>
+                    <td class="column12 style21 null"></td>
+                    </tr>
+
+                    <tbody id="body_1">
+                        <tr class="row10">
+                            <td class="column1 style19 s">
+                                Метод
+                            </td>
+                            <td class="column2 style37 s" colspan="1">
+                                Тип прибора
+                            </td>
+                            <td class="column3 style19 s" colspan="1">
+                                Номер прибора
+                            </td>
+                            <td class="column4 style19 s">
+                                Дата калибровки прибора
+                            </td>
+                            <td class="column5 style19 s">
+                                Дата проведения ГИС
+                            </td>
+                            <td class="column6 style19 s">
+                                Дата поступления ГИС в ИГиРГИ
+                            </td>
+                            <td class="column7 style45 s style45" colspan="2">
+                                Интервал записи (факт), м
+                            </td>
+                            <td class="column9 style47 s style48" colspan="2">
+                                Коэффициент сходимости данных Real-time/Memory
+                            </td>
+                            <td class="column11 style47 s style48" colspan="2">
+                                Коэффициент отсутствия данных
+                            </td>
+                            <td class="column12 style32 s style32" colspan="2">
+                                <button type="button" onclick="addRow()">
+                                    add_row
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr id="test_row" class="row11">
+                            <td class="column1 style13 s">
+                                <select name="method" id="method">
+                                    <optgroup label="ЭЛЕКТРИЧЕСКИЙ И ЭЛЕКТРОМАГНИТНЫЙ КАРОТАЖ">
+                                        <option>Азимутальный электрический микроимиджер</option>
+                                        <option>Боковой каротаж</option>
+                                        <option>Боковой микрокаротаж</option>
+                                        <option>Высокочастотное индукционное каротажное изопараметрическое зондирование</option>
+                                        <option>Индукционный каротаж</option>
+                                        <option>Электромагнитный каротаж</option>
+                                    </optgroup>
+
+                                    <optgroup label="РАДИОАКТИВНЫЙ КАРОТАЖ">
+                                        <option>Азимутальный имидж гамма-каротаж</option>
+                                        <option>Азимутальный имидж объемной плотности</option>
+                                        <option>Азимутальный имидж индекса фотоэлектрического поглощения</option>
+                                        <option>Гамма-гамма-каротаж (Объемная плотность)</option>
+                                        <option>Гамма-гамма-каротаж (Индекс фотоэлектрического поглощения)</option>
+                                        <option>Импульсный нейтронный каротаж</option>
+                                        <option>Импульсный спектрометрический нейтронный гамма-каротаж</option>
+                                        <option>Интегральный гамма-каротаж</option>
+                                        <option>Спектрометрический гамма-каротаж</option>
+                                        <option>Нейтронный каротаж</option>
+                                    </optgroup>
+
+                                    <optgroup label="АКУСТИЧЕСКИЙ КАРОТАЖ">
+                                        <option>Акустический каротаж на преломленных волнах</option>
+                                        <option>Акустический каротаж па отраженных волнах</option>
+                                    </optgroup>
+
+                                    <optgroup label="КАВЕРНОМЕТРИЯ И ПРОФИЛЕМЕТРИЯ">
+                                        <option>Каверномер</option>
+                                        <option>Плотностной каверномер</option>
+                                        <option>Акустический каверномер</option>
+                                    </optgroup>
+
+                                    <optgroup label="ЯДЕРНО-МАГНИТНЫЙ КАРОТАЖ">
+                                        <option>Ядерно-магнитный каротаж в сильном поле</option>
+                                    </optgroup>
+                                </select>
+                            </td>
+                            <td class="column2 style13 s">
+                                <select name="tool_type" id="tool_type">
+                                    <option></option>
+                                </select>
+                            </td>
+                            <td class="column3 style38 n">
+                                <input name="tool_num">
+                            </td>
+                            <td class="column4 style12 n">
+                                <input name="calibration_date" id="calibration_date" type='text' class="date assigned_date" data-position="right top"/>
+                            </td>
+                            <td class="column5 style12 s">
+                                <input name="gis_date" id="gis_date" type="text" data-range="true" data-multiple-dates-separator=" - " class="date assigned_date range_date"/>
+                            </td>
+                            <td class="column6 style12 s">
+                                <input name="receipt_date" id="receipt_date" type='text' class="date assigned_date" data-timepicker="true" data-position="right top"/><br />
+                            </td>
+                            <td class="column7 style14 n">
+                                <input name="interval_beg" id="interval_beg">
+                            </td>
+                            <td class="column8 style13 n">
+                                <input name="interval_end" id="interval_end">
+                            </td>
+                            <td class="column9 style77 n style78" colspan="2">
+                                <input name="rt_coefficient">
+                            </td>
+                            <td class="column11 style77 n style78" colspan="2">
+                                <input name="no_data_coefficient">
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tr class="row16"><td class="column1 style11 null"></td>
+                        <td class="column2 style11 null"></td>
+                        <td class="column3 style9 null"></td>
+                        <td class="column4 style9 null"></td>
+                        <td class="column5 style11 null"></td>
+                        <td class="column6 style11 null"></td>
+                        <td class="column7 style11 null"></td>
+                        <td class="column8 style11 null"></td>
+                        <td class="column9 style11 null"></td>
+                        <td class="column10 style11 null"></td>
+                        <td class="column11 style11 null"></td>
+                        <td class="column12 style11 null"></td>
+                    </tr>
+                    <tr class="row17">
+                        <td style="vertical-align: top;" class="column1 style31 s style31" colspan="3">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('info').style.display === 'none'){
+                                                    document.getElementById('info').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('info').style.display = 'none';}">
+                                Полнота представляемой информации
+                            </p>
+
+                            <div id="info" style="display: none;" onclick="get_information()">
+                                <table width="100%" bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td style="width: 75%;" class="val_name">
+                                            <h6>Титульный лист</h6>
+                                        </td>
+                                        <td style="border: none;">
+                                            <select name="title_page">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Конструкция скважины</h6>
+                                        </td>
+                                        <td>
+                                            <select name="construct">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Размеры ствола/колонны/НКТ</h6>
+                                        </td>
+                                        <td>
+                                            <select name="column_size">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Хронология, cводные данные по скважине</h6>
+                                        </td>
+                                        <td>
+                                            <select name="well_chronology">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Данные по буровому раствору</h6>
+                                        </td>
+                                        <td>
+                                            <select name="drilling_fluid_info">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Компоновка приборов и примечания</h6>
+                                        </td>
+                                        <td>
+                                            <select name="tool_composition">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Сводные данные контроля глубины</h6>
+                                        </td>
+                                        <td>
+                                            <select name="depth_control_data">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Данные инклинометрии</h6>
+                                        </td>
+                                        <td>
+                                            <select name="directional_survey_data">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Основная запись</h6>
+                                        </td>
+                                        <td>
+                                            <select name="main_record">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Параметры обработки данных и параметры прибора</h6>
+                                        </td>
+                                        <td>
+                                            <select name="data_processing_and_tool_parameters">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Контрольная запись</h6>
+                                        </td>
+                                        <td>
+                                            <select name="second_record">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Планшеты с кривыми контроля качества</h6>
+                                        </td>
+                                        <td>
+                                            <select name="curve_control_pad">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Калибровка приборов</h6>
+                                        </td>
+                                        <td>
+                                            <select name="tool_calibration">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <td style="vertical-align: top;" class="column2 style31 null style31" rowspan="2">
+                            <textarea name="information" id="information" style=" margin: 0px; background-color: white;" readonly>
+                                98985%
+                            </textarea>
+                        </td>
+
+
+                        <td style="vertical-align: top;" class="column3 style31 s style31" colspan="1" rowspan="2">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('las').style.display === 'none'){
+                                                    document.getElementById('las').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('las').style.display = 'none';}">
+                                Оформление Las-файла
+                            </p>
+
+                            <div id="las" style="display: none;">
+                                <table bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Well»</h6>
+                                        </td>
+                                        <td>
+                                            <select name="las_file_design_well_section" onchange="get_las_value()" onclick="get_las_value()">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Parameters»</h6>
+                                        </td>
+                                            <td>
+                                                <select name="las_file_design_parameters_section" onchange="get_las_value()" onclick="get_las_value()">
+                                                    <option>
+                                                        Полная
+                                                    </option>
+                                                    <option>
+                                                        Частичная
+                                                    </option>
+                                                    <option>
+                                                        Отстутсвует
+                                                    </option>
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Секция «Curve»</h6>
+                                        </td>
+                                        <td>
+                                            <select name="las_file_design_curve_section" onchange="get_las_value()" onclick="get_las_value()">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" class="column5 style31 null style31" rowspan="2">
+                            <textarea name="las_file_design" id="las_file_design" style=" margin: 0px; background-color: white;" readonly>
+                                74757%
+                            </textarea>
+                        </td>
+                        <td style="vertical-align: top;" class="column6 style31 s style31" colspan="2" rowspan="2">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('real_time').style.display === 'none'){
+                                                    document.getElementById('real_time').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('real_time').style.display = 'none';}">
+                                Некорректная настройка дынных Real-time
+                            </p>
+
+                            <div id="real_time" onclick="get_rt_data_value()" style="display: none;">
+                                <table bgcolor="#FAF0C8" class="drop">
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Полнота предостовляемых данных</h6>
+                                        </td>
+                                        <td>
+                                            <select name="data_completeness">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Настройки передачи данных</h6>
+                                        </td>
+                                        <td>
+                                            <select name="data_transfer_settings">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Название кривых</h6>
+                                        </td>
+                                        <td>
+                                            <select name="curve_names">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="val_name">
+                                            <h6>Описание мнемоник</h6>
+                                        </td>
+                                        <td>
+                                            <select name="mnemonic_description">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" class="column8 style31 null style31" rowspan="2">
+                            <textarea name="incorrect_RT_data" id="incorrect_RT_data" style="background-color: white; margin: 0px" readonly>
+                                0%
+                            </textarea>
+                        </td>
+                        <td class="column9 style31 null style31" rowspan="2" colspan="3" style="vertical-align: top;">
+                            <p style="height: 30px; padding: 0px; margin: 0px; padding: 0px; white-space: nowrap;">
+                                Плотность данных Real-time:
+                            </p>
+                            <div id="dot_m" style="display:inline-block; margin: 0px; padding: 0px;" >
+                                <select name="selected_dot" id="selected_dot" style="width: 30px; background-color: white; padding: 0px; font-weight: bold;" onchange="dot_color()">
+                                    {% for i in range(11) %}
+                                        <option>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                точ. на метр
+                            </div>
+
+
+                        </td>
+                    </tr>
+                    <tr class="row18"></tr>
+                    <tr class="row19"></tr>
+
+                    <tbody id="body_2">
+                        <tr class="row20"><td class="column1 style19 s">Метод</td>
+                            <td class="column2 style47 s style48" colspan="2">
+                                Увязка по глубине
+                            </td>
+                            <td class="column4 style19 s">
+                                Выбросы
+                            </td>
+                            <td class="column5 style19 s">
+                                Зашумленность
+                            </td>
+                            <td class="column6 style19 s">
+                                Повторный/<br />
+                                контрольный замер
+                            </td>
+                            <td class="column7 style19 s">
+                                Распределение измерений на кросс-плотах относительно палеток
+                            </td>
+                            <td class="column8 style19 s">
+                                Показания прибора в исследуемом разрезе
+                            </td>
+                            <td class="column9 style19 s">
+                                Соответствие абсолютных петрофизических значений в опорных пластах
+                            </td>
+                            <td class="column11 style47 s style48" colspan="3">
+                                Примечание
+                            </td>
+                        </tr>
+                        <tr class="row21">
+                            <td class="column1 style13 s">
+                                <p>Боковой каротаж</p>
+                            </td>
+                            <td class="column2 style55 s style56" colspan="2">
+                                <select name="linkage_by_depth" id="depth_cont" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Увязан
+                                    </option>
+                                    <option style="color: blue">
+                                        Частично неувязан
+                                    </option>
+                                    <option style="color: red">
+                                        Неувязан
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column4 style16 s">
+                                <select name="emissions" id="release" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Отсутствуют
+                                    </option>
+                                    <option style="color: blue">
+                                        Единичные
+                                    </option>
+                                    <option style="color: red">
+                                        Регулярные
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column5 style16 s">
+                                <select name="noise" id="noise" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Отсутствует
+                                    </option>
+                                    <option style="color: blue">
+                                        Незначительная
+                                    </option>
+                                    <option style="color: red">
+                                        Выше допустимой
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column6 style18 s">
+                                <select name="check_measurement" id="repeat" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Соответствует основному замеру
+                                    </option>
+                                    <option style="color: green">
+                                        Отменен по согласованию сторон
+                                    </option>
+                                    <option style="color: red">
+                                        Не соответствует основному замеру
+                                    </option>
+                                    <option style="color: red">
+                                        Не произведен
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column7 style18 s">
+                                <select name="cross_plot_distribution" id="distribution" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Соответствуют
+                                    </option>
+                                    <option style="color: blue">
+                                        Занижены
+                                    </option>
+                                    <option style="color: blue">
+                                        Завышены
+                                    </option>
+                                    <option style="color: red">
+                                        Не соответствуют
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column8 style18 s">
+                                <select name="tool_indication" id="tool_values" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Соответствуют
+                                    </option>
+                                    <option style="color: blue">
+                                        Занижены
+                                    </option>
+                                    <option style="color: blue">
+                                        Завышены
+                                    </option>
+                                    <option style="color: red">
+                                        Не соответствуют
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column9 style18 s">
+                                <select name="absolute_petrophysical_values" id="petr_values" onchange="color_method(this)">
+                                    <option disabled="disabled" selected="selected" value="">
+                                        Выберите значение
+                                    </option>
+                                    <option style="color: green">
+                                        Соответствуют
+                                    </option>
+                                    <option style="color: blue">
+                                        Занижены
+                                    </option>
+                                    <option style="color: blue">
+                                        Завышены
+                                    </option>
+                                    <option style="color: red">
+                                        Не соответствуют
+                                    </option><option style="color: green">
+                                        Опорные пласты не вскрыты
+                                    </option>
+                                </select>
+                            </td>
+                            <td class="column11 style49 null style50" colspan="3">
+                                <textarea name="notes"></textarea>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    <tr class="row26"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style10 null"></td>
+                        <td class="column7 style10 null"></td>
+                        <td class="column8 style10 null"></td>
+                        <td class="column9 style10 null">
+                            <input name="second_table_result" id="second_table_result" style="display: none" value="">
+                        </td>
+                        <td class="column10 style10 null"></td>
+                        <td class="column11 style10 null"></td>
+                        <td class="column12 style10 null"></td>
+                    </tr>
+                    <tr class="row27"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style10 null"></td>
+                        <td class="column7 style10 null"></td>
+                        <td class="column8 style10 null"></td>
+                        <td class="column9 style10 null"></td>
+                        <td class="column10 style10 null"></td>
+                        <td class="column11 style10 null"></td>
+                        <td class="column12 style10 null"></td>
+                    </tr>
+                    <tr class="row28"><td class="column1 style10 null"></td>
+                        <td class="column2 style10 null"></td>
+                        <td class="column3 style10 null"></td>
+                        <td class="column4 style10 null"></td>
+                        <td class="column5 style10 null"></td>
+                        <td class="column6 style22 null"></td>
+                        <td class="column8 style23 s"></td>
+                        <td class="column9 style24 null"></td>
+                        <td class="column10 style24 null"></td>
+                        <td class="column11 style24">
+                            Итоговая оценка качества:
+                        </td>
+                        <td class="column12 style25 n">
+                            <textarea name="grade" id="grade" style="background-color: white; width: 100%;" readonly>
+                                0%
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr class="row29"></tr>
+                    <tr class="row30"><td class="column1 style26 null"></td>
+                        <td class="column2 style26 null"></td>
+                        <td class="column3 style26 null"></td>
+                        <td class="column4 style26 null"></td>
+                        <td class="column5 style26 null"></td>
+                        <td class="column6 style26 null"></td>
+                        <td class="column7 style26 null"></td>
+                        <td class="column8 style26 null"></td>
+                        <td class="column9 style26 null"></td>
+                        <td class="column10 style26 null"></td>
+                        <td class="column11 style26 null"></td>
+                    </tr>
+                    <tr class="row31">
+                        <td class="column1 style64 null style64" colspan="12"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </form>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+/* #f6d106 main
+// #ef6c01
+// #fa9d10 border
+// #f9bd27 hover
+// #c20937
+// #3d464a
+// #6b6b6b
+// #b2b2b2
+// #bababa
+// #e2e2e2 text inside button
+// #475b79
+// #6985af
+// #95a0b2
+*/
+
+
+
+
+
+.btn-primary {
+    color: #fff;
+    background-color: #f6d106;
+    border-color: #fa9d10;
+}
+

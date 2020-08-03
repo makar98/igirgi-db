@@ -1,0 +1,109 @@
+{% extends 'gis/gis_curves_db.html' %}
+
+{% block tables %}
+<div class="col" style="margin-left: 10px;">
+    <div class="row row-name">
+        <div class="col-md-3 display-flex">
+            <span>Метод ГИС</span>
+        </div>
+        <div class="col-md-2 display-flex">
+            <span>Сокращения на латинице</span>
+        </div>
+        <div class="col-md-3 display-flex">
+            <span>Тип кривой</span>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>Единицы измерения</span>
+        </div>
+        <div class="col-md-3 display-flex">
+            <span>Примечания</span>
+        </div>
+    </div>
+    <div class="row row-content rename">
+        <div class="col col-md-3 display-flex">
+            <span>{{ method.method }}</span>
+        </div>
+        <div class="col col-md-2 display-flex">
+            <span>{{ method.latin }}</span>
+        </div>
+        <div class="col col-md-3 display-flex">
+            <span>{{ method.curve_type }}</span>
+        </div>
+        <div class="col col-md-1 display-flex">
+            <span>{{ method.units }}</span>
+        </div>
+        <div class="col-md-3 display-flex">
+            <span>{{ method.notes }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2" >
+            <div class="list-group list-group-flush">
+                <span data-toggle="modal" data-target="#add-latin">
+                <img src="{{ url_for('static', filename='images/plus.png') }}"
+                     class="img-40px"
+                     >
+                    Добавить раздел
+                </span>
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="add-latin">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="add_category">
+                            <div class="modal-header">
+                                header
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group col-md-12">
+                                    <label>Метод ГИС</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="method"
+                                           value="{{ method.method }}"
+                                           data-id="{{ method.id }}"
+                                           disabled>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Сокращение на латинице</label>
+                                    <input type="text" class="form-control" name="latin">
+                                </div>
+                                <button
+                                    class="btn btn-primary"
+                                    onclick="add_rename_curve()">
+                                    Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col align-self-start">
+            <span>Кривые для переименования</span>
+        </div>
+    </div>
+    {% for rename in method.renames %}
+    <div class="row">
+        <div class="col-1 offset-md-3">
+            <span>{{ loop.index }}</span>
+        </div>
+         <div class="col-3">
+            <span>{{ rename.name }}</span>
+        </div>
+    </div>
+    {% endfor %}
+
+
+    <div class="row row-content">
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block bottom_scripts_next %}
+    <script src="{{ url_for('static', filename='js/gis/add_rename_curve.js') }}"></script>
+{% endblock %}
+

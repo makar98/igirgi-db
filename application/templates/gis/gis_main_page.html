@@ -1,0 +1,47 @@
+{% extends 'new_style_base.html' %}
+
+{% block content %}
+<div class="collapse db-collapse" data-parent="#navAccordion" id="gis-body">
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col">
+                <a href="{{ url_for('gis_curves_db') }}">
+                    <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Свойства<br>скважин</span>
+                </a>
+            </div>
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                <span class="left-text-img align-middle">База<br>кривых</span>
+            </div>
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                <span class="left-text-img align-middle">Оценка<br>Качества ГИС</span>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 100px;">
+            <div class="col">
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Сводка по<br>интерпретации</span>
+                </div>
+            </div>
+            <div class="col">
+                <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
+                <span class="left-text-img align-middle">...</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('gis-nav')
+        db_nav.className = 'nav-second-level gis-collapse collapse show'
+        db_body = document.getElementById('gis-body')
+        db_body.className = 'nav-second-level gis-collapse collapse show'
+    }
+</script>
+{% endblock %}

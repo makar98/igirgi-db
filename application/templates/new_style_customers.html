@@ -1,0 +1,75 @@
+{% extends 'new_style_base.html' %}
+{% block content %}
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <div class="col" style="width: 30%">
+            <div class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Дочернее<br>общество</span>
+                </li>
+                <li>
+                    <span data-toggle="modal" data-target="#add-customer-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Добавить общество
+                    </span>
+                    <div class="modal" tabindex="-1" role="dialog" id="add-customer-btn">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div id="add_customer">
+                                    <div class="modal-header">
+                                        header
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group col-md-12">
+                                            <label>Заказчик</label>
+                                            <input type="text" class="form-control" name="customer">
+                                        </div>
+                                        <button
+                                            class="btn btn-primary"
+                                            onclick="add_customer()">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item border-0">
+                    <input>
+                </li>
+                <div id="customers">
+                    {% for customer in customers %}
+                        <a href="{{ url_for('new_style_customer', id=customer.id) }}">
+                            <li>{{ customer.name }}</li>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('db-nav')
+        db_nav.className = 'nav-second-level db-collapse collapse show'
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/customer.js') }}"></script>
+{% endblock %}

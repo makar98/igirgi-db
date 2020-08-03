@@ -1,0 +1,310 @@
+{% extends 'new_style_base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="col" style="margin-left: 10px;">
+    <div class="row row-name">
+        <div class="col-md-2 display-flex">
+            <div class="row no-gutters">
+                <div class="col-4 display-flex">
+                    <span>Дата</span>
+                </div>
+                <div class="col-8 display-flex">
+                    <span>Месторождение</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 display-flex">
+            <div class="row no-gutters">
+                <div class="col-4 display-flex">
+                    <span>Куст</span>
+                </div>
+                <div class="col-8">
+                    <div class="row first-line no-gutters">
+                        <div class="col display-flex">
+                            <span>Скважина</span>
+                        </div>
+                    </div>
+                    <div class="row bottom-line no-gutters">
+                        <div class="col-6 display-flex">
+                            <span>№</span>
+                        </div>
+                        <div class="col-6 display-flex">
+                            <span>Тип</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 display-flex">
+            <div class="row no-gutters">
+                <div class="col-8">
+                    <div class="row first-line no-gutters">
+                        <div class="col display-flex">
+                            <span>Ствол</span>
+                        </div>
+                    </div>
+                    <div class="row bottom-line no-gutters">
+                        <div class="col-6 display-flex">
+                            <span>№</span>
+                        </div>
+                        <div class="col-6 display-flex">
+                            <span>Тип</span>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-4 display-flex">
+                    <span>Пласт</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>ДО</span>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>Подрядчик по ГТИ</span>
+        </div>
+        <div class="col-md-2 display-flex">
+            <div class="row no-gutters">
+                <div class="col-4 display-flex">
+                    <span>Оперативность от ГТИ</span>
+                </div>
+                <div class="col-4 display-flex">
+                    <span>Кач-во по щламу/газу</span>
+                </div>
+                <div class="col-4 display-flex">
+                    <span>Частота анализа</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 display-flex">
+            <div class="row no-gutters">
+                <div class="col-6 display-flex">
+                    <span>Т3+ИГТИ</span>
+                </div>
+                <div class="col-6 display-flex">
+                    <span>Т3</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>Автор</span>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>Дегазатор</span>
+        </div>
+        <div class="col-md-1 display-flex">
+            <span>Примечания</span>
+        </div>
+    </div>
+
+    <div class="row row-category">
+        <div class="col-md-12 display-flex">
+            <span>Активные скважины</span>
+        </div>
+    </div>
+    {% for wb in wellbores %}
+    <div id="wb_{{ wb.id }}">
+        <span data-toggle="modal" data-target="#wb_info_{{ wb.id }}" style="color: black">
+            <div class="row row-content">
+                <div class="col-md-2 display-flex">
+                    <div class="row no-gutters">
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.create_date }}</span>
+                        </div>
+                        <div class="col-8 display-flex">
+                            <span>{{ wb.well.field.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <div class="row no-gutters">
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.well.pad.name }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.well.name }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.well.well_type.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <div class="row no-gutters">
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.name }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.wellbore_type.name }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>Пласт</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <span>{{ wb.well.customer.name }}</span>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <span>{{ wb.gti_row.company }}</span>
+                </div>
+                <div class="col-md-2 display-flex">
+                    <div class="row no-gutters">
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.gti_row.efficiency }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.gti_row.mud_gas_quality }}</span>
+                        </div>
+                        <div class="col-4 display-flex">
+                            <span>{{ wb.gti_row.frequency }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <div class="row no-gutters">
+                        <div class="col-6 display-flex">
+                            <span>{{ wb.gti_row.bottom_hole_plus_igti }}</span>
+                        </div>
+                        <div class="col-6 display-flex">
+                            <span>{{ wb.gti_row.bottom_hole }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <span>{{ wb.gti_row.authors[-1] }}</span>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <span>{{ wb.gti_row.degasser }}</span>
+                </div>
+                <div class="col-md-1 display-flex">
+                    <span>{{ wb.gti_row.notes }}</span>
+                </div>
+            </div>
+        </span>
+        <div class="modal fade" tabindex="-1" role="dialog" id="wb_info_{{ wb.id }}">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Месторождение: {{ wb.well.field.name }}
+                    Куст: {{ wb.well.pad.name }}
+                    Скважина: {{ wb.well.name }}{{ wb.well.well_type.name }}
+                    Ствол: {{ wb.name }}{{ wb.wellbore_type.name }}
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
+                                quality
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>ДО</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.well.customer.name }}"
+                                   readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Заказчик по ГТИ</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.company }}"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Оперативность от ГТИ</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.efficiency }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Кач-во по шламу/газу</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.mud_gas_quality }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Т3+ИГТИ</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.bottom_hole_plus_igti }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Т3</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.bottom_hole }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Частота анализа</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.frequency }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Автор последнего изменения</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.authors[-1] }}"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Дегазатор</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.degasser }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Примечания</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="customer"
+                                   value="{{ wb.gti_row.notes }}">
+                        </div>
+                    </div>
+                    <button
+                        class="btn btn-primary"
+                        onclick="#">
+                        Добавить
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    footer
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock %}

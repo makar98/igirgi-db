@@ -1,0 +1,1038 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/quality_sheet.css') }}">
+
+        <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <link href="{{ url_for('static', filename='air-datepicker-master/dist/css/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+        <script src="{{ url_for('static', filename='air-datepicker-master/dist/js/datepicker.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/autosize.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/add_row.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/delete_row.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/change_service_company.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/change_method.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/get_tool.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/quality_sheet/calculations.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/datepicker/init_date.js') }}"></script>
+
+        <script type="">
+            $(document).ready(function(){
+                var textarea= $('textarea');
+
+                textarea.height(textarea.get(0).scrollHeight);
+
+                textarea.on('keyup input change', function(){
+                    var $this = $(this);
+                    $this.height(1);
+                    $this.height(this.scrollHeight);
+                });
+            });
+        </script>
+
+        <script type="">
+            function choice_method() {
+                /*document.getElementById('ta_1').value = options[selectedIndex].text + '\n';*/
+
+                document.getElementById('select_1').style.display = 'none';
+                val = document.getElementById('select_1').value;
+                for (method of document.getElementsByClassName('method')){
+                    // electric
+                    if (val=='Азимутальный электрический микроимиджер'){value = 'Азимутальный электрический микроимиджер';};
+                    if (val=='Боковой каротаж'){value = 'Боковой каротаж';};
+                    if (val=='Боковой микрокаротаж'){value = 'Боковой микрокаротаж';};
+                    if (val=='Высокочастотное индукционное каротажное изопараметрическое зондирование'){value = 'Высокочастотное индукционное каротажное изопараметрическое зондирование';};
+                    if (val=='Индукционный каротаж'){value = 'Индукционный каротаж';};
+                    if (val=='Электромагнитный каротаж' ){value = 'Электромагнитный каротаж';};
+
+                    // radio
+                    if (val=='Азимутальный имидж гамма-каротаж'){value = 'Азимутальный имидж гамма-каротаж';};
+                    if (val=='Азимутальный имидж объемной плотности'){value = 'Азимутальный имидж объемной плотности';};
+                    if (val=='Азимутальный имидж индекса фотоэлектрического поглощения'){value = 'Азимутальный имидж индекса фотоэлектрического поглощения';};
+                    if (val=='Гамма-гамма-каротаж (Объемная плотность)'){value = 'Гамма-гамма-каротаж (Объемная плотность)';};
+                    if (val=='Гамма-гамма-каротаж (Индекс фотоэлектрического поглощения)'){value = 'Гамма-гамма-каротаж (Индекс фотоэлектрического поглощения)';};
+                    if (val=='Импульсный нейтронный каротаж'){value = 'Импульсный нейтронный каротаж';};
+                    if (val=='Импульсный спектрометрический нейтронный гамма-каротаж'){value = 'Импульсный спектрометрический <br> нейтронный гамма-каротаж';};
+                    if (val=='Интегральный гамма-каротаж'){value = 'Интегральный гамма-каротаж';};
+                    if (val=='Спектрометрический гамма-каротаж'){value = 'Спектрометрический гамма-каротаж';};
+                    if (val=='Нейтронный каротаж'){value = 'Нейтронный каротаж';};
+
+                    //acoustic
+                    if (val=='Акустический каротаж на преломленных волнах'){value = 'Акустический каротаж на преломленных волнах';};
+                    if (val=='Акустический каротаж па отраженных волнах'){value = 'Акустический каротаж па отраженных волнах';};
+
+                    // cali
+                    if (val=='Каверномер'){value = 'Каверномер';};
+                    if (val=='Плотностной каверномер'){value = 'Плотностной каверномер';};
+                    if (val=='Акустический каверномер'){value = 'Акустический каверномер';};
+
+                    // nuclear
+                    if (val=='Ядерно-магнитный каротаж в сильном поле'){value = 'Ядерно-магнитный каротаж в сильном поле';};
+
+                    method.innerHTML = value;
+                    method.style.display = 'block';
+
+                    /*document.getElementById('ta_1').style.display = 'block';
+                    document.getElementById('ta_1').disabled = true;*/
+                };
+            }
+        </script>
+
+        <script type="">
+            function color_method(obj) {
+
+                if (obj.value == 'Увязан'){obj.style.color = 'green'};
+                if (obj.value == 'Отсутствуют'){obj.style.color = 'green'};
+                if (obj.value == 'Отсутствует'){obj.style.color = 'green'};
+                if (obj.value == 'Соответствует основному замеру'){obj.style.color = 'green'};
+                if (obj.value == 'Отменен по согласованию сторон'){obj.style.color = 'green'};
+                if (obj.value == 'Соответствуют'){obj.style.color = 'green'};
+                if (obj.value == 'Опорные пласты не вскрыты'){obj.style.color = 'green'};
+
+                if (obj.value == 'Частично неувязан'){obj.style.color = 'blue'}
+                if (obj.value == 'Единичные'){obj.style.color = 'blue'}
+                if (obj.value == 'Незначительная'){obj.style.color = 'blue'}
+                if (obj.value == 'Занижены'){obj.style.color = 'blue'}
+                if (obj.value == 'Завышены'){obj.style.color = 'blue'}
+
+                if (obj.value == 'Неувязан'){obj.style.color = 'red'};
+                if (obj.value == 'Регулярные'){obj.style.color = 'red'};
+                if (obj.value == 'Выше допустимой'){obj.style.color = 'red'};
+                if (obj.value == 'Не соответствует основному замеру'){obj.style.color = 'red'}
+                if (obj.value == 'Не произведен'){obj.style.color = 'red'};
+                if (obj.value == 'Не соответствуют'){obj.style.color = 'red'};
+
+            }
+        </script>
+
+        <script type="">
+            function dot_color() {
+                elem = document.getElementById('dot_m');
+                dot = document.getElementById('selected_dot')
+                if (dot.value >= 5){
+                    elem.style.color = 'green';
+                    dot.style.color = 'green';
+                }
+                else {
+                    elem.style.color = 'red'
+                    dot.style.color = 'red'
+                }
+
+            }
+        </script>
+
+        <script type="">
+            function get_fields_list() {
+                var customer = document.getElementById('customer').value;
+                var xhr = new XMLHttpRequest();
+
+                var url = 'http://' + document.location.host + '/get_customer_json/' + customer;
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({'customer': customer}));
+                //xhr.send(customer);
+                xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if(xhr.status == 200) {
+                        fields = JSON.parse(xhr.responseText)
+                        fields = fields.toString();
+
+                        fields = fields.split(',');
+                        opt = document.createElement('select');
+                        opt.setAttribute("id", "field");
+                        opt.setAttribute("name", "field");
+                        i = 0
+                        for (field of fields){
+                            opt.options[i] = new Option(field);
+                            i++
+                        }
+
+                        var to_replace = document.getElementById('field')
+                        var parentDiv = to_replace.parentNode;
+                        parentDiv.replaceChild(opt, to_replace);
+                        }
+                    }
+                };
+
+            }
+        </script>
+
+    </head>
+    <body>
+        <h1 style="text-align: center;">Лист оценки качества данных ГИС</h1>
+        <form name="save" method="POST" action="http://127.0.0.1:5000/save_to_db">
+            <div class="row form-group row name-content-group">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <div class="col-md-2 name">
+                            <span>
+                                Заказчик
+                            </span>
+                        </div>
+                        <div class="col-md-2 name">
+                            <span>Месторождение</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>№ Куста</span>
+                        </div>
+                        <div class="col-sm-1 name" style="padding: 0px;">
+                            <div class="row first-line">
+                                <div class="col">
+                                    <span>Скважина</span>
+                                </div>
+                            </div>
+
+                            <div class="row bottom-line">
+                                <div class="col name" style="border-right: 1px solid #FFFFFF;">
+                                    <span>№</span>
+                                </div>
+                                <div class="col name" style="border-left: 1px solid #FFFFFF;">
+                                    <span>Тип</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 name">
+                            <span>Сервисная геофизическая компания</span>
+                        </div>
+                        <div class="col-sm-1 name" style="padding: 0px;">
+                            <div class="row first-line">
+                                <div class="col name">
+                                    <span>Секция</span>
+                                </div>
+                            </div>
+                            <div class="row bottom-line">
+                                <div class="col name" style="border-right: 1px solid #FFFFFF;">
+                                    <span>№</span>
+                                </div>
+                                <div class="col name" style="border-left: 1px solid #FFFFFF;">
+                                    <span>Тип</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Интервал секции, м</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Диаметр секции, мм</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-2 content">
+                            <span name="customer" data-id="{{ sheet.customer.id }}">{{ sheet.customer.name }}</span>
+                        </div>
+                        <div class="col-md-2 content">
+                            <span name="field" data-id="{{ sheet.field.id }}">{{ sheet.field.name }}</span>
+                        </div>
+                        <div class="col-md-1 content">
+                            <span name="pad" data-id="{{ sheet.pad.id }}">{{ sheet.pad.name }}</span>
+                        </div>
+                        <div class="col-md-1" style="padding: 0px;">
+                            <div class="row" style="width: 100%">
+                                <div class="col content" style="border-right: 1px solid #FFFFFF;">
+                                    <span name="well" data-id="{{ sheet.well.id }}">{{ sheet.well.name }}</span>
+                                </div>
+                                <div class="col content" style="border-left: 1px solid #FFFFFF;">
+                                    <span name="well_type" data-id="{{ sheet.well.well_type.id }}">{{ sheet.well.well_type }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 content">
+                            <select name="service_company" id="service_company" onchange="change_service_company(this)">
+                                <option></option>
+                                {% for company in companies %}
+                                    <option data-id="{{ company.id }}">{{ company.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-1" style="padding: 0px;">
+                            <div class="row" style="width: 100%">
+                                <div class="col content" style="border-right: 1px solid #FFFFFF;">
+                                    <span>{{ sheet.wellbore.name }}</span>
+                                </div>
+                                <div class="col content" style="border-left: 1px solid #FFFFFF;">
+                                    <span>{{ sheet.wellbore.wellbore_type }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="padding: 0px;">
+                            <div class="row" style="width: 100%">
+                                <div class="col content" style="border-right: 1px solid #FFFFFF;">
+                                    <span>25</span>
+                                </div>
+                                <div class="col content" style="border-left: 1px solid #FFFFFF;">
+                                    <span>48</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="section_diameter" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row name-content-group">
+                <div id="body_1" class="col-md-12">
+                    <div class="form-group row" name="names">
+                        <div class="col-md-2 name">
+                            <span>Метод</span>
+                        </div>
+                        <div class="col-sm-1 name" style="padding: 0px;">
+                            <div class="row first-line">
+                                <div class="col">
+                                    <span>Прибор</span>
+                                </div>
+                            </div>
+                            <div class="row bottom-line">
+                                <div class="col name" style="border-right: 1px solid #FFFFFF;">
+                                    <span>Тип</span>
+                                </div>
+                                <div class="col name" style="border-left: 1px solid #FFFFFF;">
+                                    <span>№</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Дата калибровки прибора</span>
+                        </div>
+                        <div class="col-md-2 name">
+                            <span>Дата проведения ГИС</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Дата поступления ГИС в ИГиРГИ</span>
+                        </div>
+                        <div class="col-md-2 name">
+                            <span>Интервал записи (факт), м</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Коэффициент сходимости данных Real-time/Memory</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Коэффициент отсутствия данных</span>
+                        </div>
+                        <div class="col-md-1 name" style="background-color: white;">
+                            <button type="button" onclick="addRow()">
+                                Добавить строку
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group row" name="values" data-index="1">
+                        <div class="col-md-2 content">
+                            <select name="method" onchange="change_method(this)">
+                                <optgroup label="ЭЛЕКТРИЧЕСКИЙ И ЭЛЕКТРОМАГНИТНЫЙ КАРОТАЖ">
+                                    <option>Азимутальный электрический микроимиджер</option>
+                                    <option>Боковой каротаж</option>
+                                    <option>Боковой микрокаротаж</option>
+                                    <option>Высокочастотное индукционное каротажное изопараметрическое зондирование</option>
+                                    <option>Индукционный каротаж</option>
+                                    <option>Электромагнитный каротаж</option>
+                                </optgroup>
+
+                                <optgroup label="РАДИОАКТИВНЫЙ КАРОТАЖ">
+                                    <option>Азимутальный имидж гамма-каротаж</option>
+                                    <option>Азимутальный имидж объемной плотности</option>
+                                    <option>Азимутальный имидж индекса фотоэлектрического поглощения</option>
+                                    <option>Гамма-гамма-каротаж (Объемная плотность)</option>
+                                    <option>Гамма-гамма-каротаж (Индекс фотоэлектрического поглощения)</option>
+                                    <option>Импульсный нейтронный каротаж</option>
+                                    <option>Импульсный спектрометрический нейтронный гамма-каротаж</option>
+                                    <option>Интегральный гамма-каротаж</option>
+                                    <option>Спектрометрический гамма-каротаж</option>
+                                    <option>Нейтронный каротаж</option>
+                                </optgroup>
+
+                                <optgroup label="АКУСТИЧЕСКИЙ КАРОТАЖ">
+                                    <option>Акустический каротаж на преломленных волнах</option>
+                                    <option>Акустический каротаж па отраженных волнах</option>
+                                </optgroup>
+
+                                <optgroup label="КАВЕРНОМЕТРИЯ И ПРОФИЛЕМЕТРИЯ">
+                                    <option>Каверномер</option>
+                                    <option>Плотностной каверномер</option>
+                                    <option>Акустический каверномер</option>
+                                </optgroup>
+
+                                <optgroup label="ЯДЕРНО-МАГНИТНЫЙ КАРОТАЖ">
+                                    <option>Ядерно-магнитный каротаж в сильном поле</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-1" style="padding: 0px;">
+                            <div class="row" style="width: 100%">
+                                <div class="col content" style="border-right: 1px solid #FFFFFF;">
+                                    <select name="tool_type">
+                                <option></option>
+                            </select>
+                                </div>
+                                <div class="col content" style="border-left: 1px solid #FFFFFF;">
+                                    <input name="tool_num" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="calibration_date" id="calibration_date" type='text' class="date assigned_date" data-position="right top" autocomplete="off">
+                        </div>
+                        <div class="col-md-2 content">
+                            <input name="gis_date" id="gis_date" type="text" data-range="true" data-multiple-dates-separator=" - " class="date assigned_date range_date" autocomplete="off">
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="receipt_date" id="receipt_date" type='text' class="date assigned_date" data-timepicker="true" data-position="right top" autocomplete="off"><br />
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="interval_beg" id="interval_beg" autocomplete="off">
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="interval_end" id="interval_end" autocomplete="off">
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="rt_coefficient" autocomplete="off">
+                        </div>
+                        <div class="col-md-1 content">
+                            <input name="no_data_coefficient" autocomplete="off">
+                        </div>
+                        <div class="col-md-1 content" style="background-color: white;">
+                            <button onclick="check = confirm('Удалить строку?');
+                                            if (check){delete_row(this)} "
+                                    type="button"
+                                    style="display: none;">
+                                Удалить строку
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group row name-content-group">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('info').style.display === 'none'){
+                                                    document.getElementById('info').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('info').style.display = 'none';}">
+                                Полнота представляемой информации
+                            </p>
+
+                        </div>
+
+                        <div class="col-md-1">
+                            <textarea name="information" id="information" readonly style=" margin: 0px; background-color: white;">
+                                100%
+                            </textarea>
+                        </div>
+
+                        <div class="col-md-2">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('las').style.display === 'none'){
+                                                    document.getElementById('las').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('las').style.display = 'none';}">
+                                Оформление Las-файла
+                            </p>
+
+
+                        </div>
+                        <div class="col-md-1">
+                            <textarea name="las_file_design" id="las_file_design" style=" margin: 0px; background-color: white;" readonly>
+                                100%
+                            </textarea>
+                        </div>
+                        <div class="col-md-2">
+                            <p style="height: 50px; margin: 0px" onclick="if(document.getElementById('real_time').style.display === 'none'){
+                                                    document.getElementById('real_time').style.display = 'block';}
+                                                    else{
+                                                    document.getElementById('real_time').style.display = 'none';}">
+                                Некорректная настройка дынных Real-time
+                            </p>
+
+
+                        </div>
+                        <div class="col-md-1">
+                            <textarea name="incorrect_RT_data" id="incorrect_RT_data" style="background-color: white; margin: 0px" readonly>
+                                100%
+                            </textarea>
+                        </div>
+                            <p style="height: 30px; padding: 0px; margin: 0px; padding: 0px; white-space: nowrap;">
+                                Плотность данных Real-time:
+                            </p>
+                            <div id="dot_m" style="display:inline-block; margin: 0px; padding: 0px;" >
+                                <select name="selected_dot" id="selected_dot" style="width: 30px; background-color: white; padding: 0px; font-weight: bold;" onchange="dot_color()">
+                                    {% for i in range(11) %}
+                                        <option>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                точ. на метр
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="width: 100%">
+                        <div class="col-md-3">
+                            <div id="info" style="display: none;" onclick="get_information()">
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Титульный лист</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="title_page">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Конструкция скважины</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="construct">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Размеры ствола/колонны/НКТ</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="column_size">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Хронология, cводные данные по скважине</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="well_chronology">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Данные по буровому раствору</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="drilling_fluid_info">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Компоновка приборов и примечания</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="tool_composition">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Сводные данные контроля глубины</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="depth_control_data">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Данные инклинометрии</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="directional_survey_data">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Основная запись</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="main_record">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Параметры обработки данных и параметры прибора</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="data_processing_and_tool_parameters">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Контрольная запись</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="second_record">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Планшеты с кривыми контроля качества</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="curve_control_pad">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Калибровка приборов</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="tool_calibration">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 offset-md-">
+                            <div id="las" style="display: none;">
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Секция «Well»</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="las_file_design_well_section" onchange="get_las_value()" onclick="get_las_value()">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Секция «Parameters»</h6>
+                                    </div>
+                                        <div class="col-md-4">
+                                            <select name="las_file_design_parameters_section" onchange="get_las_value()" onclick="get_las_value()">
+                                                <option>
+                                                    Полная
+                                                </option>
+                                                <option>
+                                                    Частичная
+                                                </option>
+                                                <option>
+                                                    Отстутсвует
+                                                </option>
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Секция «Curve»</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="las_file_design_curve_section" onchange="get_las_value()" onclick="get_las_value()">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div id="real_time" onclick="get_rt_data_value()" style="display: none;">
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Полнота предостовляемых данных</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="data_completeness">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Настройки передачи данных</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="data_transfer_settings">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Название кривых</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="curve_names">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="val_name col">
+                                        <h6>Описание мнемоник</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="mnemonic_description">
+                                            <option>
+                                                Полная
+                                            </option>
+                                            <option>
+                                                Частичная
+                                            </option>
+                                            <option>
+                                                Отстутсвует
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+            <div class="form-group row name-content-group">
+                <div id="body_2" class="col-md-12">
+                    <div class="form-group row">
+                        <div class="col-md-2 name">
+                            <span>Метод</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Увязка по глубине</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Выбросы</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Зашумленность</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Повторный контрольный замер</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Распределение измерений на кросс-плотах относительно палеток</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Показания прибора в исследуемом разрезе</span>
+                        </div>
+                        <div class="col-md-1 name">
+                            <span>Соответствие абсолютных петрофизических значений в опорных пластах</span>
+                        </div>
+                        <div class="col-md-2 name">
+                            <span>Примечание</span>
+                        </div>
+                    </div>
+                    <div class="form-group row" data-index="1">
+                        <div class="col-md-2 content">
+                            <p>Боковой каротаж</p>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="linkage_by_depth" id="depth_cont" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Увязан
+                                </option>
+                                <option style="color: blue">
+                                    Частично неувязан
+                                </option>
+                                <option style="color: red">
+                                    Неувязан
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="emissions" id="release" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Отсутствуют
+                                </option>
+                                <option style="color: blue">
+                                    Единичные
+                                </option>
+                                <option style="color: red">
+                                    Регулярные
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="noise" id="noise" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Отсутствует
+                                </option>
+                                <option style="color: blue">
+                                    Незначительная
+                                </option>
+                                <option style="color: red">
+                                    Выше допустимой
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="check_measurement" id="repeat" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Соответствует основному замеру
+                                </option>
+                                <option style="color: green">
+                                    Отменен по согласованию сторон
+                                </option>
+                                <option style="color: red">
+                                    Не соответствует основному замеру
+                                </option>
+                                <option style="color: red">
+                                    Не произведен
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="cross_plot_distribution" id="distribution" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Соответствуют
+                                </option>
+                                <option style="color: blue">
+                                    Занижены
+                                </option>
+                                <option style="color: blue">
+                                    Завышены
+                                </option>
+                                <option style="color: red">
+                                    Не соответствуют
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="tool_indication" id="tool_values" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Соответствуют
+                                </option>
+                                <option style="color: blue">
+                                    Занижены
+                                </option>
+                                <option style="color: blue">
+                                    Завышены
+                                </option>
+                                <option style="color: red">
+                                    Не соответствуют
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 content">
+                            <select name="absolute_petrophysical_values" id="petr_values" onchange="color_method(this)">
+                                <option disabled="disabled" selected="selected" value="">
+                                    Выберите значение
+                                </option>
+                                <option style="color: green">
+                                    Соответствуют
+                                </option>
+                                <option style="color: blue">
+                                    Занижены
+                                </option>
+                                <option style="color: blue">
+                                    Завышены
+                                </option>
+                                <option style="color: red">
+                                    Не соответствуют
+                                </option><option style="color: green">
+                                    Опорные пласты не вскрыты
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 content">
+                            <textarea>
+
+                            </textarea>
+                        </div>
+                        <input name="second_table_result" id="second_table_result" style="display: none" value="">
+                    </div>
+                </div>
+            </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-1 offset-md-9">
+                            Итоговая оценка качества:
+                        </div>
+                        <div class="col-md-1">
+                            <textarea name="grade" id="grade" style="background-color: white; width: 100%;" readonly>
+                                0%
+                            </textarea>
+                        </div>
+                    </div>
+
+            </div>
+        </form>
+        <button onclick="check = confirm('Сохранить запись в БД?'); if (check){
+                                        document.forms['save'].submit();} "> Send </button>
+        <textarea id="result_comment" readonly style="background-color: white; color: #000000; font-family: Europe;">
+
+        </textarea>
+    </body>
+</html>
