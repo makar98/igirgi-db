@@ -3,9 +3,10 @@ from application.models.models import Well
 from .well import well_schema, wells_schema
 from flask_restful import reqparse
 from application import db
+from flask import make_response
 
-from flask_security import login_required
-from application.db_logger.methods import edit
+from flask_security import login_required, current_user
+from application.db_logger import methods
 
 class WellApi(Resource):
     def get(self, well_id):
@@ -15,18 +16,27 @@ class WellApi(Resource):
     @login_required
     def put(self, well_id):
         parser = reqparse.RequestParser()
-        parser.add_argument('customer_id')
-        parser.add_argument('field_id')
-        parser.add_argument('pad_id')
         parser.add_argument('name')
         parser.add_argument('well_type_id')
         args = parser.parse_args()
 
         well = Well.query.filter_by(id=well_id).first()
 
-        edit(editable_tbl=Well, obj=well, args=args)
 
-        return '', 201
+        # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
+        methods.edit(editable_tbl=Well, obj=well, args=args, user=current_user)
+
+        return make_response(well_schema.jsonify(well), 201)
+
+    @login_required
+    def delete(self, well_id):
+        well = Well.query.filter_by(id=well_id).first()
+        name = well.name
+        args = dict()
+        args['name'] = name
+        # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
+        methods.delete(editable_tbl=Well, obj=well, args=args, user=current_user)
+        return '', 204
 
 
 class WellsApi(Resource):

@@ -50,3 +50,86 @@ function add_wellbore() {
         }
     }
 }
+
+function edit_wellbore() {
+    check = confirm('Сохранить изменения в БД?');
+    if (!check){
+        return
+        }
+    form = document.getElementById('edit_wellbore')
+    // _well - from page
+    // well - response
+    _wellbore = form.querySelector('input[name="wellbore"]')
+    wellbore_name = _wellbore.value
+    wellbore_id = _wellbore.dataset.id
+
+    _wellbore_type = form.querySelector('select[name="wellbore_type"]')
+    _wellbore_type_selectedIndex = _wellbore_type.selectedIndex
+    _wellbore_type_name = _wellbore_type[_wellbore_type_selectedIndex].value
+    _wellbore_type_id = _wellbore_type[_wellbore_type_selectedIndex].dataset.id
+
+
+    header = form.querySelector('.modal-header')
+
+    var formData = new FormData(document.forms.person);
+    formData.append("name", wellbore_name);
+    formData.append("wellbore_type_id", _wellbore_type_id);
+
+    var xhr = new XMLHttpRequest();
+    url = 'http://' + document.location.host + '/api/wellbore/' + wellbore_id
+    xhr.open("PUT", url);
+    xhr.send(formData);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if(xhr.status == 201) {
+                wellbore = JSON.parse(xhr.responseText)
+                _wellbore.value = wellbore['name']
+                main_page_wellbore = document.getElementById('wellbore_link')
+
+                wellbore_type = (wellbore['well_type']) ? wellbore['well_type'] : _wellbore_type_name
+                main_page_wellbore.innerHTML = 'Ствол <br>' + wellbore['name'] + ' ' + wellbore_type
+
+                header.innerHTML = 'Успех'
+            }
+            else {
+                header.innerHTML = 'Провал'
+            }
+        }
+    }
+}
+
+function delete_wellbore() {
+    check = confirm('Удалить ствол из БД?');
+    if (!check){
+        return
+        }
+    form = document.getElementById('edit_wellbore')
+    // _well - from page
+    // well - response
+    _wellbore = form.querySelector('input[name="wellbore"]')
+    wellbore_name = _wellbore.value
+    wellbore_type = _wellbore.dataset.type
+    wellbore_id = _wellbore.dataset.id
+    header = form.querySelector('.modal-header')
+
+    var formData = new FormData(document.forms.person);
+
+    var xhr = new XMLHttpRequest();
+    url = 'http://' + document.location.host + '/api/wellbore/' + wellbore_id
+    xhr.open("DELETE", url);
+    xhr.send(formData);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if(xhr.status == 204) {
+                well = document.getElementById('well')
+                well_id = well.dataset.id
+                window.location.replace('http://' + document.location.host + '/new_style_well/' + well_id)
+            }
+            else {
+                header.innerHTML = 'Провал'
+            }
+        }
+    }
+}

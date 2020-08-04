@@ -1,23 +1,102 @@
 {% extends 'new_style_base.html' %}
 {% block content %}
-
+<input
+   id="field"
+   data-id="{{ pad.field.id }}"
+   value="{{ pad.field.name }}"
+   hidden
+>
+<input
+   id="customer"
+   data-id="{{ pad.field.customer.id }}"
+   value="{{ pad.field.customer.name }}"
+   hidden
+>
 <div class="container" style="margin: 10px;">
     <div class="row justify-content-start">
         <li class="list-group-item border-0">
             <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
-            <span class="left-text-img align-middle">
+            <span class="left-text-img align-middle"
+                id="customer_link"
+                data-id="{{ pad.field.customer.id }}">
                 <a href="../../new_style_customer/{{ pad.field.customer.id }}">
                     Дочернее общество <br> {{ pad.field.customer.name }}
                 </a>
             </span>
-            <span class="left-text-img align-middle">
+            <span class="left-text-img align-middle"
+                  id="field_link"
+                  data-id="{{ pad.field.id }}">
                 <a href="../../new_style_field/{{ pad.field.id }}">
                     Месторождение <br> {{ pad.field.name }}
                 </a>
             </span>
-            <span class="left-text-img align-middle">
+            <span class="left-text-img align-middle"
+                  id="pad_link"
+                  data-id="{{ pad.id }}">
                 Куст <br> {{ pad.name }}
             </span>
+            <span data-toggle="modal" data-target="#pad-info-btn">
+                <img src="{{ url_for('static', filename='images/plus.png') }}"
+                     class="img-40px"
+                     >
+                    Информация
+            </span>
+            <div class="modal" tabindex="-1" role="dialog" id="pad-info-btn">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="edit_pad">
+                            <div class="modal-header">
+                                <span>{{ pad.field.name }}</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>ДО</label>
+                                        <input class="form-control"
+                                               name="customer"
+                                               value="{{ pad.field.customer.name }}"
+                                               data-id="{{ pad.field.customer.id }}"
+                                               style="text-align: center"
+                                               disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Месторождение</label>
+                                    <input class="form-control"
+                                           name="field"
+                                           value="{{ pad.field.name }}"
+                                           data-id="{{ pad.field.id }}"
+                                           disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Куст</label>
+                                    <input class="form-control"
+                                           name="pad"
+                                           value="{{ pad.name }}"
+                                           data-id="{{ pad.id }}">
+                                </div>
+                                <div class="form-row">
+                                    <button
+                                        class="btn btn-primary btn-del"
+                                        onclick="edit_pad()">
+                                        Сохранить изменения
+                                    </button>
+                                </div>
+                                <div class="form-row">
+                                    <button
+                                        class="btn btn-primary btn-del"
+                                        onclick="delete_pad()">
+                                        Удалить куст
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            footer
+                        </div>
+                    </div>
+                </div>
+            </div>
         </li>
     </div>
     <div class="row justify-content-start">
@@ -157,5 +236,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+<script src="{{ url_for('static', filename='js/pad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/well.js') }}"></script>
 {% endblock %}

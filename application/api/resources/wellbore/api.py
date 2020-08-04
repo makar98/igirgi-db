@@ -8,9 +8,10 @@ from application.models.user import User
 from .wellbore import wellbore_schema, wellbores_schema
 from flask_restful import reqparse
 from application import db
+from flask import make_response
 
-from flask_security import login_required
-from application.db_logger.methods import edit
+from flask_security import login_required, current_user
+from application.db_logger import methods
 
 class WellboreApi(Resource):
     def get(self, wellbore_id):
@@ -21,19 +22,25 @@ class WellboreApi(Resource):
     def put(self, wellbore_id):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
-        parser.add_argument('user_id')
-        parser.add_argument('well_id')
-        parser.add_argument('wellbore')
         parser.add_argument('wellbore_type_id')
-        parser.add_argument('is_gis')
-        parser.add_argument('is_gti')
         args = parser.parse_args()
 
         wellbore = Wellbore.query.filter_by(id=wellbore_id).first()
 
-        edit(editable_tbl=Wellbore, obj=wellbore, args=args)
+        # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
+        methods.edit(editable_tbl=Wellbore, obj=wellbore, args=args, user=current_user)
 
-        return '', 201
+        return make_response(wellbore_schema.jsonify(wellbore), 201)
+
+    @login_required
+    def delete(self, wellbore_id):
+        wellbore = Wellbore.query.filter_by(id=wellbore_id).first()
+        name = wellbore.name
+        args = dict()
+        args['name'] = name
+        # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
+        methods.delete(editable_tbl=Wellbore, obj=wellbore, args=args, user=current_user)
+        return '', 204
 
 class WellboresApi(Resource):
     def get(self):

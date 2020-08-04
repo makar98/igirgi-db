@@ -27,7 +27,7 @@ def edit(editable_tbl: object, obj: object, args: dict, user: object):
     editable_fields = []
 
     for key, value in args.items():
-        if value is not None:
+        if value is not None and getattr(obj, key)!= value:
             editable_fields.append({'field': key,
                                     'before_edit': getattr(obj, key),
                                     'after_edit': value}

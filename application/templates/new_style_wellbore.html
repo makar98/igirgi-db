@@ -1,6 +1,11 @@
 {% extends 'new_style_base.html' %}
 {% block content %}
-
+<input
+   id="well"
+   data-id="{{ wellbore.well.id }}"
+   value="{{ wellbore.well.name }}"
+   hidden
+>
 <div class="container" style="margin: 10px;">
     <div class="row justify-content-start">
         <li class="list-group-item border-0">
@@ -25,9 +30,117 @@
                     Скважина <br> {{ wellbore.well.name }} {{ wellbore.well.well_type }}
                 </a>
             </span>
-            <span class="left-text-img align-middle">
+            <span class="left-text-img align-middle"
+                  id="wellbore_link">
                 Ствол <br> {{ wellbore.name }} {{ wellbore.wellbore_type }}
             </span>
+            <span data-toggle="modal" data-target="#wellbore-info-btn">
+                <img src="{{ url_for('static', filename='images/plus.png') }}"
+                     class="img-40px"
+                     >
+                    Информация
+            </span>
+            <div class="modal" tabindex="-1" role="dialog" id="wellbore-info-btn">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="edit_wellbore">
+                            <div class="modal-header">
+                                <span>{{ wellbore.well.pad.field.name }}</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>ДО</label>
+                                        <input class="form-control"
+                                               name="customer"
+                                               value="{{ wellbore.well.pad.field.customer.name }}"
+                                               data-id="{{ wellbore.well.pad.field.customer.id }}"
+                                               style="text-align: center"
+                                               disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Месторождение</label>
+                                    <input class="form-control"
+                                           name="field"
+                                           value="{{ wellbore.well.pad.field.name }}"
+                                           data-id="{{ wellbore.well.pad.field.id }}"
+                                           disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Куст</label>
+                                    <input class="form-control"
+                                           name="pad"
+                                           value="{{ wellbore.well.pad.name }}"
+                                           data-id="{{ wellbore.well.pad.id }}"
+                                           disabled>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <label>Скважина</label>
+                                        <input class="form-control"
+                                           name="well"
+                                           value="{{ wellbore.well.name }}"
+                                           data-id="{{ wellbore.well.id }}"
+                                           disabled>
+                                    </div>
+                                    <div class="col">
+                                        <label>Тип</label>
+                                        <input class="form-control"
+                                           name="well_type"
+                                           value="{{ wellbore.well.well_type.name }}"
+                                           data-id="{{ wellbore.well.well_type.id }}"
+                                           disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <label>Ствол</label>
+                                        <input class="form-control"
+                                           name="wellbore"
+                                           value="{{ wellbore.name }}"
+                                           data-id="{{ wellbore.id }}">
+                                    </div>
+                                    <div class="col">
+                                        <label>Тип</label>
+                                        <input class="form-control"
+                                           value="{{ wellbore.wellbore_type.name }}"
+                                           disabled>
+                                    </div>
+                                    <div class="col">
+                                        <label>Новый тип</label>
+                                        <select class="form-control"
+                                                name="wellbore_type">
+                                            {% for wbt in wellbore_types %}
+                                            <option data-id="{{ wbt.id }}">
+                                                {{ wbt.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <button
+                                        class="btn btn-primary btn-del"
+                                        onclick="edit_wellbore()">
+                                        Сохранить изменения
+                                    </button>
+                                </div>
+                                <div class="form-row">
+                                    <button
+                                        class="btn btn-primary btn-del"
+                                        onclick="delete_wellbore()">
+                                        Удалить ствол
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            footer
+                        </div>
+                    </div>
+                </div>
+            </div>
         </li>
     </div>
     <div class="row justify-content-start">

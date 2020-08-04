@@ -22,9 +22,12 @@ class Customer(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
-    fields = db.relationship('Field', backref=backref('customer'), lazy=True)
-    emails = db.relationship('CustomerEmail', backref=backref('customer'), lazy=True)
-    wells = db.relationship('Well', backref=backref('customer'), lazy=True)
+    fields = db.relationship('Field', backref=backref('customer'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
+    emails = db.relationship('CustomerEmail', backref=backref('customer'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
+    wells = db.relationship('Well', backref=backref('customer'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -38,9 +41,13 @@ class Field(db.Model):
     name = db.Column(db.String(128), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     date_add = db.Column(db.DateTime, default=datetime.utcnow)
-    suites = db.relationship('Suite', backref=backref('field'), lazy=True)
-    pads = db.relationship('Pad', backref=backref('field'), lazy=True)
-    wells = db.relationship('Well', backref=backref('field'), lazy=True)
+
+    suites = db.relationship('Suite', backref=backref('field'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
+    pads = db.relationship('Pad', backref=backref('field'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
+    wells = db.relationship('Well', backref=backref('field'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     quality_sheets = db.relationship('QualitySheet', backref=backref('field'), lazy=True)
 
@@ -57,9 +64,11 @@ class Pad(db.Model):
     name = db.Column(db.String(128), nullable=False)
     field_id = db.Column(db.Integer, db.ForeignKey('field.id'), nullable=False)
     date_add = db.Column(db.DateTime, default=datetime.utcnow)
-    wells = db.relationship('Well', backref=backref('pad'), lazy=True)
+    wells = db.relationship('Well', backref=backref('pad'), lazy=True,
+                            cascade="all, delete, delete-orphan")
 
-    quality_sheets = db.relationship('QualitySheet', backref=backref('pad'), lazy=True)
+    quality_sheets = db.relationship('QualitySheet', backref=backref('pad'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -73,7 +82,8 @@ class Well(db.Model):
     name = db.Column(db.String(64), nullable=False)
     well_type_id = db.Column(db.Integer, db.ForeignKey('well_type.id'), nullable=False)
 
-    wellbores = db.relationship('Wellbore', backref=backref('well'), cascade='all, delete-orphan', lazy=True)
+    wellbores = db.relationship('Wellbore', backref=backref('well'),
+                                cascade='all, delete, delete-orphan', lazy=True)
 
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     change_date = db.Column(db.DateTime)
@@ -82,7 +92,8 @@ class Well(db.Model):
     pad_id = db.Column(db.Integer, db.ForeignKey('pad.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
-    quality_sheets = db.relationship('QualitySheet', backref=backref('well'), lazy=True)
+    quality_sheets = db.relationship('QualitySheet', backref=backref('well'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
 
     def __repr__(self):
@@ -99,7 +110,8 @@ class WellType(db.Model):
     well = db.relationship('Well', uselist=False, backref=backref('well_type'),
                                 cascade='all, delete-orphan', lazy=True)
 
-    quality_sheets = db.relationship('QualitySheet', backref=backref('well_type'), lazy=True)
+    quality_sheets = db.relationship('QualitySheet', backref=backref('well_type'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -121,9 +133,11 @@ class Wellbore(db.Model):
     is_gis = db.Column(db.Boolean, default=False)
     is_gti = db.Column(db.Boolean, default=False)
 
-    quality_sheets = db.relationship('QualitySheet', backref=backref('wellbore'), lazy=True)
+    quality_sheets = db.relationship('QualitySheet', backref=backref('wellbore'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
-    gti_row = db.relationship('GtiTableRow', backref=backref('wellbore'), uselist=False, lazy=True)
+    gti_row = db.relationship('GtiTableRow', backref=backref('wellbore'), uselist=False, lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
 
     def __repr__(self):
@@ -140,7 +154,8 @@ class WellboreType(db.Model):
     wellbore = db.relationship('Wellbore', uselist=False, backref=backref('wellbore_type'),
                                 cascade='all, delete-orphan', lazy=True)
 
-    quality_sheets = db.relationship('QualitySheet', backref=backref('wellbore_type'), lazy=True)
+    quality_sheets = db.relationship('QualitySheet', backref=backref('wellbore_type'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -157,7 +172,8 @@ class Suite(db.Model):
 
     name = db.Column(db.String(64), nullable=False)
     field_id = db.Column(db.Integer, db.ForeignKey('field.id'), nullable=False)
-    layers = db.relationship('Layer', backref=backref('suite'), lazy=True)
+    layers = db.relationship('Layer', backref=backref('suite'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -174,7 +190,8 @@ class Layer(db.Model):
 
     name = db.Column(db.String(64), nullable=False)
     suite_id = db.Column(db.Integer, db.ForeignKey('suite.id'), nullable=False)
-    path_to_files = db.relationship('FilePath', backref=backref('layer'), lazy=True)
+    path_to_files = db.relationship('FilePath', backref=backref('layer'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -211,8 +228,10 @@ class ServiceCompany(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     quality_sheets = db.relationship('QualitySheet', backref=backref('service_company'), lazy=True)
-    tools = db.relationship('Tool', backref=backref('service_company'), lazy=True)
-    emails = db.relationship('CompanyEmail', backref=backref('service_company'), lazy=True)
+    tools = db.relationship('Tool', backref=backref('service_company'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
+    emails = db.relationship('CompanyEmail', backref=backref('service_company'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
 
     def __repr__(self):
@@ -248,7 +267,8 @@ class QualitySheet(db.Model):
     section_interval_end = db.Column(db.String(128))
     section_diameter = db.Column(db.String(128))
 
-    methods = db.relationship('Method', backref=backref('QualitySheet'), lazy=True)
+    methods = db.relationship('Method', backref=backref('QualitySheet'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     information = db.Column(db.String(128))  # int???
     title_page = db.Column(db.String(128))
@@ -314,7 +334,8 @@ class GisCurveCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
 
-    curves = db.relationship('GisCurve', backref=backref('gis_curve_category'), lazy=True)
+    curves = db.relationship('GisCurve', backref=backref('gis_curve_category'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -333,7 +354,8 @@ class GisCurve(db.Model):
     units = db.Column(db.String(128), nullable=False)
     notes = db.Column(db.String(512), nullable=False)
 
-    renames = db.relationship('GisCurveRename', backref=backref('gis_curve'), lazy=True)
+    renames = db.relationship('GisCurveRename', backref=backref('gis_curve'), lazy=True,
+                                     cascade="all, delete, delete-orphan")
 
 
 class GisCurveRename(db.Model):
@@ -375,7 +397,9 @@ class GtiTableRow(db.Model):
     degasser = db.Column(db.String(128))
     notes = db.Column(db.String(512))
 
-    gti_quality_sheet = db.relationship('GtiQualitySheet', backref=backref('gti_table_row'), uselist=False, lazy=True)
+    gti_quality_sheet = db.relationship('GtiQualitySheet', backref=backref('gti_table_row'),
+                                        uselist=False, lazy=True,
+                                        cascade="all, delete, delete-orphan")
 
 
 class GtiQualitySheet(db.Model):

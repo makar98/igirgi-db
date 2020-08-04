@@ -98,7 +98,7 @@ function delete_field() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
             if(xhr.status == 204) {
-                customer = document.getElementById('customer')
+                customer = document.getElementById('customer_link')
                 customer_id = customer.dataset.id
                 window.location.replace('http://' + document.location.host + '/new_style_customer/' + customer_id)
             }

@@ -1,6 +1,31 @@
 {% extends 'new_style_base.html' %}
 {% block content %}
 
+<div class="row filter">
+    <div class="col">
+        <select class="form-control">
+        {% for u in users %}
+            <option>{{ u }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col">
+        <select class="form-control">
+        {% for u in users %}
+            <option>{{ u }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col">
+        <select class="form-control">
+        {% for u in users %}
+            <option>{{ u }}</option>
+        {% endfor %}
+        </select>
+
+    </div>
+</div>
+
 {% for log in logger %}
     <ul>
         {% for field in log.editable_fields %}

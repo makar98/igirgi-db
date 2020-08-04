@@ -19,6 +19,7 @@ from application.models.models import QualitySheet
 from application.models.models import GisCurve
 from application.models.models import GisCurveCategory
 from application.models.logger import Logger
+from application.models.user import User
 
 from application import db
 import os
@@ -146,14 +147,20 @@ def new_style_pad(id):
 def new_style_well(id):
     well = Well.query.filter_by(id=id).first()
     wellbore_types = WellboreType.query.all()
-    return render_template(r'new_style_well.html', well=well, wellbore_types=wellbore_types)
+    well_types = WellType.query.all()
+    return render_template(r'new_style_well.html',
+                           well=well,
+                           wellbore_types=wellbore_types,
+                           well_types = well_types)
 
 
 @app.route('/new_style_wellbore/<id>', methods=['GET', 'POST'])
 def new_style_wellbore(id):
     wellbore = Wellbore.query.filter_by(id=id).first()
-    #wellbore_types = WellboreType.query.all()
-    return render_template(r'new_style_wellbore.html', wellbore=wellbore)
+    wellbore_types = WellboreType.query.all()
+    return render_template(r'new_style_wellbore.html',
+                           wellbore=wellbore,
+                           wellbore_types=wellbore_types)
 
 
 @app.route('/quality_sheet/<id>', methods=['GET', 'POST'])
@@ -276,5 +283,8 @@ def save_to_db():
 
 @app.route('/logger', methods=['GET'])
 def logger():
-    logger = Logger.query.all()
-    return render_template('logger/logger_main_page.html', logger=logger)
+    logger = Logger.query.order_by(desc(Logger.date)).all()
+    users = User.query.all()
+    return render_template('logger/logger_main_page.html',
+                           logger=logger,
+                           users=users)

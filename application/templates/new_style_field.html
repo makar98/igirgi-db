@@ -18,18 +18,18 @@
                       data-id="{{ field.id }}">
                     Месторождение <br> {{ field.name }}
                 </span>
-                    <input
-                       id="field"
-                       data-id="{{ field.id }}"
-                       value="{{ field.name }}"
-                       hidden
-                    >
-                    <input
-                       id="customer"
-                       data-id="{{ field.customer.id }}"
-                       value="{{ field.customer.name }}"
-                       hidden
-                    >
+                <input
+                   id="field"
+                   data-id="{{ field.id }}"
+                   value="{{ field.name }}"
+                   hidden
+                >
+                <input
+                   id="customer"
+                   data-id="{{ field.customer.id }}"
+                   value="{{ field.customer.name }}"
+                   hidden
+                >
             </li>
         </div>
         <div class="col">
@@ -186,7 +186,7 @@
                 <div id="pads">
                 {% for pad in field.pads %}
                     <a href="{{ url_for('new_style_pad', id=pad.id) }}">
-                        <li>{{ field.name }} {{ pad }}</li>
+                        <li>{{ pad }}</li>
                     </a>
                 {% endfor %}
                 </div>

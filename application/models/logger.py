@@ -42,4 +42,4 @@ class EditableField(db.Model):
 
         if self.logger.is_delete:
             return f'Пользователь {self.logger.user.username} удалил запись {self.before_edit} ' \
-                   f'Из таблицы {self.logger.editable_tbl}'
+                   f'Из таблицы {self.logger.editable_tbl} в {self.logger.date}'
