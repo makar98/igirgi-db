@@ -12,8 +12,9 @@
             </li>
         </div>
         <div class="col">
-            <li class="list-group-item border-0">
-                <span data-toggle="modal" data-target="#customer-info-btn">
+            <div class="list-group list-group-flush">
+                <li>
+                    <span data-toggle="modal" data-target="#customer-info-btn">
                     <img src="{{ url_for('static', filename='images/plus.png') }}"
                          class="img-40px"
                          >
@@ -60,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-            </li>
+            </div>
         </div>
     </div>
     <div class="row justify-content-start">
@@ -300,8 +301,8 @@
 
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/customer.js') }}"></script>
 <script src="{{ url_for('static', filename='js/field.js') }}"></script>
 <script src="{{ url_for('static', filename='js/pad_customer.js') }}"></script>
