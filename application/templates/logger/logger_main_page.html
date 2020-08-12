@@ -1,47 +1,93 @@
 {% extends 'new_style_base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/bootstrap-select.js') }}"></script>
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/i18n/defaults-ru_RU.js') }}"></script>
+
+
+{% endblock %}
+
 {% block content %}
 
 <div class="row filter">
     <div class="col">
-        <select class="form-control">
-        {% for u in users %}
-            <option>{{ u }}</option>
-        {% endfor %}
+        <select id="users" class="selectpicker" multiple data-actions-box="true">
+            {% for user in users %}
+            <option value="{{ user.id }}">
+                {{ user }}
+            </option>
+            {% endfor %}
         </select>
     </div>
     <div class="col">
-        <select class="form-control">
-        {% for u in users %}
-            <option>{{ u }}</option>
-        {% endfor %}
+        <select id="date_interval" class="selectpicker" data-actions-box="true">
+            <option value="last_hour">
+                За час
+            </option>
+            <option value="last_day">
+                За сутки
+            </option>
+            <option value="last_week">
+                За неделю
+            </option>
+            <option value="last_month">
+                За месяц
+            </option>
+            <option value="all_time">
+                Все вреемя
+            </option>
+        </select>
+    </div>
+        <div class="col">
+        <select id="sort" class="selectpicker" data-actions-box="true">
+            <option value="asc">
+                По возрастанию
+            </option>
+            <option value="desc">
+               По убыванию
+            </option>
         </select>
     </div>
     <div class="col">
-        <select class="form-control">
-        {% for u in users %}
-            <option>{{ u }}</option>
-        {% endfor %}
-        </select>
-
+        <button class="btn-primary" onclick="get_log()">
+            Поиск
+        </button>
     </div>
 </div>
-
-{% for log in logger %}
-    <ul>
+<div id="log">
+    {% for log in logger %}
+        <div class="row" style="background-color: #fa9d10;">
+            <div class="col">
+                #{{ log.id }}
+            </div>
+        </div>
         {% for field in log.editable_fields %}
-        <li>
+        <div class="row">
+            <div class="col">
             {{ field }}
-        </li>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
-{% endfor %}
+    {% endfor %}
+</div>
+
 
 {% endblock %}
 
 {% block bottom_scripts %}
-
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+<script src="{{ url_for('static', filename='js/logger/main_page.js') }}"></script>
 {% endblock %}

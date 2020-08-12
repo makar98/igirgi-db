@@ -51,6 +51,8 @@ class FieldsApi(Resource):
             field = Field(name=args['field'], customer_id=int(args['customer_id']))
             db.session.add(field)
             db.session.commit()
+
+            methods.create(editable_tbl=Field, obj=field, args=args, user=current_user)
             return field_schema.jsonify(field)
         else:
             return '', 400

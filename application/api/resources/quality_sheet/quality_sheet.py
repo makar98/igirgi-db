@@ -1,5 +1,5 @@
 from application import ma, db
-from application.models.models import QualitySheet
+from application.models.gis import QualitySheet
 from marshmallow import fields as ma_fields
 
 

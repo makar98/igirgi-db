@@ -1,0 +1,72 @@
+{% extends 'new_style_base.html' %}
+
+{% block links %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <div class="col" style="width: 30%">
+            <div class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Параметры</span>
+                </li>
+                <li>
+                    <span data-toggle="modal" data-target="#add-parameter-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Добавить параметр
+                    </span>
+                    <div class="modal" tabindex="-1" role="dialog" id="add-parameter-btn">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div id="add_parameter">
+                                    <div class="modal-header">
+                                        header
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group col-md-12">
+                                            <label>Параметр</label>
+                                            <input type="text" class="form-control" name="parameter">
+                                        </div>
+                                        <button
+                                            class="btn btn-primary"
+                                            onclick="add_parameter()">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item border-0">
+                    <input>
+                </li>
+                <div id="parameters">
+                    {% for parameter in parameters %}
+                        <a href="{{ url_for('gti_parameter', parameter_id=parameter.id) }}">
+                            <li>{{ parameter }}</li>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/gti/parameter.js') }}"></script>
+{% endblock %}

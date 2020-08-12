@@ -52,6 +52,8 @@ class PadsApi(Resource):
             pad = Pad(name=args['pad'], field_id=int(args['field_id']))
             db.session.add(pad)
             db.session.commit()
+
+            methods.create(editable_tbl=Pad, obj=pad, args=args, user=current_user)
             return pad_schema.jsonify(pad)
         else:
             return '', 400

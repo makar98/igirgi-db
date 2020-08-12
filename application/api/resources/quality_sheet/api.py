@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from application.models.models import QualitySheet
+from application.models.gis import QualitySheet
 from .quality_sheet import quality_sheet_schema, quality_sheets_schema
 from flask_restful import reqparse
 from application import db

@@ -1,5 +1,5 @@
 from application import ma, db
-from application.models.models import GisCurveRename
+from application.models.gis import GisCurveRename
 from marshmallow import fields as ma_fields
 
 

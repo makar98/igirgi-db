@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from application.models.models import GisCurveCategory
+from application.models.gis import GisCurveCategory
 from .gis_curve_category import gis_curve_category_schema, gis_curve_categories_schema
 from flask_restful import reqparse
 from application import db

@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from application.models.models import GisCurveRename
+from application.models.gis import GisCurveRename
 from .gis_rename_curve import gis_curve_rename_schema, gis_curves_rename_schema
 from flask_restful import reqparse
 from application import db

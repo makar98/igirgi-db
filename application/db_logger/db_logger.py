@@ -20,8 +20,8 @@ class DBLog(object):
         self.is_delete = is_delete
 
     def save(self):
-        log = Logger(user_id=self.user_id, date=self.date,
-                     editable_tbl=self.editable_tbl.__tablename__, is_create=self.is_create, is_edit=self.is_edit,
+        log = Logger(user_id=self.user_id, edit_date=self.date,
+                     editable_tbl=self.editable_tbl.__human_name__, is_create=self.is_create, is_edit=self.is_edit,
                      is_delete=self.is_delete)
 
         db.session.add(log)

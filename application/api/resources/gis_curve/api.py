@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from application.models.models import GisCurve
+from application.models.gis import GisCurve
 from .gis_curve import gis_curve_schema, gis_curves_schema
 from flask_restful import reqparse
 from application import db

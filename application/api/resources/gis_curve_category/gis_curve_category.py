@@ -1,5 +1,5 @@
 from application import ma, db
-from application.models.models import GisCurve, GisCurveCategory
+from application.models.gis import GisCurve, GisCurveCategory
 from marshmallow import fields as ma_fields
 
 

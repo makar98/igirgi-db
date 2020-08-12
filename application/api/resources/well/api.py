@@ -59,6 +59,8 @@ class WellsApi(Resource):
                         well_type_id=int(args['well_type_id']))
             db.session.add(well)
             db.session.commit()
+
+            methods.create(editable_tbl=Well, obj=well, args=args, user=current_user)
             return well_schema.jsonify(well)
         else:
             return '', 400

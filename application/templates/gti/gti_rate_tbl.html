@@ -5,6 +5,111 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    <div class="col" >
+        <div class="list-group list-group-flush">
+            <span data-toggle="modal" data-target="#add-wellbore-btn">
+            <img src="{{ url_for('static', filename='images/plus.png') }}"
+                 class="img-40px"
+                 >
+                Добавить секцию
+            </span>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="add-wellbore-btn">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="add_wellbore">
+                        <div class="modal-header">
+                            header
+                        </div>
+                        <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>Заказчик</label>
+                                        <select class="form-control">
+                                            {% for customer in customers %}
+                                            <option data-id="{{ customer.id }}">
+                                                {{ customer.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>Месторождение</label>
+                                        <select class="form-control">
+                                            <option>
+
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Куст</label>
+                                        <select class="form-control">
+                                            <option>
+
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Скважина</label>
+                                        <select class="form-control">
+                                            <option>
+
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Тип скважины</label>
+                                        <select class="form-control">
+                                            <option>
+
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Тип сецкии</label>
+                                        <select class="form-control">
+                                            <option>
+
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Секция</label>
+                                        <input type="text" class="form-control" name="wellbore">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="is_gis">ГИС</label>
+                                        <input type="checkbox" class="form-control" name="is_gis">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="is_gti">ГТИ</label>
+                                        <input type="checkbox" class="form-control" name="is_gti">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="add_wellbore()">
+                                    Добавить
+                                </button>
+
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col" style="margin-left: 10px;">
     <div class="row row-name">
         <div class="col-md-2 display-flex">

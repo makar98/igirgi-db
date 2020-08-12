@@ -11,6 +11,11 @@ from .resources.gis_curve_category.api import GisCurveCategoryApi, GisCurveCateg
 from .resources.gis_rename_curve.api import GisRenameCurveApi, GisRenameCurvesApi
 from .resources.quality_sheet.api import QualitySheetApi, QualitySheetsApi
 
+from .resources.gti.parameter.api import GtiParameterApi, GtiParametersApi
+from .resources.gti.format.api import GtiFormatApi, GtiFormatsApi
+
+from .resources.logger.api import LoggerApi, LoggersApi
+
 
 def initialize_routes(api):
     api.add_resource(CustomerFullDataApi, '/api/customer_full_data/<customer_id>')
@@ -45,3 +50,14 @@ def initialize_routes(api):
 
     #api.add_resource(QualitySheetApi, '/api/quality_sheet/<quality_sheet_id>')
     #api.add_resource(QualitySheetsApi, '/api/quality_sheet', '/api/quality_sheets')
+
+    #GTI
+    api.add_resource(GtiParameterApi, '/api/gti/parameter/<parameter_id>')
+    api.add_resource(GtiParametersApi, '/api/gti/parameter', '/api/gti/parameters')
+
+    api.add_resource(GtiFormatApi, '/api/gti/format/<gti_format_id>')
+    api.add_resource(GtiFormatsApi, '/api/gti/format', '/api/gti/formats')
+
+    api.add_resource(LoggerApi, '/api/logger/<log_id>')
+    api.add_resource(LoggersApi, '/api/logger', '/api/loggers')
+

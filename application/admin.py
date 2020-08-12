@@ -4,7 +4,7 @@ from flask_admin.contrib.sqla import ModelView
 
 # Импорт моделей делать после db
 # https://stackoverflow.com/questions/50308051/importerror-cannot-import-name-db
-from application.models.models import Tool, QualitySheet, ServiceCompany
+from application.models.models import Tool, ServiceCompany
 from application.models.models import Customer
 from application.models.models import Field
 from application.models.models import Pad
@@ -14,7 +14,8 @@ from application.models.models import WellboreType
 from application.models.models import Wellbore
 
 from application.models.user import User, Role
-from application.models.models import GtiTableRow
+from application.models.gti.table_row import GtiTableRow
+from application.models.gis import QualitySheet
 
 
 #from application.models.UserSearchSettings import UserSearchSettings

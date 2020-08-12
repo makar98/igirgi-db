@@ -1,15 +1,14 @@
 from application import db
-from datetime import datetime
 from sqlalchemy.orm import backref
 
+from .base.base_date import BaseDate
 
 
-class Logger(db.Model):
+
+class Logger(BaseDate):
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    date = db.Column(db.DateTime, default=datetime.utcnow)
 
     editable_tbl = db.Column(db.String(128))
 
@@ -21,7 +20,7 @@ class Logger(db.Model):
 
 
 
-class EditableField(db.Model):
+class EditableField(BaseDate):
     id = db.Column(db.Integer, primary_key=True)
 
     log_id = db.Column(db.Integer, db.ForeignKey('logger.id'))
@@ -34,12 +33,12 @@ class EditableField(db.Model):
         if self.logger.is_edit:
             return f'Пользователь {self.logger.user.username} изменил поле {self.field_name} ' \
                    f'в таблице {self.logger.editable_tbl} c ' \
-                   f'{self.before_edit} на {self.after_edit} в {self.logger.date}'
+                   f'{self.before_edit} на {self.after_edit} в {self.logger.edit_date}'
 
         if self.logger.is_create:
             return f'Пользователь {self.logger.user.username} создал поле {self.field_name} ' \
-                   f'в таблице {self.logger.editable_tbl} со значением {self.after_edit} в {self.logger.date}'
+                   f'в таблице {self.logger.editable_tbl} со значением {self.after_edit} в {self.logger.edit_date}'
 
         if self.logger.is_delete:
             return f'Пользователь {self.logger.user.username} удалил запись {self.before_edit} ' \
-                   f'Из таблицы {self.logger.editable_tbl} в {self.logger.date}'
+                   f'Из таблицы {self.logger.editable_tbl} в {self.logger.edit_date}'

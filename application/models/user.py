@@ -1,24 +1,24 @@
 from application import db
-#from flask_login import UserMixin
-#from application import login
 from sqlalchemy.orm import backref
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from flask_security import UserMixin, RoleMixin
+from .base.base_date import BaseDate
 from .logger import Logger
-
 
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
-class Role(db.Model, RoleMixin):
+class Role(BaseDate, RoleMixin):
+    __human_name__ = 'Роль пользователя'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
 
-class User(db.Model, UserMixin):
+class User(BaseDate, UserMixin):
+    __human_name__ = 'Пользователь'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True)
     email = db.Column(db.String(255), unique=True)

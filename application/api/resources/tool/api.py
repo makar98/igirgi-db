@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from application.models.models import Well
 from application.models.models import Wellbore
-from application.models.models import QualitySheet
+from application.models.gis import QualitySheet
 from .tool import tool_schema, tools_schema
 from flask_restful import reqparse
 from application import db

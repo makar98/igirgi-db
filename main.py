@@ -1,5 +1,5 @@
 from application import app, db
-from application.models.models import ServiceCompany, Tool, QualitySheet, Method, \
+from application.models.models import ServiceCompany, Tool,  \
     FilePath, CustomerEmail, CompanyEmail
 
 from application.models.models import Customer
@@ -7,12 +7,12 @@ from application.models.models import Field
 from application.models.models import Layer
 from application.models.models import Well
 from application.models.models import WellType
-from application.models.models import QualitySheet
-from application.models.models import GisCurve
-from application.models.models import GisCurveCategory
+from application.models.gis import GisCurve, GisCurveCategory, QualitySheet, Method
 from application.models.user import User, Role
-from application.models.models import GtiTableRow
 from application.models.logger import Logger, EditableField
+from application.models.gti.format import GtiFormat
+from application.models.gti.parameter import GtiParameter
+from application.models.gti.table_row import GtiTableRow
 
 
 @app.shell_context_processor
@@ -23,7 +23,7 @@ def make_shell_context():
             'QualitySheet': QualitySheet, 'Method': Method, 'FilePath': FilePath, 'CustomerEmail': CustomerEmail,
             'CompanyEmail': CompanyEmail, 'User': User, 'Role': Role,
             'GisCurve': GisCurve, 'GisCurveCategory': GisCurveCategory,
-            'GtiTableRow': GtiTableRow,
+            'GtiTableRow': GtiTableRow, 'GtiFormat': GtiFormat, 'GtiParameter': GtiParameter,
             'Logger': Logger, 'EditableField': EditableField}
 
 

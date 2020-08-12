@@ -1,9 +1,9 @@
 from flask_restful import Resource
 from application.models.models import Well
 from application.models.models import Wellbore
-from application.models.models import QualitySheet
-from application.models.models import GtiTableRow
-from application.models.models import GtiQualitySheet
+from application.models.gis import QualitySheet
+from application.models.gti.table_row import GtiTableRow
+from application.models.gti.quality_sheet.quality_sheet import GtiQualitySheet
 from application.models.user import User
 from .wellbore import wellbore_schema, wellbores_schema
 from flask_restful import reqparse
@@ -86,6 +86,8 @@ class WellboresApi(Resource):
 
 
             db.session.commit()
+
+            methods.create(editable_tbl=Wellbore, obj=wellbore, args=args, user=current_user)
             return wellbore_schema.jsonify(wellbore)
         else:
             return '', 400
