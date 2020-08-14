@@ -11,7 +11,7 @@ from flask_marshmallow import Marshmallow
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, engine_options={'pool_size': 10, 'max_overflow': -1})
 
 """ Users & Roles """
 from application.models.user import User, Role
