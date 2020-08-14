@@ -23,19 +23,9 @@ class GtiTechnologicalResearch(Row):
 
     quality_sheet_id = db.Column(db.Integer, db.ForeignKey('gti_quality_sheet.id'))
 
-    parameter = db.relationship('GtiParameter',
-                                uselist=False,
-                                backref=backref('technological_parameter'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
+    parameter_id = db.Column(db.Integer, db.ForeignKey('gti_parameter.id'))
 
-    format = db.relationship('GtiFormat',
-                                uselist=False,
-                                backref=backref('technological_format'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
-
-    #format_id = db.Column(db.Integer, db.ForeignKey('format_id'))
+    format_id = db.Column(db.Integer, db.ForeignKey('gti_format.id'))
 
 
 class GtiGasResearch(Row):
@@ -46,17 +36,10 @@ class GtiGasResearch(Row):
 
     quality_sheet_id = db.Column(db.Integer, db.ForeignKey('gti_quality_sheet.id'))
 
-    parameter = db.relationship('GtiParameter',
-                                uselist=False,
-                                backref=backref('gas_parameter'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
+    parameter_id = db.Column(db.Integer, db.ForeignKey('gti_parameter.id'))
 
-    format = db.relationship('GtiFormat',
-                                uselist=False,
-                                backref=backref('gas_format'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
+    format_id = db.Column(db.Integer, db.ForeignKey('gti_format.id'))
+
 
 class GtiGeoResearch(Row):
     __human_name__ = 'Геолого-геохимичкские исследования ГТИ'
@@ -65,15 +48,7 @@ class GtiGeoResearch(Row):
 
     quality_sheet_id = db.Column(db.Integer, db.ForeignKey('gti_quality_sheet.id'))
 
-    parameter = db.relationship('GtiParameter',
-                                uselist=False,
-                                backref=backref('geo_parameter'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
+    parameter_id = db.Column(db.Integer, db.ForeignKey('gti_parameter.id'))
 
-    format = db.relationship('GtiFormat',
-                                uselist=False,
-                                backref=backref('geo_format'),
-                                cascade='all, delete-orphan',
-                                lazy=True)
+    format_id = db.Column(db.Integer, db.ForeignKey('gti_format.id'))
 

@@ -61,7 +61,7 @@ class WellboresApi(Resource):
             well_id = int(args['well_id'])
             wellbore = Wellbore(name=args['wellbore'], well_id=well_id,
                         wellbore_type_id=int(args['wellbore_type_id']),
-                        is_gis=int(args['is_gis']), is_gti=int(args['is_gti']))
+                        is_gis=bool(args['is_gis']), is_gti=bool(args['is_gti']))
 
             well = Well.query.filter_by(id=well_id).first()
 

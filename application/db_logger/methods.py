@@ -14,7 +14,6 @@ def create(editable_tbl: object, obj: object, args: dict, user: object):
                                     'before_edit': None,
                                     'after_edit': value}
                                    )
-            setattr(obj, key, value)
 
     db.session.commit()
     log = DBLog(user_id=user.id, date=datetime.now(), editable_tbl=editable_tbl,

@@ -18,7 +18,7 @@ function add_parameter() {
                 parameter = JSON.parse(xhr.responseText)
 
                 link = document.createElement('a');
-                link.setAttribute('href', '/gti/gti_parameter/' + parameter['id'])
+                link.setAttribute('href', '/gti/parameter/' + parameter['id'])
                 liFirst = document.createElement('li');
                 liFirst.innerHTML = parameter['name'];
                 link.append(liFirst);
