@@ -12,16 +12,18 @@ function get_log() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
             if(xhr.status == 200) {
-                log_div = $('#log')
-                logs = JSON.parse(xhr.responseText)
-                console.log(logs)
+                log_div = $('#log')[0]
+                //console.log(logs)
                 console.log(log_div)
-                while (log.firstChild) {
-                    console.log()
-                    log.removeChild(log.firstChild);
+                console.log(log_div.children)
+                while (log_div.firstChild) {
+                    //console.log(log_div.firstChild)
+                    log_div.removeChild(log_div.firstChild);
                 }
+
+                logs = JSON.parse(xhr.responseText)
                 for (log of logs){
-                    console.log(log)
+                    //console.log(log)
                     div_row = document.createElement('div');
                     div_row.classList.add('row')
                     div_row.setAttribute('style', 'background-color: #fa9d10;')
@@ -40,7 +42,10 @@ function get_log() {
                         field_div_col = document.createElement('div');
                         field_div_col.classList.add('col')
 
-                        field_div_col.innerHTML = field['__repr__'].split('<bound method EditableField.__repr__ of ')[1]
+                        data = field['__repr__'].split('<bound method EditableField.__repr__ of ')[1]
+                        data = data.substring(0, data.length - 1)
+
+                        field_div_col.innerHTML = data
 
                         field_div_row.append(field_div_col)
                         log_div.append(field_div_row)
