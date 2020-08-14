@@ -13,5 +13,17 @@ class GtiFormat(BaseDate):
 
     parameter_id = db.Column(db.Integer, db.ForeignKey('gti_parameter.id'), nullable=False)
 
+    technological_research_row_id = db.Column(db.Integer,
+                                              db.ForeignKey('gti_technological_research.id'),
+                                              nullable=False)
+
+    gas_research_row_id = db.Column(db.Integer,
+                                    db.ForeignKey('gti_gas_research.id'),
+                                    nullable=False)
+
+    geo_research_row_id = db.Column(db.Integer,
+                                    db.ForeignKey('gti_geo_research.id'),
+                                    nullable=False)
+
     def __repr__(self):
         return self.name
