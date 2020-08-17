@@ -102,9 +102,11 @@ def gti():
 @roles_required('test_role')
 def gti_tbl():
     gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
+    wellbore_types = WellboreType.query.all()
     customers = Customer.query.all()
     return render_template(r'gti/gti_rate_tbl.html',
                            wellbores=gti_wellbores,
+                           wellbore_types=wellbore_types,
                            customers=customers)
 
 

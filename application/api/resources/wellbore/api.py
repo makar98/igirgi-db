@@ -52,14 +52,13 @@ class WellboresApi(Resource):
         parser.add_argument('user_id')
         parser.add_argument('name')
         parser.add_argument('well_id')
-        parser.add_argument('wellbore')
         parser.add_argument('wellbore_type_id')
         parser.add_argument('is_gis')
         parser.add_argument('is_gti')
         args = parser.parse_args()
-        if  args['wellbore']:
+        if  args['name']:
             well_id = int(args['well_id'])
-            wellbore = Wellbore(name=args['wellbore'], well_id=well_id,
+            wellbore = Wellbore(name=args['name'], well_id=well_id,
                         wellbore_type_id=int(args['wellbore_type_id']),
                         is_gis=bool(args['is_gis']), is_gti=bool(args['is_gti']))
 

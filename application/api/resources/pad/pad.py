@@ -15,6 +15,7 @@ class PadWellSchema(ma.SQLAlchemyAutoSchema):
     customer_id = ma_fields.Int()
     field_id = ma_fields.Int()
     name = ma_fields.Str()
+    well_type = ma_fields.Str()
 
 
 class WellSchema(ma.SQLAlchemyAutoSchema):

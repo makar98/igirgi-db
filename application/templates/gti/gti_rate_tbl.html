@@ -12,7 +12,7 @@
             <img src="{{ url_for('static', filename='images/plus.png') }}"
                  class="img-40px"
                  >
-                Добавить секцию
+                Добавить скважину
             </span>
         </div>
         <div class="modal" tabindex="-1" role="dialog" id="add-wellbore-btn">
@@ -26,7 +26,12 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label>Заказчик</label>
-                                        <select class="form-control">
+                                        <select class="form-control"
+                                                name="customer"
+                                                onchange="get_fields(this)">
+                                            <option>
+
+                                            </option>
                                             {% for customer in customers %}
                                             <option data-id="{{ customer.id }}">
                                                 {{ customer.name }}
@@ -38,7 +43,9 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label>Месторождение</label>
-                                        <select class="form-control">
+                                        <select class="form-control"
+                                                name="field"
+                                                onchange="get_pads(this)">
                                             <option>
 
                                             </option>
@@ -48,7 +55,9 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         <label>Куст</label>
-                                        <select class="form-control">
+                                        <select class="form-control"
+                                                name="pad"
+                                                onchange="get_wells(this)">
                                             <option>
 
                                             </option>
@@ -56,7 +65,9 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>Скважина</label>
-                                        <select class="form-control">
+                                        <select class="form-control"
+                                                name="well"
+                                                onchange="set_well_type()">
                                             <option>
 
                                             </option>
@@ -64,35 +75,45 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>Тип скважины</label>
-                                        <select class="form-control">
-                                            <option>
+                                        <input class="form-control"
+                                               name="well_type"
+                                               disabled>
 
-                                            </option>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
+                                        <label>Секция</label>
+                                        <input type="text" class="form-control" name="wellbore">
+                                    </div>
+                                    <div class="form-group col-md-6">
                                         <label>Тип сецкии</label>
-                                        <select class="form-control">
+                                        <select class="form-control"
+                                                name="wellbore_type">
                                             <option>
 
                                             </option>
+                                            {% for wb_type in wellbore_types  %}
+                                            <option data-id="{{ wb_type.id }}">
+                                                {{ wb_type.name }}
+                                            </option>
+                                            {% endfor %}
                                         </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Секция</label>
-                                        <input type="text" class="form-control" name="wellbore">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="is_gis">ГИС</label>
-                                        <input type="checkbox" class="form-control" name="is_gis">
+                                        <input type="checkbox"
+                                               class="form-control"
+                                               name="is_gis">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="is_gti">ГТИ</label>
-                                        <input type="checkbox" class="form-control" name="is_gti">
+                                        <input type="checkbox"
+                                               class="form-control"
+                                               name="is_gti"
+                                               checked>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary"
@@ -304,7 +325,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
-                                quality
+                                Чек-лист
                             </a>
                         </div>
                     </div>
@@ -318,7 +339,7 @@
                                    readonly>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Заказчик по ГТИ</label>
+                            <label>Подрядчик по ГТИ</label>
                             <input type="text"
                                    class="form-control"
                                    name="customer"
@@ -412,4 +433,6 @@
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/gti/add_section_tbl.js') }}"></script>
 {% endblock %}

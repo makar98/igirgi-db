@@ -7,6 +7,8 @@ class WellSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Well
         sqla_session = db.session
+
+    well_type = ma_fields.Str()
     wellbores = ma_fields.Nested('WellWellboreSchema', default=[], many=True)
 
 
