@@ -56,7 +56,7 @@ function add_wellbore() {
 }
 
 
-function get_fields(el) {
+function get_fields() {
     form = document.getElementById('add_wellbore')
     customer = form.querySelector('select[name="customer"]')
     customer_id = customer[customer.selectedIndex].dataset.id
@@ -97,7 +97,7 @@ function get_fields(el) {
 
 function get_pads() {
     form = document.getElementById('add_wellbore')
-    field = form.querySelector('select[name="customer"]')
+    field = form.querySelector('select[name="field"]')
     field_id = field[field.selectedIndex].dataset.id
 
     pads_opt = form.querySelector('select[name="pad"]')
