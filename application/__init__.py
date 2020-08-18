@@ -38,5 +38,6 @@ from .admin import create_admin
 
 admin = create_admin(app, db)
 
-from application import routes
+from application.routes import routes, gti
+
 """###"""

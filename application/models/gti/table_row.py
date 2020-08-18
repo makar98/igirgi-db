@@ -3,6 +3,7 @@ from sqlalchemy.orm import backref
 
 from application.models.base.base_date import BaseDate
 from .quality_sheet.quality_sheet import GtiQualitySheet
+from .directory.service_company import GtiServiceCompany
 
 
 author_gti_row = db.Table('author_gti',
@@ -33,3 +34,5 @@ class GtiTableRow(BaseDate):
     gti_quality_sheet = db.relationship('GtiQualitySheet', backref=backref('gti_table_row'),
                                         uselist=False, lazy=True,
                                         cascade="all, delete, delete-orphan")
+
+    service_company_id = db.Column(db.Integer, db.ForeignKey('gti_service_company.id'))

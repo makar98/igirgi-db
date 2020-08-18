@@ -1,16 +1,14 @@
 from application import app
 from flask import render_template, request, url_for, redirect, make_response, jsonify
 
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import asc, desc
 
-import json
 
 from application.models.models import ServiceCompany
 from application.models.models import Customer
 from application.models.models import Field
 from application.models.models import Pad
-from application.models.models import Layer
+
 from application.models.models import Well
 from application.models.models import WellType
 from application.models.models import Wellbore
@@ -19,11 +17,7 @@ from application.models.models import WellboreType
 from application.models.gis import GisCurve, GisCurveCategory, QualitySheet
 from application.models.logger import Logger
 from application.models.user import User
-from application.models.gti.format import GtiFormat
-from application.models.gti.parameter import GtiParameter
 
-from application import db
-import os
 from flask_security import login_required, logout_user, roles_required
 
 
@@ -89,64 +83,7 @@ def gis_curves_rename(curve_id):
     return render_template(r'gis/gis_rename_curve.html', method=method)
 
 
-# GTI
-@app.route('/gti', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti():
-    return render_template(r'gti/gti_main_page.html')
 
-
-@app.route('/gti/tbl', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_tbl():
-    gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
-    wellbore_types = WellboreType.query.all()
-    customers = Customer.query.all()
-    return render_template(r'gti/gti_rate_tbl.html',
-                           wellbores=gti_wellbores,
-                           wellbore_types=wellbore_types,
-                           customers=customers)
-
-
-@app.route('/gti/quality_sheet/<gti_quality_sheet_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_quality_sheet(gti_quality_sheet_id):
-    param = GtiParameter.query.all()
-    return render_template(r'gti/quality_sheet.html', param=param)
-
-
-@app.route('/gti/parameters', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_parameters():
-    parameters = GtiParameter.query.all()
-    return render_template(r'gti/parameters.html', parameters=parameters)
-
-
-@app.route('/gti/parameter/<int:parameter_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_parameter(parameter_id):
-    parameter = GtiParameter.query.filter_by(id=parameter_id).first_or_404()
-    return render_template(r'gti/parameter.html', parameter=parameter)
-
-
-@app.route('/gti/format/<int:format_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_format(format_id):
-    format = GtiFormat.query.filter_by(id=format_id).first_or_404()
-    return render_template(r'gti/format.html', format=format)
-
-
-@app.route('/gti/test', methods=['GET', 'POST'])
-@login_required
-@roles_required('test_role')
-def gti_test():
-    return render_template(r'gti/test.html')
 
 
 # return all customers

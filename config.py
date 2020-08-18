@@ -3,12 +3,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    FLASK_APP = os.environ.get('FLASK_APP') or 'main.py'
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = ("mysql+pymysql://"+ os.environ['DB_USER'] + ":"
+                                         + os.environ['DB_PASSWORD']+ "@"
+                                         + os.environ['DB_HOST']
+                                         + ":3306/igirgi_empty")
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://a_makeev:Cgfhnfr18011998@localhost:3306/igirgi_empty'
-        #'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECURITY_PASSWORD_SALT = 'salt'

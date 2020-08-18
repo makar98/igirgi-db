@@ -18,7 +18,7 @@ function add_wellbore() {
 
     console.log(user_id)
     console.log(well_id)
-    console.log(wellbore)
+    console.log(wellbore_name)
     console.log(wellbore_type_id)
     console.log(is_gis)
     console.log(is_gti)

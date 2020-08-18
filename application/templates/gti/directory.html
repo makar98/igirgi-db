@@ -1,0 +1,62 @@
+{% extends 'new_style_base.html' %}
+
+{% block content %}
+<div class="collapse db-collapse" data-parent="#navAccordion" id="gti-body">
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-4">
+                <a href="{{ url_for('gti_tbl') }}">
+                    <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Подрядчик по ГТИ</span>
+                </a>
+            </div>
+            <div class="col-4">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Статус скважины</span>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 100px;">
+            <div class="col-4">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Тип станции</span>
+                </a>
+            </div>
+            <div class="col-4">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Тип хроматографа</span>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 100px;">
+            <div class="col-4">
+                <a href="{{ url_for('gti_parameters') }}">
+                    <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Параметр<br>формат/оперативность</span>
+                </a>
+            </div>
+            <div class="col-4">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Тип дегазатора</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script>
+    window.onload = function() {
+        db_nav = document.getElementById('gti-nav')
+        db_nav.className = 'nav-second-level gti-collapse collapse show'
+        db_body = document.getElementById('gti-body')
+        db_body.className = 'nav-second-level gti-collapse collapse show'
+    }
+</script>
+{% endblock %}
