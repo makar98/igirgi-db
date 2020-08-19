@@ -1,34 +1,20 @@
 from application import ma, db
-from application.models.gti.parameter import GtiParameter
-from application.models.gti.format import GtiFormat
+from application.models.gti.directory.station_type import GtiStationType
 from marshmallow import fields as ma_fields
 
 
-class ParameterSchema(ma.SQLAlchemyAutoSchema):
+class GtiStation_TypeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = GtiParameter
+        model = GtiStationType
         sqla_session = db.session
-    fields = ma_fields.Nested('ParameterFormatSchema', default=[], many=True)
+    gti_rows = ma_fields.Nested('GtiTableRowStationTypeSchema', default=[], many=True)
 
 
-class ParameterFormatSchema(ma.SQLAlchemyAutoSchema):
+class GtiTableRowStationTypeSchema(ma.SQLAlchemyAutoSchema):
     id = ma_fields.Int()
-    parameter_id = ma_fields.Int()
-    name = ma_fields.Str()
+    station_type_id = ma_fields.Int()
+    wellbore_id = ma_fields.Int()
 
 
-class FormatSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = GtiFormat
-        sqla_session = db.session
-    parameter = ma_fields.Nested('FormatParameterSchema', default=[])
-
-
-class FormatParameterSchema(ma.SQLAlchemyAutoSchema):
-    format_id = ma_fields.Int()
-    id = ma_fields.Int()
-    name = ma_fields.Str()
-
-
-parameter_schema = ParameterSchema()
-parameters_schema = ParameterSchema(many=True)
+station_type_schema = GtiStation_TypeSchema()
+station_types_schema = GtiStation_TypeSchema(many=True)

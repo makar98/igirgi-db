@@ -1,7 +1,6 @@
 from flask_restful import Resource
-from application.models.gti.parameter import GtiParameter
-from application.models.gti.format import GtiFormat
-from .parameter import parameter_schema, parameters_schema
+from application.models.gti.directory.chromatograph_type import GtiChromatographType
+from .chromatograph_type import chromatograph_type_schema, chromatograph_types_schema
 from flask_restful import reqparse
 from application import db
 from flask import make_response
@@ -10,39 +9,39 @@ from flask_security import login_required, current_user
 
 from application.db_logger import methods
 
-class GtiParameterApi(Resource):
+class GtiChromatographTypeApi(Resource):
     @login_required
-    def get(self, parameter_id):
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first_or_404()
-        return parameter_schema.jsonify(parameter)
+    def get(self, chromatograph_type_id):
+        chromatograph = GtiChromatographType.query.filter_by(id=chromatograph_type_id).first_or_404()
+        return chromatograph_type_schema.jsonify(chromatograph)
 
     @login_required
-    def put(self, parameter_id):
+    def put(self, chromatograph_type_id):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
         args = parser.parse_args()
 
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first()
+        chromatograph = GtiChromatographType.query.filter_by(id=chromatograph_type_id).first()
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
-        methods.edit(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
+        methods.edit(editable_tbl=GtiChromatographType, obj=chromatograph, args=args, user=current_user)
 
-        return make_response(parameter_schema.jsonify(parameter), 201)
+        return make_response(chromatograph_type_schema.jsonify(chromatograph), 201)
 
 
     @login_required
-    def delete(self, parameter_id):
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first()
-        name = parameter.name
+    def delete(self, chromatograph_type_id):
+        chromatograph = GtiChromatographType.query.filter_by(id=chromatograph_type_id).first()
+        name = type.name
         args = dict()
         args['name'] = name
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
-        methods.delete(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
+        methods.delete(editable_tbl=GtiChromatographType, obj=chromatograph, args=args, user=current_user)
         return  '', 204
 
-class GtiParametersApi(Resource):
+class GtiChromatographTypesApi(Resource):
     def get(self):
-        parameters = GtiParameter.query.all()
-        return parameters_schema.jsonify(parameters)
+        chromatographs = GtiChromatographType.query.all()
+        return chromatograph_types_schema.jsonify(chromatographs)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -50,12 +49,11 @@ class GtiParametersApi(Resource):
         args = parser.parse_args()
 
         if  args['name']:
-            print(args['name'])
-            parameter = GtiParameter(name=args['name'])
-            db.session.add(parameter)
+            chromatograph = GtiChromatographType(name=args['name'])
+            db.session.add(chromatograph)
             db.session.commit()
 
-            methods.create(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
-            return parameter_schema.jsonify(parameter)
+            methods.create(editable_tbl=GtiChromatographType, obj=chromatograph, args=args, user=current_user)
+            return chromatograph_type_schema.jsonify(chromatograph)
         else:
-            return 'parameter is None', 400
+            return 'chromatograph is None', 400

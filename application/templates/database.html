@@ -3,31 +3,35 @@
 <div class="collapse db-collapse" data-parent="#navAccordion" id="db-body">
     <div class="container">
         <div class="row" style="margin-top: 50px;">
-            <div class="col">
+            <div class="col-4">
                 <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
                 <span class="left-text-img align-middle">Поиск<br>скважины</span>
             </div>
-            <div class="col">
+            <div class="col-4">
                 <a href="{{ url_for('new_style_customers') }}">
                     <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
                     <span class="left-text-img align-middle">Дочернее<br>общество</span>
                 </a>
             </div>
-            <div class="col">
+            <div class="col-4">
                 <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
                 <span class="left-text-img align-middle">Сервисные<br>компании</span>
             </div>
         </div>
         <div class="row" style="margin-top: 100px;">
-            <div class="col">
-                <div style="text-align: center;">
+            <div class="col-4">
                 <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
                 <span class="left-text-img align-middle">Оценка<br>ГИС</span>
-                    </div>
             </div>
-            <div class="col">
+            <div class="col-4">
                 <img src="{{ url_for('static', filename='images/quality.png') }}" class="img-db">
                 <span class="left-text-img align-middle">Оценка<br>ГТИ</span>
+            </div>
+            <div class="col-4">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/service_company.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Статус скважины</span>
+                </a>
             </div>
         </div>
     </div>

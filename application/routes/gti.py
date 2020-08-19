@@ -12,6 +12,9 @@ from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 
 from application.models.gti.directory.service_company import GtiServiceCompany
+from application.models.gti.directory.chromatograph_type import GtiChromatographType
+from application.models.gti.directory.degasser_type import GtiDegasserType
+from application.models.gti.directory.station_type import GtiStationType
 
 
 from flask_security import login_required, roles_required
@@ -31,12 +34,6 @@ def gti_tbl():
     gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
     wellbore_types = WellboreType.query.all()
     customers = Customer.query.all()
-    print(gti_wellbores)
-    print(gti_wellbores[3].well.customer.name)
-    print(gti_wellbores[3].name)
-    print(gti_wellbores[3].id)
-    for w in gti_wellbores:
-        print(w.gti_row.authors)
     return render_template(r'gti/gti_rate_tbl.html',
                            wellbores=gti_wellbores,
                            wellbore_types=wellbore_types,
@@ -98,8 +95,50 @@ def gti_service_company(company_id):
     return render_template(r'gti/directory/service_company.html', company=company)
 
 
-@app.route('/gti/test', methods=['GET', 'POST'])
+@app.route('/gti/directory/station_types', methods=['GET'])
 @login_required
 @roles_required('test_role')
-def gti_test():
-    return render_template(r'gti/test.html')
+def gti_station_types():
+    station_types = GtiStationType.query.all()
+    return render_template(r'gti/directory/station_types.html', station_types=station_types)
+
+
+@app.route('/gti/directory/station_type/<int:type_id>', methods=['GET'])
+@login_required
+@roles_required('test_role')
+def gti_station_type(type_id):
+    station_type = GtiStationType.query.filter_by(id=type_id).first_or_404()
+    return render_template(r'gti/directory/station_type.html', type=station_type)
+
+
+@app.route('/gti/directory/chromatograph_type', methods=['GET'])
+@login_required
+@roles_required('test_role')
+def gti_chromatograph_types():
+    chromatograph_types = GtiChromatographType.query.all()
+    return render_template(r'gti/directory/chromatograph_types.html', chromatograph_types=chromatograph_types)
+
+
+@app.route('/gti/directory/chromatograph_type/<int:type_id>', methods=['GET'])
+@login_required
+@roles_required('test_role')
+def gti_chromatograph_type(type_id):
+    chromatograph_type = GtiChromatographType.query.filter_by(id=type_id).first_or_404()
+    return render_template(r'gti/directory/chromatograph_type.html', type=chromatograph_type)
+
+
+@app.route('/gti/directory/degasser_type', methods=['GET'])
+@login_required
+@roles_required('test_role')
+def gti_degasser_types():
+    degasser_types = GtiDegasserType.query.all()
+    return render_template(r'gti/directory/degasser_types.html', degasser_types=degasser_types)
+
+
+@app.route('/gti/directory/degasser_type/<int:type_id>', methods=['GET'])
+@login_required
+@roles_required('test_role')
+def gti_degasser_type(type_id):
+    degasser_type = GtiDegasserType.query.filter_by(id=type_id).first_or_404()
+    return render_template(r'gti/directory/degasser_type.html', type=degasser_type)
+

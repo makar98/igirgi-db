@@ -17,6 +17,12 @@ from .resources.gti.format.api import GtiFormatApi, GtiFormatsApi
 
 from .resources.gti.service_company.api import GtiServiceCompanyApi, GtiServiceCompaniesApi
 
+from .resources.gti.station_type.api import GtiStationTypeApi, GtiStationTypesApi
+
+from .resources.gti.chromatograph_type.api import GtiChromatographTypeApi, GtiChromatographTypesApi
+
+from .resources.gti.degasser_type.api import GtiDegasserApi, GtiDegassersApi
+
 from .resources.logger.api import LoggerApi, LoggersApi
 
 
@@ -63,6 +69,15 @@ def initialize_routes(api):
 
     api.add_resource(GtiServiceCompanyApi, '/api/gti/company/<company_id>')
     api.add_resource(GtiServiceCompaniesApi, '/api/gti/company', '/api/gti/companies')
+
+    api.add_resource(GtiStationTypeApi, '/api/gti/station_type/<station_type_id>')
+    api.add_resource(GtiStationTypesApi, '/api/gti/station_type', '/api/gti/station_types')
+
+    api.add_resource(GtiChromatographTypeApi, '/api/gti/chromatograph_type/<chromatograph_type_id>')
+    api.add_resource(GtiChromatographTypesApi, '/api/gti/chromatograph_type', '/api/gti/chromatograph_types')
+
+    api.add_resource(GtiDegasserApi, '/api/gti/degasser_type/<degasser_type_id>')
+    api.add_resource(GtiDegassersApi, '/api/gti/degasser_type', '/api/gti/degasser_types')
 
     api.add_resource(LoggerApi, '/api/logger/<log_id>')
     api.add_resource(LoggersApi, '/api/logger', '/api/loggers')

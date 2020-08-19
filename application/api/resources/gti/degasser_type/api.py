@@ -1,7 +1,6 @@
 from flask_restful import Resource
-from application.models.gti.parameter import GtiParameter
-from application.models.gti.format import GtiFormat
-from .parameter import parameter_schema, parameters_schema
+from application.models.gti.directory.degasser_type import GtiDegasserType
+from .degasser_type import degasser_type_schema, degasser_types_schema
 from flask_restful import reqparse
 from application import db
 from flask import make_response
@@ -10,39 +9,39 @@ from flask_security import login_required, current_user
 
 from application.db_logger import methods
 
-class GtiParameterApi(Resource):
+class GtiDegasserApi(Resource):
     @login_required
-    def get(self, parameter_id):
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first_or_404()
-        return parameter_schema.jsonify(parameter)
+    def get(self, degasser_type_id):
+        degasser = GtiDegasserType.query.filter_by(id=degasser_type_id).first_or_404()
+        return degasser_type_schema.jsonify(degasser)
 
     @login_required
-    def put(self, parameter_id):
+    def put(self, degasser_type_id):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
         args = parser.parse_args()
 
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first()
+        degasser = GtiDegasserType.query.filter_by(id=degasser_type_id).first()
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
-        methods.edit(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
+        methods.edit(editable_tbl=GtiDegasserType, obj=degasser, args=args, user=current_user)
 
-        return make_response(parameter_schema.jsonify(parameter), 201)
+        return make_response(degasser_type_schema.jsonify(degasser), 201)
 
 
     @login_required
-    def delete(self, parameter_id):
-        parameter = GtiParameter.query.filter_by(id=parameter_id).first()
-        name = parameter.name
+    def delete(self, degasser_type_id):
+        degasser = GtiDegasserType.query.filter_by(id=degasser_type_id).first()
+        name = degasser.name
         args = dict()
         args['name'] = name
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
-        methods.delete(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
+        methods.delete(editable_tbl=GtiDegasserType, obj=degasser, args=args, user=current_user)
         return  '', 204
 
-class GtiParametersApi(Resource):
+class GtiDegassersApi(Resource):
     def get(self):
-        parameters = GtiParameter.query.all()
-        return parameters_schema.jsonify(parameters)
+        degassers = GtiDegasserType.query.all()
+        return degasser_types_schema.jsonify(degassers)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -51,11 +50,11 @@ class GtiParametersApi(Resource):
 
         if  args['name']:
             print(args['name'])
-            parameter = GtiParameter(name=args['name'])
-            db.session.add(parameter)
+            degasser = GtiDegasserType(name=args['name'])
+            db.session.add(degasser)
             db.session.commit()
 
-            methods.create(editable_tbl=GtiParameter, obj=parameter, args=args, user=current_user)
-            return parameter_schema.jsonify(parameter)
+            methods.create(editable_tbl=GtiDegasserType, obj=degasser, args=args, user=current_user)
+            return degasser_type_schema.jsonify(degasser)
         else:
-            return 'parameter is None', 400
+            return 'degasser is None', 400

@@ -36,3 +36,6 @@ class GtiTableRow(BaseDate):
                                         cascade="all, delete, delete-orphan")
 
     service_company_id = db.Column(db.Integer, db.ForeignKey('gti_service_company.id'))
+    station_type_id = db.Column(db.Integer, db.ForeignKey('gti_station_type.id'))
+    degasser_type_id = db.Column(db.Integer, db.ForeignKey('gti_degasser_type.id'))
+    chromatograph_type_id = db.Column(db.Integer, db.ForeignKey('gti_chromatograph_type.id'))

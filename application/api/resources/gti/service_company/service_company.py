@@ -8,10 +8,10 @@ class CompanySchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = GtiParameter
         sqla_session = db.session
-    gti_rows = ma_fields.Nested('TableRowSchema', default=[], many=True)
+    gti_rows = ma_fields.Nested('GtiTableRowCompanySchema', default=[], many=True)
 
 
-class TableRowSchema(ma.SQLAlchemyAutoSchema):
+class GtiTableRowCompanySchema(ma.SQLAlchemyAutoSchema):
     id = ma_fields.Int()
     service_company_id = ma_fields.Int()
     wellbore_id = ma_fields.Int()
