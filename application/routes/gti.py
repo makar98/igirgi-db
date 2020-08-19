@@ -11,6 +11,8 @@ from application.models.models import WellboreType
 from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 
+from application.models.gti.directory.service_company import GtiServiceCompany
+
 
 from flask_security import login_required, roles_required
 
@@ -53,31 +55,47 @@ def gti_quality_sheet(gti_quality_sheet_id):
 @login_required
 @roles_required('test_role')
 def gti_directory():
-    return render_template(r'gti/directory.html')
+    return render_template(r'gti/directory/directory.html')
 
 
-@app.route('/gti/parameters', methods=['GET', 'POST'])
+@app.route('/gti/directory/parameters', methods=['GET', 'POST'])
 @login_required
 @roles_required('test_role')
 def gti_parameters():
     parameters = GtiParameter.query.all()
-    return render_template(r'gti/parameters.html', parameters=parameters)
+    return render_template(r'gti/directory/parameters.html', parameters=parameters)
 
 
-@app.route('/gti/parameter/<int:parameter_id>', methods=['GET', 'POST'])
+@app.route('/gti/directory/parameter/<int:parameter_id>', methods=['GET', 'POST'])
 @login_required
 @roles_required('test_role')
 def gti_parameter(parameter_id):
     parameter = GtiParameter.query.filter_by(id=parameter_id).first_or_404()
-    return render_template(r'gti/parameter.html', parameter=parameter)
+    return render_template(r'gti/directory/parameter.html', parameter=parameter)
 
 
-@app.route('/gti/format/<int:format_id>', methods=['GET', 'POST'])
+@app.route('/gti/directory/format/<int:format_id>', methods=['GET', 'POST'])
 @login_required
 @roles_required('test_role')
 def gti_format(format_id):
     format = GtiFormat.query.filter_by(id=format_id).first_or_404()
-    return render_template(r'gti/format.html', format=format)
+    return render_template(r'gti/directory/format.html', format=format)
+
+
+@app.route('/gti/directory/service_companies', methods=['GET', 'POST'])
+@login_required
+@roles_required('test_role')
+def gti_service_companies():
+    service_companies = GtiServiceCompany.query.all()
+    return render_template(r'gti/directory/service_companies.html', service_companies=service_companies)
+
+
+@app.route('/gti/directory/service_company/<int:company_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('test_role')
+def gti_service_company(company_id):
+    company = GtiServiceCompany.query.filter_by(id=company_id).first_or_404()
+    return render_template(r'gti/directory/service_company.html', company=company)
 
 
 @app.route('/gti/test', methods=['GET', 'POST'])

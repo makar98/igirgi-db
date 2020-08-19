@@ -11,8 +11,11 @@ from .resources.gis_curve_category.api import GisCurveCategoryApi, GisCurveCateg
 from .resources.gis_rename_curve.api import GisRenameCurveApi, GisRenameCurvesApi
 from .resources.quality_sheet.api import QualitySheetApi, QualitySheetsApi
 
+#GTI
 from .resources.gti.parameter.api import GtiParameterApi, GtiParametersApi
 from .resources.gti.format.api import GtiFormatApi, GtiFormatsApi
+
+from .resources.gti.service_company.api import GtiServiceCompanyApi, GtiServiceCompaniesApi
 
 from .resources.logger.api import LoggerApi, LoggersApi
 
@@ -57,6 +60,9 @@ def initialize_routes(api):
 
     api.add_resource(GtiFormatApi, '/api/gti/format/<gti_format_id>')
     api.add_resource(GtiFormatsApi, '/api/gti/format', '/api/gti/formats')
+
+    api.add_resource(GtiServiceCompanyApi, '/api/gti/company/<company_id>')
+    api.add_resource(GtiServiceCompaniesApi, '/api/gti/company', '/api/gti/companies')
 
     api.add_resource(LoggerApi, '/api/logger/<log_id>')
     api.add_resource(LoggersApi, '/api/logger', '/api/loggers')

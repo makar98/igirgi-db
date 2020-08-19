@@ -5,6 +5,7 @@ from application.models.base.base_date import BaseDate
 
 
 class GtiServiceCompany(BaseDate):
+    __human_name__ = 'Подрядчик по ГТИ'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
 
