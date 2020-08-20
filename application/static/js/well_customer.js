@@ -25,7 +25,7 @@ function add_well() {
     formData.append("customer_id", customer_id);
     formData.append("field_id", field_id);
     formData.append("pad_id", pad_id);
-    formData.append("well", _well);
+    formData.append("name", _well);
     formData.append("well_type_id", well_type_id);
 
     var xhr = new XMLHttpRequest();

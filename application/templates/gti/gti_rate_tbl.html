@@ -8,6 +8,231 @@
 <div class="row">
     <div class="col" >
         <div class="list-group list-group-flush">
+            <span data-toggle="modal" data-target="#add-field-btn">
+            <img src="{{ url_for('static', filename='images/plus.png') }}"
+                 class="img-40px"
+                 >
+                Добавить месторождение
+            </span>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="add-field-btn">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="add_field">
+                        <div class="modal-header">
+                            header
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Заказчик</label>
+                                    <select class="form-control"
+                                            name="customer">
+                                        <option>
+
+                                        </option>
+                                        {% for customer in customers %}
+                                        <option data-id="{{ customer.id }}">
+                                            {{ customer.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Месторождение</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="field">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <button class="btn btn-primary"
+                                            onclick="add_field(this)">
+                                        Добавить
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col" >
+        <div class="list-group list-group-flush">
+            <span data-toggle="modal" data-target="#add-pad-btn">
+            <img src="{{ url_for('static', filename='images/plus.png') }}"
+                 class="img-40px"
+                 >
+                Добавить Куст
+            </span>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="add-pad-btn">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="add_pad">
+                        <div class="modal-header">
+                            header
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Заказчик</label>
+                                    <select class="form-control"
+                                            name="customer"
+                                            onchange="get_fields(this)">
+                                        <option>
+
+                                        </option>
+                                        {% for customer in customers %}
+                                        <option data-id="{{ customer.id }}">
+                                            {{ customer.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Месторождение</label>
+                                    <select class="form-control"
+                                            name="field">
+                                        <option>
+
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Куст</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="pad">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <button class="btn btn-primary"
+                                            onclick="add_pad(this)">
+                                        Добавить
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col" >
+        <div class="list-group list-group-flush">
+            <span data-toggle="modal" data-target="#add-well-btn">
+            <img src="{{ url_for('static', filename='images/plus.png') }}"
+                 class="img-40px"
+                 >
+                Добавить скважину
+            </span>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="add-well-btn">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="add_well">
+                        <div class="modal-header">
+                            header
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Заказчик</label>
+                                    <select class="form-control"
+                                            name="customer"
+                                            onchange="get_fields(this)">
+                                        <option>
+
+                                        </option>
+                                        {% for customer in customers %}
+                                        <option data-id="{{ customer.id }}">
+                                            {{ customer.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Месторождение</label>
+                                    <select class="form-control"
+                                            name="field"
+                                            onchange="get_pads(this)">
+                                        <option>
+
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Куст</label>
+                                    <select class="form-control"
+                                            name="pad">
+                                        <option>
+
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Скважина</label>
+                                    <input type="text" class="form-control" name="well">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Тип скважины</label>
+                                    <select class="form-control"
+                                            name="well_type">
+                                        <option>
+
+                                        </option>
+                                        {% for well_type in well_types  %}
+                                        <option data-id="{{ well_type.id }}">
+                                            {{ well_type.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <button class="btn btn-primary"
+                                            onclick="add_well(this)">
+                                        Добавить
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                footer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col" >
+        <div class="list-group list-group-flush">
             <span data-toggle="modal" data-target="#add-wellbore-btn">
             <img src="{{ url_for('static', filename='images/plus.png') }}"
                  class="img-40px"
@@ -28,7 +253,7 @@
                                         <label>Заказчик</label>
                                         <select class="form-control"
                                                 name="customer"
-                                                onchange="get_fields()">
+                                                onchange="get_fields(this)">
                                             <option>
 
                                             </option>
@@ -106,20 +331,26 @@
                                         <label for="is_gis">ГИС</label>
                                         <input type="checkbox"
                                                class="form-control"
-                                               name="is_gis">
+                                               name="is_gis"
+                                               id="is_gis">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="is_gti">ГТИ</label>
                                         <input type="checkbox"
                                                class="form-control"
                                                name="is_gti"
+                                               id="is_gti"
                                                checked>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary"
-                                        onclick="add_wellbore()">
-                                    Добавить
-                                </button>
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <button class="btn btn-primary"
+                                                onclick="add_wellbore(this)">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                </div>
 
                             <div class="modal-footer">
                                 footer

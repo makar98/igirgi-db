@@ -8,7 +8,7 @@ function add_pad() {
     field_id = _field_opt[_index].dataset.id
 
     var formData = new FormData(document.forms.person);
-    formData.append("pad", _pad);
+    formData.append("name", _pad);
     formData.append("field_id", field_id);
 
     var xhr = new XMLHttpRequest();

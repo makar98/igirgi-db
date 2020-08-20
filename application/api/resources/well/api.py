@@ -49,12 +49,12 @@ class WellsApi(Resource):
         parser.add_argument('customer_id')
         parser.add_argument('field_id')
         parser.add_argument('pad_id')
-        parser.add_argument('well')
+        parser.add_argument('name')
         parser.add_argument('well_type_id')
         args = parser.parse_args()
 
-        if  args['well']:
-            well = Well(name=args['well'], customer_id=int(args['customer_id']),
+        if  args['name']:
+            well = Well(name=args['name'], customer_id=int(args['customer_id']),
                         field_id=int(args['field_id']), pad_id=int(args['pad_id']),
                         well_type_id=int(args['well_type_id']))
             db.session.add(well)

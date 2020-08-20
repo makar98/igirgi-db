@@ -44,12 +44,12 @@ class PadsApi(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('pad')
+        parser.add_argument('name')
         parser.add_argument('field_id')
         args = parser.parse_args()
         print(args)
-        if  args['pad'] and args['field_id']:
-            pad = Pad(name=args['pad'], field_id=int(args['field_id']))
+        if  args['name'] and args['field_id']:
+            pad = Pad(name=args['name'], field_id=int(args['field_id']))
             db.session.add(pad)
             db.session.commit()
 

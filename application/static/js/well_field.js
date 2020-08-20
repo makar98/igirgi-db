@@ -24,7 +24,7 @@ function add_well() {
     formData.append("field_id", field_id);
     formData.append("pad_id", pad_id);
     formData.append("well_type_id", well_type_id);
-    formData.append("well", _well);
+    formData.append("name", _well);
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/well'

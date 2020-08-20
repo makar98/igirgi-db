@@ -8,6 +8,8 @@ from application.models.models import Customer
 from application.models.models import Wellbore
 from application.models.models import WellboreType
 
+from application.models.models import WellType
+
 from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 
@@ -33,10 +35,12 @@ def gti():
 def gti_tbl():
     gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
     wellbore_types = WellboreType.query.all()
+    well_types = WellType.query.all()
     customers = Customer.query.all()
     return render_template(r'gti/gti_rate_tbl.html',
                            wellbores=gti_wellbores,
                            wellbore_types=wellbore_types,
+                           well_types=well_types,
                            customers=customers)
 
 

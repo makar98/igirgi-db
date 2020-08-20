@@ -1,8 +1,133 @@
-function add_wellbore() {
+function add_field(el) {
     user = document.getElementById('user')
     user_id = user.dataset.id
 
-    form = document.getElementById('add_wellbore')
+    form = el.parentNode.parentNode.parentNode.parentNode
+    header = form.querySelector('.modal-header')
+
+    customer = form.querySelector('select[name="customer"]')
+    customer_id = customer[customer.selectedIndex].dataset.id
+
+
+    field = form.querySelector('input[name="field"]').value
+
+    var formData = new FormData(document.forms.person);
+
+    formData.append("customer_id", customer_id);
+    formData.append("name", field);
+
+    var xhr = new XMLHttpRequest();
+    url = 'http://' + document.location.host + '/api/field'
+    xhr.open("POST", url);
+    xhr.send(formData);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if(xhr.status == 200) {
+                field = JSON.parse(xhr.responseText)
+                header.innerHTML = 'Месторождение ' + field['name'] + ' успешно добавлено'
+            }
+            if(xhr.status == 400 || xhr.status == 500) {
+                header.innerHTML = 'Месторождение НЕ добавлено'
+            }
+        }
+    }
+}
+
+function add_pad(el) {
+    user = document.getElementById('user')
+    user_id = user.dataset.id
+
+    form = el.parentNode.parentNode.parentNode.parentNode
+    header = form.querySelector('.modal-header')
+
+    customer = form.querySelector('select[name="customer"]')
+    customer_id = customer[customer.selectedIndex].dataset.id
+
+    field = form.querySelector('select[name="field"]')
+    field_id = field[field.selectedIndex].dataset.id
+
+
+    pad = form.querySelector('input[name="pad"]').value
+
+    var formData = new FormData(document.forms.person);
+
+    formData.append("customer_id", customer_id);
+    formData.append("field_id", field_id);
+    formData.append("name", pad);
+
+    var xhr = new XMLHttpRequest();
+    url = 'http://' + document.location.host + '/api/pad'
+    xhr.open("POST", url);
+    xhr.send(formData);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if(xhr.status == 200) {
+                wellbore = JSON.parse(xhr.responseText)
+
+                header.innerHTML = 'Секция ' + wellbore['name'] + ' успешно добавлена'
+            }
+            if(xhr.status == 400 || xhr.status == 500) {
+                header.innerHTML = 'Секция НЕ добавлена'
+            }
+        }
+    }
+}
+
+function add_well(el) {
+    user = document.getElementById('user')
+    user_id = user.dataset.id
+
+    form = el.parentNode.parentNode.parentNode.parentNode
+    header = form.querySelector('.modal-header')
+
+    customer = form.querySelector('select[name="customer"]')
+    customer_id = customer[customer.selectedIndex].dataset.id
+
+    field = form.querySelector('select[name="field"]')
+    field_id = field[field.selectedIndex].dataset.id
+
+    pad = form.querySelector('select[name="pad"]')
+    pad_id = pad[pad.selectedIndex].dataset.id
+
+    well = form.querySelector('input[name="well"]').value
+
+    well_type = form.querySelector('select[name="well_type"]')
+    well_type_id = well_type[well_type.selectedIndex].dataset.id
+
+    var formData = new FormData(document.forms.person);
+
+    formData.append("customer_id", customer_id);
+    formData.append("field_id", field_id);
+    formData.append("pad_id", pad_id);
+    formData.append("well_type_id", well_type_id);
+    formData.append("name", well);
+
+    var xhr = new XMLHttpRequest();
+    url = 'http://' + document.location.host + '/api/well'
+    xhr.open("POST", url);
+    xhr.send(formData);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if(xhr.status == 200) {
+                well = JSON.parse(xhr.responseText)
+
+                header.innerHTML = 'Скважина ' + well['name'] + ' успешно добавлена'
+            }
+            if(xhr.status == 400 || xhr.status == 500) {
+                header.innerHTML = 'Скважина НЕ добавлена'
+            }
+        }
+    }
+}
+
+function add_wellbore(el) {
+    user = document.getElementById('user')
+    user_id = user.dataset.id
+
+    form = el.parentNode.parentNode.parentNode.parentNode
     header = form.querySelector('.modal-header')
 
     well = form.querySelector('select[name="well"]')
@@ -15,13 +140,6 @@ function add_wellbore() {
 
     let is_gis = (form.querySelector('input[name="is_gis"]').checked) ? 1 : 0;
     let is_gti = (form.querySelector('input[name="is_gti"]').checked) ? 1 : 0;
-
-    console.log(user_id)
-    console.log(well_id)
-    console.log(wellbore_name)
-    console.log(wellbore_type_id)
-    console.log(is_gis)
-    console.log(is_gti)
 
     wellbore_type = form.querySelector('select[name="wellbore_type"]')
     wellbore_type_id = wellbore_type[wellbore_type.selectedIndex].dataset.id
@@ -43,7 +161,6 @@ function add_wellbore() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
             if(xhr.status == 200) {
-                wellbores_div = document.getElementById('wellbores')
                 wellbore = JSON.parse(xhr.responseText)
 
                 header.innerHTML = 'Секция ' + wellbore['name'] + ' успешно добавлена'
@@ -56,8 +173,8 @@ function add_wellbore() {
 }
 
 
-function get_fields() {
-    form = document.getElementById('add_wellbore')
+function get_fields(el) {
+    form = el.parentNode.parentNode.parentNode.parentNode
     customer = form.querySelector('select[name="customer"]')
     customer_id = customer[customer.selectedIndex].dataset.id
 
@@ -66,13 +183,19 @@ function get_fields() {
     wells_opt = form.querySelector('select[name="well"]')
     well_type = form.querySelector('input[name="well_type"]')
         // Удаление старых option
-    fields_opt.length = 0;
-    fields_opt.options[0] = new Option();
-    pads_opt.length = 0;
-    pads_opt.options[0] = new Option();
-    wells_opt.length = 0;
-    wells_opt.options[0] = new Option();
-    well_type.value = ''
+        // try ecxcept
+    try {
+        fields_opt.length = 0;
+        fields_opt.options[0] = new Option();
+        pads_opt.length = 0;
+        pads_opt.options[0] = new Option();
+        wells_opt.length = 0;
+        wells_opt.options[0] = new Option();
+        well_type.value = ''
+    }
+    catch (e){
+        console.log(e)
+    }
 
     xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/customer/' + customer_id
@@ -95,20 +218,26 @@ function get_fields() {
     }
 }
 
-function get_pads() {
-    form = document.getElementById('add_wellbore')
+function get_pads(el) {
+    form = el.parentNode.parentNode.parentNode.parentNode
     field = form.querySelector('select[name="field"]')
     field_id = field[field.selectedIndex].dataset.id
 
     pads_opt = form.querySelector('select[name="pad"]')
     wells_opt = form.querySelector('select[name="well"]')
     well_type = form.querySelector('input[name="well_type"]')
+
     // Удаление старых option
-    pads_opt.length = 0;
-    pads_opt.options[0] = new Option();
-    wells_opt.length = 0;
-    wells_opt.options[0] = new Option();
-    well_type.value = ''
+    try{
+        pads_opt.length = 0;
+        pads_opt.options[0] = new Option();
+        wells_opt.length = 0;
+        wells_opt.options[0] = new Option();
+        well_type.value = ''
+    }
+    catch (e){
+        console.log(e)
+    }
 
     xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/field/' + field_id
@@ -131,8 +260,8 @@ function get_pads() {
     }
 }
 
-function get_wells() {
-    form = document.getElementById('add_wellbore')
+function get_wells(el) {
+    form = el.parentNode.parentNode.parentNode.parentNode
     pad = form.querySelector('select[name="pad"]')
     pad_id = pad[pad.selectedIndex].dataset.id
 

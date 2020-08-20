@@ -4,7 +4,7 @@ function add_customer() {
     header = form.querySelector('.modal-header')
 
     var formData = new FormData(document.forms.person);
-    formData.append("customer", _customer);
+    formData.append("name", _customer);
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/customer'

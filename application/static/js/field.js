@@ -7,7 +7,7 @@ function add_field() {
     console.log(header)
 
     var formData = new FormData(document.forms.person);
-    formData.append("field", _field);
+    formData.append("name", _field);
     formData.append("customer_id", customer_id);
 
     var xhr = new XMLHttpRequest();

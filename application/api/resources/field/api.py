@@ -43,12 +43,12 @@ class FieldsApi(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('field')
+        parser.add_argument('name')
         parser.add_argument('customer_id')
         args = parser.parse_args()
 
-        if  args['field']:
-            field = Field(name=args['field'], customer_id=int(args['customer_id']))
+        if  args['name']:
+            field = Field(name=args['name'], customer_id=int(args['customer_id']))
             db.session.add(field)
             db.session.commit()
 

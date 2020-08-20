@@ -20,7 +20,7 @@ function add_wellbore() {
 
     formData.append("user_id", user_id);
     formData.append("well_id", well_id);
-    formData.append("wellbore", wellbore);
+    formData.append("name", wellbore);
     formData.append("wellbore_type_id", wellbore_type_id);
     formData.append("is_gis", is_gis);
     formData.append("is_gti", is_gti);
@@ -36,11 +36,13 @@ function add_wellbore() {
                 wellbores_div = document.getElementById('wellbores')
                 wellbore = JSON.parse(xhr.responseText)
 
-                console.log(wellbore)
+                link = document.createElement('a');
+                link.setAttribute('href', '/new_style_wellbore/' + wellbore['id'])
                 liFirst = document.createElement('li');
                 liFirst.innerHTML = wellbore['name'] + ' ' + wellbore['wellbore_type']['name'];
+                link.append(liFirst);
 
-                wellbores_div.prepend(liFirst)
+                wellbores_div.prepend(link)
 
                 header.innerHTML = 'Секция ' + wellbore['name'] + ' успешно добавлена'
             }

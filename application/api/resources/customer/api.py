@@ -45,12 +45,12 @@ class CustomersApi(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('customer')
+        parser.add_argument('name')
         args = parser.parse_args()
 
-        if  args['customer']:
-            print(args['customer'])
-            customer = Customer(name=args['customer'])
+        if  args['name']:
+            print(args['name'])
+            customer = Customer(name=args['name'])
             db.session.add(customer)
             db.session.commit()
 

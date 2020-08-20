@@ -16,7 +16,7 @@ function add_well() {
     formData.append("customer_id", customer_id);
     formData.append("field_id", field_id);
     formData.append("pad_id", pad_id);
-    formData.append("well", _well);
+    formData.append("name", _well);
     formData.append("well_type_id", well_type_id);
 
     var xhr = new XMLHttpRequest();
@@ -30,13 +30,12 @@ function add_well() {
                 wells_div = document.getElementById('wells')
                 well = JSON.parse(xhr.responseText)
 
-                //link = document.createElement('a');
-                //link.setAttribute('href', '/new_style_pad/' + well['id'])
+                link = document.createElement('a');
+                link.setAttribute('href', '/new_style_well/' + well['id'])
                 liFirst = document.createElement('li');
                 liFirst.innerHTML = well['name'];
-                //link.append(liFirst);
-                //wells_div.prepend(link)
-                wells_div.prepend(liFirst)
+                link.append(liFirst);
+                wells_div.prepend(link)
 
                 header.innerHTML = 'Скважина ' + well['name'] + ' успешно добавлена'
             }
