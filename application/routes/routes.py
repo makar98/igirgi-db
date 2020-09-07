@@ -14,6 +14,8 @@ from application.models.models import WellType
 from application.models.models import Wellbore
 from application.models.models import WellboreType
 
+from application.models.models import Suite, Layer
+
 from application.models.gis import GisCurve, GisCurveCategory, QualitySheet
 from application.models.logger import Logger
 from application.models.user import User
@@ -107,7 +109,9 @@ def new_style_customer(id):
 def new_style_field(id):
     field = Field.query.filter_by(id=id).first_or_404()
     well_types = WellType.query.all()
-    return render_template(r'new_style_field.html', field=field, well_types=well_types)
+    suites=Suite.query.all()
+    return render_template(r'new_style_field.html',
+                           field=field, well_types=well_types, suites=suites)
 
 
 @app.route('/new_style_pad/<id>', methods=['GET', 'POST'])
@@ -132,9 +136,13 @@ def new_style_well(id):
 def new_style_wellbore(id):
     wellbore = Wellbore.query.filter_by(id=id).first()
     wellbore_types = WellboreType.query.all()
+    suites = wellbore.well.field.suites
+    print(suites)
+
     return render_template(r'new_style_wellbore.html',
                            wellbore=wellbore,
-                           wellbore_types=wellbore_types)
+                           wellbore_types=wellbore_types,
+                           suites=suites)
 
 
 @app.route('/quality_sheet/<id>', methods=['GET', 'POST'])
@@ -262,3 +270,26 @@ def logger():
     return render_template('logger/logger_main_page.html',
                            logger=logger,
                            users=users)
+
+
+@app.route('/suites', methods=['GET'])
+def suites():
+    suites = Suite.query.all()
+    fields = Field.query.all()
+    return render_template(r'suite_layer/suites.html',
+                           suites=suites,
+                           fields=fields)
+
+
+@app.route('/suite/<int:suite_id>', methods=['GET'])
+def suite(suite_id):
+    suite = Suite.query.filter_by(id=suite_id).first()
+    fields = Field.query.all()
+    print(suite)
+    return render_template(r'suite_layer/suite.html', suite=suite, fields=fields)
+
+
+@app.route('/layer/<int:layer_id>', methods=['GET'])
+def layer(layer_id):
+    layer = Layer.query.filter_by(id=layer_id).first()
+    return render_template(r'suite_layer/layer.html', layer=layer)

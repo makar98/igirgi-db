@@ -70,12 +70,19 @@ function edit_wellbore() {
     _wellbore_type_name = _wellbore_type[_wellbore_type_selectedIndex].value
     _wellbore_type_id = _wellbore_type[_wellbore_type_selectedIndex].dataset.id
 
+    let is_gis = (form.querySelector('input[name="is_gis"]').checked) ? 1 : 0;
+    let is_gti = (form.querySelector('input[name="is_gti"]').checked) ? 1 : 0;
+
+    var layers_id = $('#layers').val()
 
     header = form.querySelector('.modal-header')
 
     var formData = new FormData(document.forms.person);
     formData.append("name", wellbore_name);
     formData.append("wellbore_type_id", _wellbore_type_id);
+    formData.append("layers_id", JSON.stringify(layers_id));
+    formData.append("is_gis", is_gis);
+    formData.append("is_gti", is_gti);
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/wellbore/' + wellbore_id

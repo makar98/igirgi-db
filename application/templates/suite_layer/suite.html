@@ -1,0 +1,157 @@
+{% extends 'new_style_base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/bootstrap-select.js') }}"></script>
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/i18n/defaults-ru_RU.js') }}"></script>
+
+
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 10px;">
+    <div class="row justify-content-start">
+        <div class="col" style="width: 30%">
+            <div class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <img src="{{ url_for('static', filename='images/customer.png') }}" class="img-db">
+                    <span class="left-text-img align-middle"
+                          id="suite"
+                          data-id="{{ suite.id }}">
+                        Свита {{ suite.name }}
+                    </span>
+                </li>
+                <li>
+                    <span data-toggle="modal" data-target="#info-parameter-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Информация
+                    </span>
+                    <div class="modal" tabindex="-1" role="dialog" id="info-parameter-btn">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div id="edit_suite">
+                                    <div class="modal-header">
+                                        header
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group col-md-12">
+                                            <label>Свита</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="suite"
+                                                   value="{{  suite.name }}"
+                                                   data-id="{{ suite.id }}">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label>Месторождения</label>
+                                                <select id="fields"
+                                                        class="form-control selectpicker"
+                                                        multiple
+                                                        data-actions-box="true">
+                                                    {% for field in suite.fields %}
+                                                    <option value="{{ field.id }}"
+                                                            selected>
+                                                        {{ field.name }}
+                                                    </option>
+                                                    {% endfor %}
+                                                    {% for field in fields %}
+                                                        {% if field not in suite.field %}
+                                                        <option value="{{ field.id }}">
+                                                            {{ field.name }}
+                                                        </option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button
+                                            class="btn btn-primary"
+                                            onclick="edit_suite()">
+                                            Редактировать
+                                        </button>
+                                        <button
+                                            class="btn btn-primary"
+                                            onclick="delete_suite()">
+                                            Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span data-toggle="modal" data-target="#add-layer-btn">
+                    <img src="{{ url_for('static', filename='images/plus.png') }}"
+                         class="img-40px"
+                         >
+                        Добавить пласт
+                    </span>
+                    <div class="modal" tabindex="-1" role="dialog" id="add-layer-btn">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div id="add_layer">
+                                    <div class="modal-header">
+                                        header
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group col-md-12">
+                                            <label>Пласт</label>
+                                            <input type="text" class="form-control" name="layer">
+                                        </div>
+                                        <button
+                                            class="btn btn-primary"
+                                            onclick="add_layer()">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    footer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item border-0">
+                    <input>
+                </li>
+                <div id="layers">
+                    {% for layer in suite.layers %}
+                        <a href="{{ url_for('layer', layer_id=layer.id) }}">
+                            <li>{{ layer.name }}</li>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/suite_layer/suite.js') }}"></script>
+<script src="{{ url_for('static', filename='js/suite_layer/layer.js') }}"></script>
+{% endblock %}

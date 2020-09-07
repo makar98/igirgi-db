@@ -20,6 +20,7 @@ class CustomerApi(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('name')
+        parser.add_argument('short_name')
         args = parser.parse_args()
 
         customer = Customer.query.filter_by(id=customer_id).first()
@@ -46,11 +47,12 @@ class CustomersApi(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
+        parser.add_argument('short_name')
         args = parser.parse_args()
 
         if  args['name']:
             print(args['name'])
-            customer = Customer(name=args['name'])
+            customer = Customer(name=args['name'], short_name=args['short_name'])
             db.session.add(customer)
             db.session.commit()
 

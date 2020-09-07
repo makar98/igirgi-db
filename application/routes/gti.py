@@ -13,10 +13,15 @@ from application.models.models import WellType
 from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 
+from application.models.gti.quality_sheet.quality_sheet import GtiQualitySheet
 from application.models.gti.directory.service_company import GtiServiceCompany
 from application.models.gti.directory.chromatograph_type import GtiChromatographType
 from application.models.gti.directory.degasser_type import GtiDegasserType
 from application.models.gti.directory.station_type import GtiStationType
+from application.models.gti.directory.service_company import GtiServiceCompany
+
+from application.models.models import WellboreStatus
+from application.models.models import Suite
 
 
 from flask_security import login_required, roles_required
@@ -36,12 +41,25 @@ def gti_tbl():
     gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
     wellbore_types = WellboreType.query.all()
     well_types = WellType.query.all()
-    customers = Customer.query.all()
+    wellbore_statuses = WellboreStatus.query.all()
+    customer = Customer.query.all()
+    service_companies = GtiServiceCompany.query.all()
+    suites = Suite.query.all()
+    station_types = GtiStationType.query.all()
+    degasser_types = GtiDegasserType.query.all()
+    chromatograph_types = GtiChromatographType.query.all()
+    for wb in gti_wellbores:
+        print(wb.gti_row.gti_quality_sheet)
     return render_template(r'gti/gti_rate_tbl.html',
                            wellbores=gti_wellbores,
                            wellbore_types=wellbore_types,
                            well_types=well_types,
-                           customers=customers)
+                           customer=customer,
+                           service_companies=service_companies,
+                           suites=suites,
+                           station_types=station_types,
+                           degasser_types=degasser_types,
+                           chromatograph_types=chromatograph_types)
 
 
 @app.route('/gti/quality_sheet/<gti_quality_sheet_id>', methods=['GET', 'POST'])
@@ -49,7 +67,10 @@ def gti_tbl():
 @roles_required('test_role')
 def gti_quality_sheet(gti_quality_sheet_id):
     param = GtiParameter.query.all()
-    return render_template(r'gti/quality_sheet.html', param=param)
+    quality_sheet = GtiQualitySheet.query.filter_by(id=gti_quality_sheet_id).first_or_404()
+    return render_template(r'gti/quality_sheet.html',
+                           param=param,
+                           quality_sheet=quality_sheet)
 
 
 @app.route('/gti/directory', methods=['GET', 'POST'])

@@ -4,8 +4,10 @@
     <div class="container">
         <div class="row" style="margin-top: 50px;">
             <div class="col-4">
-                <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
-                <span class="left-text-img align-middle">Поиск<br>скважины</span>
+                <a href="{{ url_for('suites') }}">
+                    <img src="{{ url_for('static', filename='images/search-120.png') }}" class="img-db">
+                    <span class="left-text-img align-middle">Пласты и свиты</span>
+                </a>
             </div>
             <div class="col-4">
                 <a href="{{ url_for('new_style_customers') }}">

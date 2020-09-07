@@ -28,8 +28,8 @@ class DBLog(object):
         db.session.flush()
 
         for field in self.editable_fields:
-            edit_field = EditableField(log_id=log.id, field_name=field['field'], before_edit=field['before_edit'],
-                                       after_edit=field['after_edit'])
+            edit_field = EditableField(log_id=log.id, field_name=field['field'], before_edit=str(field['before_edit']),
+                                       after_edit=str(field['after_edit']))
             db.session.add(edit_field)
 
         db.session.commit()

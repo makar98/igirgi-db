@@ -3,6 +3,8 @@ from application.db_logger.db_logger import DBLog
 
 from datetime import datetime
 
+from sqlalchemy.orm.collections import InstrumentedList
+
 
 def create(editable_tbl: object, obj: object, args: dict, user: object):
     # list of editable model fields. struct at application.db_logger.db_logger EditableFields
@@ -26,7 +28,17 @@ def edit(editable_tbl: object, obj: object, args: dict, user: object):
     editable_fields = []
 
     for key, value in args.items():
+        # Это исправление косяка, так как в апи не добавил строгую типизацию
+        if '_id' in key:
+            try:
+                value = int(value)
+            # На случай, если '_id' будет в самом название колонки
+            except ValueError:
+                pass
         if value is not None and getattr(obj, key)!= value:
+            if type(value) == InstrumentedList:
+                pass
+
             editable_fields.append({'field': key,
                                     'before_edit': getattr(obj, key),
                                     'after_edit': value}

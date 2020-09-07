@@ -1,4 +1,24 @@
 {% extends 'new_style_base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/bootstrap-select.js') }}"></script>
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/i18n/defaults-ru_RU.js') }}"></script>
+
+
+{% endblock %}
+
 {% block content %}
 <input
    id="well"
@@ -119,6 +139,52 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row form-group">
+                                    <div class="col">
+                                        <label>Пласты</label>
+                                        <select id="layers"
+                                                class="form-control selectpicker"
+                                                multiple>
+                                            {% for suite in suites %}
+                                            <optgroup label="Свита {{ suite.name }}">
+                                                {% for layer in suite.layers %}
+                                                    {% if layer in wellbore.layers %}
+                                                       <option value="{{ layer.id }}"
+                                                               selected>
+                                                            {{ layer.name }}
+                                                        </option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for layer in suite.layers %}
+                                                    {% if not layer in wellbore.layers %}
+                                                       <option value="{{ layer.id }}">
+                                                            {{ layer.name }}
+                                                        </option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col">
+                                        <input type="checkbox"
+                                               name="is_gis"
+                                               id="is_gis"
+                                               {% if wellbore.is_gis %} checked {% endif %}
+                                        >
+                                        <label for="is_gis">is_gis</label>
+                                    </div>
+                                    <div class="col">
+                                        <input type="checkbox"
+                                               name="is_gti"
+                                               id="is_gti"
+                                               {% if wellbore.is_gti %} checked {% endif %}
+                                        >
+                                        <label for="is_gti">is_gti</label>
+                                    </div>
+                                </div>
                                 <div class="form-row">
                                     <button
                                         class="btn btn-primary btn-del"
@@ -126,6 +192,7 @@
                                         Сохранить изменения
                                     </button>
                                 </div>
+
                                 <div class="form-row">
                                     <button
                                         class="btn btn-primary btn-del"
@@ -154,15 +221,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-2">
-            <input type="checkbox" name="is_gis" {% if wellbore.is_gis %} checked {% endif %}>
-            <label for="is_gis">is_gis</label>
-        </div>
-        <div class="col-2">
-            <input type="checkbox" id="horns" name="is_gti" {% if wellbore.is_gti %} checked {% endif %}>
-            <label for="is_gti">is_gti</label>
-        </div>
+
     </div>
 </div>
 
@@ -178,7 +237,7 @@
 
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+
 
 <script src="{{ url_for('static', filename='js/wellbore.js') }}"></script>
 {% endblock %}

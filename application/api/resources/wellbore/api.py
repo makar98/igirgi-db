@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from application.models.models import Well
 from application.models.models import Wellbore
+from application.models.models import Layer
 from application.models.gis import QualitySheet
 from application.models.gti.table_row import GtiTableRow
 from application.models.gti.quality_sheet.quality_sheet import GtiQualitySheet
@@ -9,6 +10,7 @@ from .wellbore import wellbore_schema, wellbores_schema
 from flask_restful import reqparse
 from application import db
 from flask import make_response
+import json
 
 from flask_security import login_required, current_user
 from application.db_logger import methods
@@ -23,9 +25,41 @@ class WellboreApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
         parser.add_argument('wellbore_type_id')
+        parser.add_argument('layers_id')
+        parser.add_argument('is_gis')
+        parser.add_argument('is_gti')
         args = parser.parse_args()
 
         wellbore = Wellbore.query.filter_by(id=wellbore_id).first()
+        db.session.flush()
+
+        args['is_gis'] = bool(int(args['is_gis']))
+        args['is_gti'] = bool(int(args['is_gti']))
+
+        if wellbore.gti_row.gti_quality_sheet is None and args['is_gti']:
+            if wellbore.gti_row is None:
+                gti_table_row = GtiTableRow(wellbore_id=wellbore.id)
+                db.session.add(gti_table_row)
+            else:
+                gti_table_row = wellbore.gti_row
+
+            author = User.query.filter_by(id=int(current_user.id)).first()
+            gti_table_row.authors.append(author)
+            db.session.flush()
+
+            gis_quality_sheet = GtiQualitySheet(gti_table_row_id=gti_table_row.id)
+            db.session.add(gis_quality_sheet)
+
+        args['layers_id'] = json.loads(args['layers_id'])
+        if args['layers_id'] is not None:
+            args['layers_id'] = sorted(list(map(int, args['layers_id'])))
+            if args['layers_id'] != sorted([layer.id for layer in wellbore.layers]):
+                args['layers'] = []
+                for layer_id in args['layers_id']:
+                    args['layers'].append(Layer.query.filter_by(id=layer_id).first())
+            else:
+                args['layers'] = wellbore.layers
+        del args['layers_id']
 
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
         methods.edit(editable_tbl=Wellbore, obj=wellbore, args=args, user=current_user)

@@ -20,6 +20,14 @@ from .gis import GisCurveRename, GisCurveCategory, GisCurve
     DELETE FROM alembic_version WHERE version_num='3aae6532b560';
 """
 
+fields_suites = db.Table('fields_suites',
+        db.Column('field_id', db.Integer(), db.ForeignKey('field.id')),
+        db.Column('suite_id', db.Integer(), db.ForeignKey('suite.id')))
+
+wellbores_layers = db.Table('wellbores_layers',
+        db.Column('wellbore_id', db.Integer(), db.ForeignKey('wellbore.id')),
+        db.Column('layer_id', db.Integer(), db.ForeignKey('layer.id')))
+
 
 class Customer(BaseDate):
     __human_name__ = 'Заказчик'
@@ -27,6 +35,7 @@ class Customer(BaseDate):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
+    short_name = db.Column(db.String(64), unique=True)
     fields = db.relationship('Field', backref=backref('customer'), lazy=True,
                                      cascade="all, delete, delete-orphan")
     emails = db.relationship('CustomerEmail', backref=backref('customer'), lazy=True,
@@ -51,12 +60,12 @@ class Field(BaseDate):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     date_add = db.Column(db.DateTime, default=datetime.utcnow)
 
-    suites = db.relationship('Suite', backref=backref('field'), lazy=True,
-                                     cascade="all, delete, delete-orphan")
     pads = db.relationship('Pad', backref=backref('field'), lazy=True,
                                      cascade="all, delete, delete-orphan")
     wells = db.relationship('Well', backref=backref('field'), lazy=True,
                                      cascade="all, delete, delete-orphan")
+
+    suites = db.relationship('Suite', secondary=fields_suites, back_populates='fields')
 
     quality_sheets = db.relationship('QualitySheet', backref=backref('field'), lazy=True)
 
@@ -137,6 +146,7 @@ class Wellbore(BaseDate):
 
     name = db.Column(db.String(128), nullable=False)
     wellbore_type_id = db.Column(db.Integer, db.ForeignKey('wellbore_type.id'), nullable=False)
+    wellbore_status_id = db.Column(db.Integer, db.ForeignKey('wellbore_status.id'))
     well_id = db.Column(db.Integer, db.ForeignKey('well.id'), nullable=False)
 
     is_gis = db.Column(db.Boolean, default=False)
@@ -147,6 +157,8 @@ class Wellbore(BaseDate):
 
     gti_row = db.relationship('GtiTableRow', backref=backref('wellbore'), uselist=False, lazy=True,
                                      cascade="all, delete, delete-orphan")
+
+    layers = db.relationship('Layer', secondary=wellbores_layers, back_populates='wellbores')
 
 
     def __repr__(self):
@@ -169,18 +181,29 @@ class WellboreType(BaseDate):
         return self.name
 
 
+class WellboreStatus(BaseDate):
+    __human_name__ = 'Тип секции'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+
+    wellbore = db.relationship('Wellbore', uselist=False, backref=backref('wellbore_status'),
+                                cascade='all, delete-orphan', lazy=True)
+
+    def __repr__(self):
+        return self.name
+
+
 class Suite(BaseDate):
     __human_name__ = 'Свита'
 
-    __table_args__ = (
-        db.UniqueConstraint('name', 'field_id', name='unique_suite'),
-    )
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(64), nullable=False)
-    field_id = db.Column(db.Integer, db.ForeignKey('field.id'), nullable=False)
     layers = db.relationship('Layer', backref=backref('suite'), lazy=True,
                                      cascade="all, delete, delete-orphan")
+
+    fields = db.relationship('Field', secondary=fields_suites, back_populates='suites')
 
     def __repr__(self):
         return self.name
@@ -198,6 +221,8 @@ class Layer(BaseDate):
     suite_id = db.Column(db.Integer, db.ForeignKey('suite.id'), nullable=False)
     path_to_files = db.relationship('FilePath', backref=backref('layer'), lazy=True,
                                      cascade="all, delete, delete-orphan")
+
+    wellbores = db.relationship('Wellbore', secondary=wellbores_layers, back_populates='layers')
 
     def __repr__(self):
         return self.name

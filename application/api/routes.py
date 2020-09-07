@@ -4,6 +4,9 @@ from .resources.field.api import FieldApi, FieldsApi
 from .resources.pad.api import PadApi, PadsApi
 from .resources.well.api import WellApi, WellsApi
 from .resources.wellbore.api import WellboreApi, WellboresApi
+from .resources.suite.api import SuiteApi, SuitesApi
+from .resources.layer.api import LayerApi, LayersApi
+
 from .resources.service_company.api import ServiceCompaniesApi, ServiceCompanyApi
 from .resources.tool.api import ToolApi, ToolsApi
 from .resources.gis_curve.api import GisCurveApi, GisCurvesApi
@@ -45,6 +48,13 @@ def initialize_routes(api):
     api.add_resource(WellboreApi, '/api/wellbore/<wellbore_id>')
     api.add_resource(WellboresApi, '/api/wellbore', '/api/wellbores')
 
+    api.add_resource(SuiteApi, '/api/suite/<suite_id>')
+    api.add_resource(SuitesApi, '/api/suite', '/api/suites')
+
+    api.add_resource(LayerApi, '/api/layer/<layer_id>')
+    api.add_resource(LayersApi, '/api/layer', '/api/layers')
+
+    # GIS
     api.add_resource(ServiceCompanyApi, '/api/service_company/<service_company_id>')
     api.add_resource(ServiceCompaniesApi, '/api/service_company', '/api/service_companies')
 

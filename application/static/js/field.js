@@ -43,6 +43,7 @@ function edit_field() {
         return
         }
     form = document.getElementById('edit_field')
+    var suites_id = $('#suites').val()// || []
     // _field - from page
     // field - response
     _field = form.querySelector('input[name="field"]')
@@ -52,6 +53,7 @@ function edit_field() {
 
     var formData = new FormData(document.forms.person);
     formData.append("name", field_name);
+    formData.append("suites_id", JSON.stringify(suites_id));
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/field/' + field_id

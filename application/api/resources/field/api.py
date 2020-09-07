@@ -1,9 +1,10 @@
 from flask_restful import Resource
-from application.models.models import Field
+from application.models.models import Field, Suite
 from .field import field_schema, fields_schema
 from flask_restful import reqparse
 from application import db
 from flask import make_response
+import json
 
 from flask_security import login_required, current_user
 from application.db_logger import methods
@@ -17,11 +18,19 @@ class FieldApi(Resource):
     def put(self, field_id):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
+        parser.add_argument('suites_id')
         args = parser.parse_args()
 
         field = Field.query.filter_by(id=field_id).first()
 
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
+        args['suites_id'] = json.loads(args['suites_id'])
+        print(args)
+        args['suites'] = []
+        if args['suites_id'] is not None:
+            for suite_id in args['suites_id']:
+                args['suites'].append(Suite.query.filter_by(id=suite_id).first())
+        del args['suites_id']
         methods.edit(editable_tbl=Field, obj=field, args=args, user=current_user)
 
         return make_response(field_schema.jsonify(field), 201)

@@ -12,7 +12,25 @@
 {% endblock %}
 
 {% block content %}
-
+    <div id="info">
+        <div class="row">
+            <div class="col">
+                <span>Подрядчик {{ quality_sheet.gti_table_row.service_company }}</span>
+            </div>
+            <div class="col">
+                <span>Тип станции {{ quality_sheet.gti_table_row.station_type_id }}</span>
+            </div>
+            <div class="col">
+                <span>Тип хроматографа {{ quality_sheet.gti_table_row.chromatograph_type_id }}</span>
+            </div>
+            <div class="col">
+                <span>Тип дегазатора {{ quality_sheet.gti_table_row.degasser_type_id }}</span>
+            </div>
+            <div class="col">
+                <span>Завод № {{ quality_sheet.gti_table_row.factory_num }}</span>
+            </div>
+        </div>
+    </div>
     <div id="technological_research">
         <div class="row">
             <div class="col">

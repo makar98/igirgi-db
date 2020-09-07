@@ -4,6 +4,7 @@ from sqlalchemy.orm import backref
 from application.models.base.base_date import BaseDate
 from .quality_sheet.quality_sheet import GtiQualitySheet
 from .directory.service_company import GtiServiceCompany
+from .quality_sheet.final_report import GtiFinalReport
 
 
 author_gti_row = db.Table('author_gti',
@@ -20,22 +21,28 @@ class GtiTableRow(BaseDate):
 
     layer = db.Column(db.String(128)) #  Сделать связь к модели Layer
     company = db.Column(db.String(128)) #  Сделать связь к модели GtiServiceCompany
-    efficiency = db.Column(db.String(128))
-    mud_gas_quality =db.Column(db.String(128))
     frequency = db.Column(db.Integer, default=0)
-    bottom_hole_plus_igti = db.Column(db.String(128))
-    bottom_hole = db.Column(db.String(128))
-
+    quality = db.Column(db.Integer, db.ForeignKey('gti_table_row_quality.id'))
     authors = db.relationship('User', secondary=author_gti_row, backref='authors')
 
-    degasser = db.Column(db.String(128))
     notes = db.Column(db.String(512))
 
-    gti_quality_sheet = db.relationship('GtiQualitySheet', backref=backref('gti_table_row'),
-                                        uselist=False, lazy=True,
-                                        cascade="all, delete, delete-orphan")
+    final_report_id = db.Column(db.Integer, db.ForeignKey('gti_final_report.id'))
+    final_report_path = db.Column(db.String(256))
+
+    gti_quality_sheet = db.relationship('GtiQualitySheet',
+                                        backref=backref('gti_table_row'),
+                                        lazy=True,
+                                        uselist=False,
+                                        cascade='all, delete, delete-orphan')
+
+    date_T3 = db.Column(db.DateTime)
 
     service_company_id = db.Column(db.Integer, db.ForeignKey('gti_service_company.id'))
     station_type_id = db.Column(db.Integer, db.ForeignKey('gti_station_type.id'))
     degasser_type_id = db.Column(db.Integer, db.ForeignKey('gti_degasser_type.id'))
     chromatograph_type_id = db.Column(db.Integer, db.ForeignKey('gti_chromatograph_type.id'))
+    factory_num = db.Column(db.String(128))
+
+
+

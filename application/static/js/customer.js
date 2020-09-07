@@ -1,10 +1,12 @@
 function add_customer() {
     form = document.getElementById('add_customer')
     _customer = form.querySelector('input[name="customer"]').value
+    _customer_short = form.querySelector('input[name="customer_short"]').value
     header = form.querySelector('.modal-header')
 
     var formData = new FormData(document.forms.person);
     formData.append("name", _customer);
+    formData.append("short_name", _customer_short);
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/customer'
@@ -42,12 +44,15 @@ function edit_customer() {
     // _customer - from page
     // customer - response
     _customer = form.querySelector('input[name="customer"]')
+    _customer_short = form.querySelector('input[name="customer_short"]')
     customer_name = _customer.value
+    customer_short = _customer_short.value
     customer_id = _customer.dataset.id
     header = form.querySelector('.modal-header')
 
     var formData = new FormData(document.forms.person);
     formData.append("name", customer_name);
+    formData.append("short_name", customer_short);
 
     var xhr = new XMLHttpRequest();
     url = 'http://' + document.location.host + '/api/customer/' + customer_id
