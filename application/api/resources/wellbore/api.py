@@ -51,6 +51,7 @@ class WellboreApi(Resource):
             db.session.add(gis_quality_sheet)
 
         args['layers_id'] = json.loads(args['layers_id'])
+        print(args['layers_id'])
         if args['layers_id'] is not None:
             args['layers_id'] = sorted(list(map(int, args['layers_id'])))
             if args['layers_id'] != sorted([layer.id for layer in wellbore.layers]):

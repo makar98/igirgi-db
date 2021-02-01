@@ -25,8 +25,9 @@ class FieldApi(Resource):
 
         # Изменения в объект вносятся внутри methods.edit, чтобы не перебирать их дважды
         args['suites_id'] = json.loads(args['suites_id'])
-        print(args)
-        args['suites'] = []
+        # print(args)
+        args['suites'] = [] # Нахуя это делается? Надо разобраться!
+        # print(args)
         if args['suites_id'] is not None:
             for suite_id in args['suites_id']:
                 args['suites'].append(Suite.query.filter_by(id=suite_id).first())

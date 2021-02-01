@@ -26,7 +26,11 @@ from .resources.gti.chromatograph_type.api import GtiChromatographTypeApi, GtiCh
 
 from .resources.gti.degasser_type.api import GtiDegasserApi, GtiDegassersApi
 
+from .resources.gti.table_row.api import GtiTableRowApi, GtiTableRowsApi
+
 from .resources.logger.api import LoggerApi, LoggersApi
+
+from .resources.gti.quality_sheet.api import GtiQualitySheetApi
 
 
 def initialize_routes(api):
@@ -89,6 +93,13 @@ def initialize_routes(api):
     api.add_resource(GtiDegasserApi, '/api/gti/degasser_type/<degasser_type_id>')
     api.add_resource(GtiDegassersApi, '/api/gti/degasser_type', '/api/gti/degasser_types')
 
+    api.add_resource(GtiTableRowApi, '/api/gti/table_row/<table_row_id>')
+    api.add_resource(GtiTableRowsApi, '/api/gti/table_row', '/api/gti/table_rows')
+
+    api.add_resource(GtiQualitySheetApi, '/api/gti/quality_sheet/<quality_sheet_id>')
+
     api.add_resource(LoggerApi, '/api/logger/<log_id>')
     api.add_resource(LoggersApi, '/api/logger', '/api/loggers')
+
+
 

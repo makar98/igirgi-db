@@ -6,6 +6,7 @@ from application.models.models import Customer
 from application.models.models import Field
 from application.models.models import Layer
 from application.models.models import Well
+from application.models.models import Wellbore
 from application.models.models import WellType
 from application.models.gis import GisCurve, GisCurveCategory, QualitySheet, Method
 from application.models.user import User, Role
@@ -14,10 +15,16 @@ from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 from application.models.gti.table_row import GtiTableRow
 
+import logging
+
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
 
 @app.shell_context_processor
 def make_shell_context():
-    return {'db': db, 'Customer': Customer, 'Field': Field, 'Layer': Layer, 'Well': Well, 'WellType': WellType,
+    return {'db': db, 'Customer': Customer, 'Field': Field, 'Layer': Layer, 'Well': Well, 'Wellbore': Wellbore,
+            'WellType': WellType,
             'Tool': Tool, 'QualitySheet': QualitySheet,
             'ServiceCompany': ServiceCompany,
             'QualitySheet': QualitySheet, 'Method': Method, 'FilePath': FilePath, 'CustomerEmail': CustomerEmail,

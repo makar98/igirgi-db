@@ -3,7 +3,7 @@ from application.models.gti.directory.station_type import GtiStationType
 from marshmallow import fields as ma_fields
 
 
-class GtiStation_TypeSchema(ma.SQLAlchemyAutoSchema):
+class GtiStationTypeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = GtiStationType
         sqla_session = db.session
@@ -16,5 +16,5 @@ class GtiTableRowStationTypeSchema(ma.SQLAlchemyAutoSchema):
     wellbore_id = ma_fields.Int()
 
 
-station_type_schema = GtiStation_TypeSchema()
-station_types_schema = GtiStation_TypeSchema(many=True)
+station_type_schema = GtiStationTypeSchema()
+station_types_schema = GtiStationTypeSchema(many=True)

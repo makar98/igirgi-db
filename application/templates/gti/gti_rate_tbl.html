@@ -5,6 +5,9 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
+    <link href="{{ url_for('static', filename='air-datepicker-master/dist/css/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+
+
     <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/bootstrap-select.js') }}"></script>
 
 
@@ -13,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-select-1.13.14/js/i18n/defaults-ru_RU.js') }}"></script>
 
-{% endblock %}
+    {% endblock %}
 
 {% block content %}
 <div class="row">
@@ -373,6 +376,137 @@
         </div>
     </div>
 </div>
+
+<div class="row search" id="search">
+    <div class="col">
+        <div class="row">
+            <div class="col-md-2">
+                <select id="date_interval_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Интервал">
+                    <option value="last_hour">
+                        За час
+                    </option>
+                    <option value="last_day">
+                        За сутки
+                    </option>
+                    <option value="last_week">
+                        За неделю
+                    </option>
+                    <option value="last_month">
+                        За месяц
+                    </option>
+                    <option value="all_time">
+                        Все время
+                    </option>
+                </select>
+            </div>
+             <div class="col-md-2">
+                <select id="users_search"
+                        class="selectpicker"
+                        multiple data-actions-box="true"
+                        title="Пользователь">
+                    {% for user in users %}
+                    <option value="{{ user.id }}">
+                        {{ user }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="fields_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Месторождение"
+                        multiple>
+                    {% for f in fields %}
+                    <option value="{{ f.id }}">
+                        {{ f.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="layers_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Пласт"
+                        multiple>
+                    {% for suite in suites %}
+                    <optgroup label="Свита {{ suite.name }}">
+                        {% for layer in suite.layers %}
+                        <option value="{{ layer.id }}">
+                            {{ layer.name }}
+                        </option>
+                        {% endfor %}
+                    </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <select id="customers_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="ДО"
+                        multiple>
+                    {% for customer in customers %}
+                    <option value="{{ customer.id }}">
+                        {{ customer.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="gti_service_companies_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Подрядчик по ГТИ"
+                        multiple>
+                    {% for service_company in service_companies %}
+                    <option value="{{ service_company.id }}">
+                        {{ service_company.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="wellbore_statuses_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Статус скважины"
+                        multiple>
+                    {% for wellbore_status in wellbore_statuses %}
+                    <option value="{{ wellbore_status.id }}">
+                        {{ wellbore_status.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="quality_search"
+                        class="selectpicker"
+                        data-actions-box="true"
+                        title="Качество"
+                        multiple>
+                    {% for q in qualities %}
+                    <option value="{{ q.id }}">
+                        {{ q.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary"
+                        onclick="get_rows_filter()">
+                    Поиск
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col" style="margin-left: 10px;">
     <div class="row row-name">
         <div class="col-md-2 display-flex">
@@ -478,337 +612,410 @@
             <span>Активные скважины</span>
         </div>
     </div>
-    {% for wb in wellbores %}
-    <div id="wb_{{ wb.id }}">
-        <span data-toggle="modal" data-target="#wb_info_{{ wb.id }}" style="color: black">
-            <div class="row row-content">
-                <div class="col-md-2 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-4 display-flex">
-                            <span>{{ wb.create_date }}</span>
-                        </div>
-                        <div class="col-8 display-flex">
-                            <span>{{ wb.well.field.name }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-4 display-flex">
-                            <span>{{ wb.well.pad.name }}</span>
-                        </div>
-                        <div class="col-4 display-flex">
-                            <span>{{ wb.well.name }}</span>
-                        </div>
-                        <div class="col-4 display-flex">
-                            <span>{{ wb.well.well_type.name }}</span>
+    <div id="main_data_rows">
+        {% for wb in wellbores %}
+        <div id="wb_{{ wb.id }}">
+            <span data-toggle="modal" data-target="#{{ wb.id }}" style="color: black">
+                <div class="row row-content">
+                    <div class="col-md-2 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-4 display-flex">
+                                <span>{{ wb.create_date }}</span>
+                            </div>
+                            <div class="col-8 display-flex">
+                                <span>{{ wb.well.field.name }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-6 display-flex">
-                            <span>{{ wb.name }}</span>
-                        </div>
-                        <div class="col-6 display-flex">
-                            <span>{{ wb.wellbore_type.name }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-6 display-flex">
-                            {% for layer in wb.layers %}
-                                <span>{{ layer.name }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="col-6 display-flex">
-                            <span>{{ wb.well.customer.short_name }}</span>
+                    <div class="col-md-1 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-4 display-flex">
+                                <span>{{ wb.well.pad.name }}</span>
+                            </div>
+                            <div class="col-4 display-flex">
+                                <span>{{ wb.well.name }}</span>
+                            </div>
+                            <div class="col-4 display-flex">
+                                <span>{{ wb.well.well_type.name }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <span>{{ wb.gti_row.company.name }}</span>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-8 display-flex">
-                            <span>
-                                <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
-                                    {{ wb.gti_row.quality }}
-                                </a>
-                            </span>
-                        </div>
-                        <div class="col-4 display-flex">
-                            <span>{{ wb.gti_row.frequency }}</span>
+                    <div class="col-md-1 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-6 display-flex">
+                                <span>{{ wb.name }}</span>
+                            </div>
+                            <div class="col-6 display-flex">
+                                <span>{{ wb.wellbore_type.name }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <div class="row no-gutters">
-                        <div class="col-6 display-flex">
-                            <span>{{ wb.wellbore_status.name }}</span>
-                        </div>
-                        <div class="col-6 display-flex">
-                            <span>{{ wb.gti_row.date_T3 }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <span>{{ wb.gti_row.authors[-1] }}</span>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <span>{{ wb.gti_row.gti_station_type }}</span>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <span>{{ wb.gti_row.notes }}</span>
-                </div>
-                <div class="col-md-1 display-flex">
-                    <span>{{ wb.gti_row.final_report }}</span>
-                </div>
-            </div>
-        </span>
-        <div class="modal fade" tabindex="-1" role="dialog" id="wb_info_{{ wb.id }}">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    Месторождение: {{ wb.well.field.name }}
-                    Куст: {{ wb.well.pad.name }}
-                    Скважина: {{ wb.well.name }}{{ wb.well.well_type.name }}
-                    Ствол: {{ wb.name }}{{ wb.wellbore_type.name }}
-                </div>
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
-                                Чек-лист
-                            </a>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <a href="{{ url_for('new_style_wellbore', id=wb.id) }}">
-                                Секция
-                            </a>
+                    <div class="col-md-1 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-6 display-flex">
+                                {% for layer in wb.layers_gti %}
+                                    <span>{{ layer.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="col-6 display-flex">
+                                <span>{{ wb.well.customer.short_name }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>ДО</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="customer"
-                                   value="{{ wb.well.customer.name }}"
-                                   readonly>
+                    <div class="col-md-1 display-flex">
+                        <span>{{ wb.gti_row.service_company.name }}</span>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-8 display-flex">
+                                <span>
+                                    <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
+                                        {{ wb.gti_row.gti_table_row_quality.name }}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col-4 display-flex">
+                                <span>{{ wb.gti_row.frequency }}</span>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label>Подрядчик по ГТИ</label>
-                            {% if wb.gti_row.service_company.name is none %}
-                            <select class="form-control"
-                                        name="customer">
-                                    <option>
-                                    </option>
-                                    {% for sc in service_companies %}
-                                    <option data-id="{{ sc.id }}">
-                                        {{ sc.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <div class="row no-gutters">
+                            <div class="col-6 display-flex">
+                                <span>{{ wb.wellbore_status.name }}</span>
+                            </div>
+                            <div class="col-6 display-flex">
+                                <span>{{ wb.gti_row.date_T3 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <span>{{ wb.gti_row.authors[-1] }}</span>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <span>{{ wb.gti_row.station_type.name }}</span>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <span>{{ wb.gti_row.notes }}</span>
+                    </div>
+                    <div class="col-md-1 display-flex">
+                        <span>{{ wb.gti_row.gti_final_report.name }}</span>
+                    </div>
+                </div>
+            </span>
+            <div class="modal fade" tabindex="-1" role="dialog" id="{{ wb.id }}">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Месторождение: {{ wb.well.field.name }}
+                            Куст: {{ wb.well.pad.name }}
+                            Скважина: {{ wb.well.name }}{{ wb.well.well_type.name }}
+                            Ствол: {{ wb.name }}{{ wb.wellbore_type.name }}
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <a href="{{ url_for('gti_quality_sheet', gti_quality_sheet_id=wb.gti_row.gti_quality_sheet.id) }}">
+                                        Чек-лист
+                                    </a>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <a href="{{ url_for('new_style_wellbore', id=wb.id) }}">
+                                        Секция
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>ДО</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="customer"
+                                           value="{{ wb.well.customer.name }}"
+                                           readonly>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Подрядчик по ГТИ</label>
+                                        <select class="form-control selectpicker"
+                                                name="service_company"
+                                                id="service_company_{{ wb.id }}">
+                                            <option>
+                                            </option>
+                                            {% for sc in service_companies %}
+                                                {% if wb.gti_row.service_company == sc %}
+                                                    <option value="{{ sc.id }}"
+                                                            selected>
+                                                        {{ sc.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for sc in service_companies %}
+                                                {% if wb.gti_row.service_company != sc %}
+                                                    <option value="{{ sc.id }}">
+                                                        {{ sc.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Пласты ГТИ</label>
+                                    <select id="layers_{{ wb.id }}"
+                                            class="form-control selectpicker"
+                                            name="layers"
+                                            multiple>
+                                        {% for suite in suites %}
+                                        <optgroup label="Свита {{ suite.name }}">
+                                            {% for layer in suite.layers %}
+                                                {% if layer in wb.layers_gti %}
+                                                   <option value="{{ layer.id }}"
+                                                           selected>
+                                                        {{ layer.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for layer in suite.layers %}
+                                                {% if not layer in wb.layers_gti %}
+                                                   <option value="{{ layer.id }}">
+                                                        {{ layer.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Качествово</label>
+                                    <select name="quality"
+                                            id="quality_{{ wb.id }}"
+                                            class="form-control selectpicker">
+                                        <option>
 
-                            {% else %}
-                                <input type="text"
-                                   class="form-control"
-                                   name="service_company"
-                                   value="{{ wb.gti_row.service_company }}"
-                                   readonly>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Пласты</label>
-                            <select id="layers"
-                                    class="form-control selectpicker"
-                                    multiple>
-                                {% for suite in suites %}
-                                <optgroup label="Свита {{ suite.name }}">
-                                    {% for layer in suite.layers %}
-                                        {% if layer in wb.layers %}
-                                           <option value="{{ layer.id }}"
-                                                   selected
-                                                   disabled>
-                                                {{ layer.name }}
+                                        </option>
+                                        {% for quality in qualities %}
+                                            {% if quality.id == wb.gti_row.gti_table_row_quality.id %}
+                                               <option value="{{ quality.id }}"
+                                                       selected>
+                                                    {{ quality.name }}
+                                                </option>
+                                            {% else %}
+                                                <option value="{{ quality.id }}">
+                                                    {{ quality.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Статус скважины</label>
+                                        <select class="form-control selectpicker"
+                                                name="wellbore_status"
+                                                id="wellbore_status_{{ wb.id }}">
+                                            <option>
+                                            </option>
+                                            {% for wellbore_status in wellbore_statuses %}
+                                                {% if wb.wellbore_status == wellbore_status %}
+                                                    <option value="{{ wellbore_status.id }}"
+                                                            selected>
+                                                        {{ wellbore_status.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for wellbore_status in wellbore_statuses %}
+                                                {% if wb.wellbore_status != wellbore_status %}
+                                                    <option value="{{ wellbore_status.id }}">
+                                                        {{ wellbore_status.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Дата Т3</label>
+                                    <input name="date_T3"
+                                           type='date'
+                                           class="form-control"
+                                           autocomplete="off"
+                                           {% if not wb.gti_row.date_T3 is none %}
+                                            value={{ wb.gti_row.date_T3 }}
+                                           {% endif %}
+                                    >
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Частота анализа</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="frequency"
+                                           value="{{ wb.gti_row.frequency }}">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>ОК отчет</label>
+                                    <select class="form-control selectpicker"
+                                                name="final_report"
+                                                id="final_report_{{ wb.id }}">
+                                            {% if wb.gti_row.gti_final_report is none %}
+                                                <option>
+
+                                                </option>
+                                            {% endif %}
+                                            {% for final_report in final_reports %}
+                                                {% if final_report.id == wb.gti_row.gti_final_report.id %}
+                                                   <option value="{{ final_report.id }}"
+                                                           selected>
+                                                        {{ final_report.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for final_report in final_reports %}
+                                                {% if not final_report.id == wb.gti_row.gti_final_report.id %}
+                                                   <option value="{{ final_report.id }}">
+                                                        {{ final_report.name }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Автор последнего изменения</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="author"
+                                           value="{{ wb.gti_row.authors[-1] }}"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label>Тип станции</label>
+                                    <select class="form-control selectpicker"
+                                            name="station_type"
+                                            id="station_type_{{ wb.id }}">
+                                        {% if wb.gti_row.station_type is none %}
+                                            <option>
+
                                             </option>
                                         {% endif %}
-                                    {% endfor %}
-                                </optgroup>
-                                {% endfor %}
-                            </select>
+                                        {% for type in station_types %}
+                                            {% if type.id == wb.gti_row.station_type.id %}
+                                               <option value="{{ type.id }}"
+                                                       selected
+                                                       disabled>
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% for type in station_types %}
+                                            {% if not type.id == wb.gti_row.station_type.id %}
+                                               <option value="{{ type.id }}">
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Тип дегазатора</label>
+                                    <select class="form-control selectpicker"
+                                            name="degasser_type"
+                                            id="degasser_type_{{ wb.id }}">
+                                        {% if wb.gti_row.degasser_type is none %}
+                                            <option>
+
+                                            </option>
+                                        {% endif %}
+                                        {% for type in degasser_types %}
+                                            {% if type.id == wb.gti_row.degasser_type.id %}
+                                               <option value="{{ type.id }}"
+                                                       selected
+                                                       disabled>
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% for type in degasser_types %}
+                                            {% if not type.id == wb.gti_row.degasser_type.id %}
+                                               <option value="{{ type.id }}">
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Тип хроматографа</label>
+                                    <select class="form-control selectpicker"
+                                            name="chromatograph_type"
+                                            id="chromatograph_type_{{ wb.id }}">
+                                        {% if wb.gti_row.chromatograph_type is none %}
+                                            <option>
+
+                                            </option>
+                                        {% endif %}
+                                        {% for type in chromatograph_types %}
+                                            {% if type.id == wb.gti_row.chromatograph_type.id %}
+                                               <option value="{{ type.id }}"
+                                                       selected
+                                                       disabled>
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% for type in chromatograph_types %}
+                                            {% if not type.id == wb.gti_row.chromatograph_type.id %}
+                                               <option value="{{ type.id }}">
+                                                    {{ type.name }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Заваод №</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="factory_num"
+                                           id="factory_num"
+                                           value="{{ wb.gti_row.factory_num }}">
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Примечания</label>
+                                    <textarea class="form-control"
+                                              name="notes">
+                                        {{ wb.gti_row.notes }}
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <button
+                                    class="btn btn-primary"
+                                    onclick="edit_row(this)"
+                                    data-table_row_id="{{ wb.gti_row.id }}">
+                                    Сохранить изменения
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label>Качествово</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="quality"
-                                   value="{{ wb.gti_row.quality }}">
+                        <div class="modal-footer">
+                            footer
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Статус скважины</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="wellbore_status"
-                                   value="{{ wb.wellbore_status }}"
-                                   disabled>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Дата Т3</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="customer"
-                                   value="{{ wb.gti_row.date_T3 }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label>Частота анализа</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="frequency"
-                                   value="{{ wb.gti_row.frequency }}">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>ОК отчет</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="final_report"
-                                   value="{{ wb.gti_row.final_report }}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Автор последнего изменения</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="author"
-                                   value="{{ wb.gti_row.authors[-1] }}"
-                                   readonly>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label>Тип станции</label>
-                            <select class="form-control selectpicker">
-                                {% if wb.gti_row.station_type is none %}
-                                    <option>
-
-                                    </option>
-                                {% endif %}
-                                {% for type in station_types %}
-                                    {% if type.id == wb.gti_row.station_type.id %}
-                                       <option value="{{ type.id }}"
-                                               selected
-                                               disabled>
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                {% for type in station_types %}
-                                    {% if not type.id == wb.gti_row.station_type.id %}
-                                       <option value="{{ type.id }}">
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label>Тип дегазатора</label>
-                            <select class="form-control selectpicker">
-                                {% if wb.gti_row.degasser_type is none %}
-                                    <option>
-
-                                    </option>
-                                {% endif %}
-                                {% for type in degasser_types %}
-                                    {% if type.id == wb.gti_row.degasser_type.id %}
-                                       <option value="{{ type.id }}"
-                                               selected
-                                               disabled>
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                {% for type in degasser_types %}
-                                    {% if not type.id == wb.gti_row.degasser_type.id %}
-                                       <option value="{{ type.id }}">
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label>Тип хроматографа</label>
-                            <select class="form-control selectpicker">
-                                {% if wb.gti_row.chromatograph_type is none %}
-                                    <option>
-
-                                    </option>
-                                {% endif %}
-                                {% for type in chromatograp_types %}
-                                    {% if type.id == wb.gti_row.chromatograph_type.id %}
-                                       <option value="{{ type.id }}"
-                                               selected
-                                               disabled>
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                {% for type in chromatograph_types %}
-                                    {% if not type.id == wb.gti_row.chromatograph_type.id %}
-                                       <option value="{{ type.id }}">
-                                            {{ type.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label>Заваод №</label>
-                            <input type="text"
-                                   class="form-control"
-                                   name="factory_num"
-                                   value="{{ wb.gti_row.factory_num }}">
-                        </div>
-
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label>Примечания</label>
-                            <textarea type="text"
-                                   class="form-control"
-                                   name="customer"
-                                   value="{{ wb.gti_row.notes }}">
-                            </textarea>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <button
-                            class="btn btn-primary"
-                            onclick="#">
-                            Сохранить изменения
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    footer
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    </div>
-    {% endfor %}
 </div>
 {% endblock %}
 
@@ -816,5 +1023,9 @@
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 
+<script src="{{ url_for('static', filename='air-datepicker-master/dist/js/datepicker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/datepicker/init_date.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/gti/add_section_tbl.js') }}"></script>
+<script src="{{ url_for('static', filename='js/gti/table_row.js') }}"></script>
 {% endblock %}

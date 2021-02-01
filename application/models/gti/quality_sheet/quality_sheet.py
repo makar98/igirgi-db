@@ -12,15 +12,15 @@ class GtiQualitySheet(BaseDate):
     gti_table_row_id = db.Column(db.Integer, db.ForeignKey('gti_table_row.id'), nullable=False)
 
     rows_technological = db.relationship('GtiTechnologicalResearch',
-                                        backref=backref('row_technological'),
+                                        backref=backref('quality_sheet'),
                                         lazy=True,
                                         cascade='all, delete, delete-orphan')
     rows_gas = db.relationship('GtiGasResearch',
-                                        backref=backref('row_gas'),
+                                        backref=backref('quality_sheet'),
                                         lazy=True,
                                         cascade='all, delete, delete-orphan')
     rows_geo = db.relationship('GtiGeoResearch',
-                                        backref=backref('row_geo'),
+                                        backref=backref('quality_sheet'),
                                         lazy=True,
                                         cascade='all, delete, delete-orphan')
 

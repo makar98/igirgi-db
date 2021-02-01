@@ -7,6 +7,7 @@ from application.models.gti.parameter import GtiParameter
 from application.models.gti.format import GtiFormat
 
 class Row(BaseDate):
+    # the same
     __abstract__ = True
     interval_beg = db.Column(db.Float())
     interval_end = db.Column(db.Float())

@@ -29,22 +29,26 @@ def edit(editable_tbl: object, obj: object, args: dict, user: object):
 
     for key, value in args.items():
         # Это исправление косяка, так как в апи не добавил строгую типизацию
-        if '_id' in key:
-            try:
-                value = int(value)
-            # На случай, если '_id' будет в самом название колонки
-            except ValueError:
-                pass
-        if value is not None and getattr(obj, key)!= value:
-            if type(value) == InstrumentedList:
-                pass
+        if value is not None:
+            #print(f'{key} - {value}')
+            if '_id' in key:
+                try:
+                    value = int(value)
+                    print(value)
+                # На случай, если '_id' будет в самом название колонки
+                except ValueError:
+                    pass
+            if getattr(obj, key)!= value:
+                if type(value) == InstrumentedList: #???
+                    pass
 
-            editable_fields.append({'field': key,
-                                    'before_edit': getattr(obj, key),
-                                    'after_edit': value}
-                                   )
-            setattr(obj, key, value)
-
+                editable_fields.append({'field': key,
+                                        'before_edit': getattr(obj, key),
+                                        'after_edit': value}
+                                       )
+                setattr(obj, key, value)
+                # print(f'{key} - {value}')
+    setattr(obj, 'edit_date', datetime.now())
     db.session.commit()
     log = DBLog(user_id=user.id, date=datetime.now(), editable_tbl=editable_tbl,
                 editable_fields=editable_fields, is_edit=True)

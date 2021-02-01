@@ -24,7 +24,7 @@ fields_suites = db.Table('fields_suites',
         db.Column('field_id', db.Integer(), db.ForeignKey('field.id')),
         db.Column('suite_id', db.Integer(), db.ForeignKey('suite.id')))
 
-wellbores_layers = db.Table('wellbores_layers',
+wellbores_layers_gti = db.Table('wellbores_layers_gti',
         db.Column('wellbore_id', db.Integer(), db.ForeignKey('wellbore.id')),
         db.Column('layer_id', db.Integer(), db.ForeignKey('layer.id')))
 
@@ -89,6 +89,9 @@ class Pad(BaseDate):
 
     quality_sheets = db.relationship('QualitySheet', backref=backref('pad'), lazy=True,
                                      cascade="all, delete, delete-orphan")
+    __mapper_args__ = dict(
+        inherit_condition=(field_id == Field.id)
+    )
 
     def __repr__(self):
         return self.name
@@ -114,6 +117,10 @@ class Well(BaseDate):
 
     quality_sheets = db.relationship('QualitySheet', backref=backref('well'), lazy=True,
                                      cascade="all, delete, delete-orphan")
+
+    __mapper_args__ = dict(
+        inherit_condition=(field_id == Field.id)
+    )
 
 
     def __repr__(self):
@@ -142,6 +149,7 @@ class Wellbore(BaseDate):
     __table_args__ = (
         db.UniqueConstraint('name', 'wellbore_type_id', 'well_id', name='unique_wellbore_type'),
     )
+
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(128), nullable=False)
@@ -158,8 +166,11 @@ class Wellbore(BaseDate):
     gti_row = db.relationship('GtiTableRow', backref=backref('wellbore'), uselist=False, lazy=True,
                                      cascade="all, delete, delete-orphan")
 
-    layers = db.relationship('Layer', secondary=wellbores_layers, back_populates='wellbores')
+    layers_gti = db.relationship('Layer', secondary=wellbores_layers_gti, back_populates='wellbores_gti')
 
+    __mapper_args__ = dict(
+        inherit_condition=(well_id == Well.id)
+    )
 
     def __repr__(self):
         return self.name
@@ -222,7 +233,7 @@ class Layer(BaseDate):
     path_to_files = db.relationship('FilePath', backref=backref('layer'), lazy=True,
                                      cascade="all, delete, delete-orphan")
 
-    wellbores = db.relationship('Wellbore', secondary=wellbores_layers, back_populates='layers')
+    wellbores_gti = db.relationship('Wellbore', secondary=wellbores_layers_gti, back_populates='layers_gti')
 
     def __repr__(self):
         return self.name

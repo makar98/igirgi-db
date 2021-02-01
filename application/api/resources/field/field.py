@@ -7,6 +7,8 @@ class FieldSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Field
         sqla_session = db.session
+
+    customer_id = ma_fields.Int()
     pads = ma_fields.Nested('FieldPadSchema', default=[], many=True)
 
 

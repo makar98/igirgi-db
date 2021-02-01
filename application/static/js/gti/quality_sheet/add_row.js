@@ -15,6 +15,9 @@ function addRow(el) {
     delete_button = new_data_row.lastElementChild.lastElementChild
     delete_button.style.display = 'block'
 
+    // Нужно обращаться не ко всем datepicker, а только к новым (на текущей строке)
+    // И вообще здесь нужно создавать строку, а не копировать
+
     $('.range_date').datepicker({position: "top right",
                                             todayButton: true,
                                             range: true,

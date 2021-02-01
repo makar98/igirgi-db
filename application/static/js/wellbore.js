@@ -75,6 +75,7 @@ function edit_wellbore() {
 
     var layers_id = $('#layers').val()
 
+
     header = form.querySelector('.modal-header')
 
     var formData = new FormData(document.forms.person);

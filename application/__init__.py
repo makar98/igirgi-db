@@ -7,9 +7,11 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from application.forms import ExtendedLoginForm
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
+#from flask_cors import CORS
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
+#CORS(app)
 
 db = SQLAlchemy(app, engine_options={'pool_size': 10, 'max_overflow': -1})
 
@@ -37,7 +39,8 @@ initialize_routes(api)
 from .admin import create_admin
 
 admin = create_admin(app, db)
-
-from application.routes import routes, gti
-
 """###"""
+
+from application.routes import routes
+from application.routes.gti import routes
+

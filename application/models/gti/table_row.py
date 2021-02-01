@@ -19,10 +19,8 @@ class GtiTableRow(BaseDate):
 
     wellbore_id = db.Column(db.Integer, db.ForeignKey('wellbore.id'), nullable=False)
 
-    layer = db.Column(db.String(128)) #  Сделать связь к модели Layer
-    company = db.Column(db.String(128)) #  Сделать связь к модели GtiServiceCompany
     frequency = db.Column(db.Integer, default=0)
-    quality = db.Column(db.Integer, db.ForeignKey('gti_table_row_quality.id'))
+    quality_id = db.Column(db.Integer, db.ForeignKey('gti_table_row_quality.id'))
     authors = db.relationship('User', secondary=author_gti_row, backref='authors')
 
     notes = db.Column(db.String(512))
@@ -36,7 +34,7 @@ class GtiTableRow(BaseDate):
                                         uselist=False,
                                         cascade='all, delete, delete-orphan')
 
-    date_T3 = db.Column(db.DateTime)
+    date_T3 = db.Column(db.Date)
 
     service_company_id = db.Column(db.Integer, db.ForeignKey('gti_service_company.id'))
     station_type_id = db.Column(db.Integer, db.ForeignKey('gti_station_type.id'))
@@ -45,4 +43,12 @@ class GtiTableRow(BaseDate):
     factory_num = db.Column(db.String(128))
 
 
+class GtiTableRowQuality(BaseDate):
+    __human_name__ = 'Оценка строки таблицы ГТИ. Есть замечания/Нет замечаний'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    gti_rows = db.relationship('GtiTableRow',
+                               backref=backref('gti_table_row_quality'),
+                               lazy=True,
+                               cascade='all, delete, delete-orphan')
 

@@ -1,30 +1,32 @@
-from application import app
-from flask import render_template
+from application import app, db
+from flask import render_template, request
 
 from sqlalchemy import asc, desc
 
-from application.models.models import Customer
-
-from application.models.models import Wellbore
-from application.models.models import WellboreType
-
-from application.models.models import WellType
+from application.models.models import Wellbore, Well, Pad, Field, Customer, \
+    WellboreStatus, Layer, Suite, WellboreType, WellType
 
 from application.models.gti.format import GtiFormat
 from application.models.gti.parameter import GtiParameter
 
+from application.models.gti.table_row import GtiTableRowQuality
 from application.models.gti.quality_sheet.quality_sheet import GtiQualitySheet
-from application.models.gti.directory.service_company import GtiServiceCompany
+from application.models.gti.quality_sheet.final_report import GtiFinalReport
 from application.models.gti.directory.chromatograph_type import GtiChromatographType
 from application.models.gti.directory.degasser_type import GtiDegasserType
 from application.models.gti.directory.station_type import GtiStationType
 from application.models.gti.directory.service_company import GtiServiceCompany
 
-from application.models.models import WellboreStatus
+from application.models.models import WellboreStatus, Field
+from application.models.user import User
 from application.models.models import Suite
+
+from datetime import datetime, timedelta
 
 
 from flask_security import login_required, roles_required
+
+from application.routes.gti.queries import *
 
 
 @app.route('/gti', methods=['GET', 'POST'])
@@ -38,28 +40,111 @@ def gti():
 @login_required
 @roles_required('test_role')
 def gti_tbl():
-    gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
+
+    if request.args.get('filter') is not None:
+        if request.args.get('users'):
+            users_id = list(map(int, request.args.get('users').split(',')))
+        else:
+            users_id = None
+
+        if request.args.get('fields'):
+            fields_id = request.args.get('fields').split(',')
+        else:
+            fields_id = []
+        if request.args.get('layers'):
+            layers_id = request.args.get('layers').split(',')
+        else:
+            layers_id = []
+        if request.args.get('customers'):
+            customers_id = request.args.get('customers').split(',')
+        else:
+            customers_id = []
+        if request.args.get('service_companies'):
+            service_companies_id = request.args.get('service_companies').split(',')
+        else:
+            service_companies_id = []
+        if request.args.get('wellbore_statuses'):
+            wellbore_statuses_id = request.args.get('wellbore_statuses').split(',')
+        else:
+            wellbore_statuses_id = []
+        if request.args.get('qualities'):
+            qualities_id = request.args.get('qualities').split(',')
+        else:
+            qualities_id = []
+
+        date_interval = datetime(1990, 3, 5)
+        if request.args.get('date_interval') == 'last_hour':
+            date_interval = datetime.now() - timedelta(hours=1)
+
+        if request.args.get('date_interval') == 'last_day':
+            date_interval = datetime.now() - timedelta(days=1)
+
+        if request.args.get('date_interval') == 'last_week':
+            date_interval = datetime.now() - timedelta(weeks=1)
+
+        if request.args.get('date_interval') == 'last_month':
+            date_interval = datetime.now() - timedelta(days=30)
+
+        if request.args.get('date_interval') == 'all_time':
+            date_interval = datetime(1990, 3, 5)
+
+        query = db.session.query(Wellbore).filter(Wellbore.is_gti == True)
+        query = query.filter(GtiTableRow.edit_date >= date_interval)
+
+        query = query \
+            .join(GtiTableRow, GtiTableRow.wellbore_id == Wellbore.id) \
+            .join(Well, Well.id == Wellbore.well_id) \
+            .join(Customer, Customer.id == Well.customer_id) \
+            .filter(Customer.id.in_(customers_id))
+
+        query = query \
+            .join(Pad, Pad.id == Well.pad_id) \
+            .join(Field, Field.id == Pad.field_id). \
+            filter(Field.id.in_(fields_id))
+
+        query = query \
+            .join(WellboreStatus, WellboreStatus.id == Wellbore.wellbore_status_id) \
+            .filter(WellboreStatus.id.in_(wellbore_statuses_id))
+
+        query = query.filter(GtiTableRow.authors.any(User.id.in_(users_id)))
+        query = query.filter(Wellbore.layers_gti.any(Layer.id.in_(layers_id)))
+        query = query.filter(GtiTableRow.service_company_id.in_(service_companies_id))
+        query = query.filter(GtiTableRow.quality_id.in_(qualities_id))
+
+        gti_wellbores = query.all()
+        print(gti_wellbores)
+    else:
+        gti_wellbores = Wellbore.query.filter_by(is_gti=True).order_by(desc(Wellbore.create_date)).all()
     wellbore_types = WellboreType.query.all()
     well_types = WellType.query.all()
     wellbore_statuses = WellboreStatus.query.all()
-    customer = Customer.query.all()
+    customers = Customer.query.all()
     service_companies = GtiServiceCompany.query.all()
     suites = Suite.query.all()
     station_types = GtiStationType.query.all()
     degasser_types = GtiDegasserType.query.all()
     chromatograph_types = GtiChromatographType.query.all()
-    for wb in gti_wellbores:
-        print(wb.gti_row.gti_quality_sheet)
+    qualities = GtiTableRowQuality.query.all()
+    final_reports = GtiFinalReport.query.all()
+
+    # SEARCH
+    fields = Field.query.all()
+    users = User.query.all()
     return render_template(r'gti/gti_rate_tbl.html',
                            wellbores=gti_wellbores,
                            wellbore_types=wellbore_types,
                            well_types=well_types,
-                           customer=customer,
+                           customers=customers,
                            service_companies=service_companies,
                            suites=suites,
                            station_types=station_types,
                            degasser_types=degasser_types,
-                           chromatograph_types=chromatograph_types)
+                           chromatograph_types=chromatograph_types,
+                           qualities=qualities,
+                           final_reports=final_reports,
+                           wellbore_statuses=wellbore_statuses,
+                           fields=fields,
+                           users=users)
 
 
 @app.route('/gti/quality_sheet/<gti_quality_sheet_id>', methods=['GET', 'POST'])
